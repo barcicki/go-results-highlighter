@@ -1,0 +1,34 @@
+{
+  "name": "go-results-highlighter",
+  "description": "Improves readability of Go results by highlighting opponents of selected player",
+  "main": "index.js",
+  "authors": [
+    "Artur Barcicki <barcicki@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "go",
+    "baduk",
+    "results",
+    "highlighter",
+    "go",
+    "results",
+    "opengotcha",
+    "macmahon"
+  ],
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals",
+    "node"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
