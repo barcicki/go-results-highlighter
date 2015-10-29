@@ -81,6 +81,9 @@ function mapRowsToPlayers(table, settings) {
     rows.forEach((row) => {
         const cells = asArray(row.querySelectorAll(settings.cellTags));
 
+        // assign default place
+        row.goResultPlace = -1;
+
         // no cells? unlikely to be a result row
         if (!cells.length) {
             return;
@@ -117,10 +120,14 @@ function mapRowsToPlayers(table, settings) {
                     continue;
                 }
 
-                let opponent = match[1];
+                let opponentPlace = match[1];
 
-                player.games[opponent] = result.cls;
-                player.opponents.push(opponent);
+                cell.goOpponentPlace = opponentPlace;
+                player.games[opponentPlace] = {
+                    cell,
+                    cls: result.cls
+                };
+                player.opponents.push(opponentPlace);
             }
         });
 
@@ -134,6 +141,25 @@ function mapRowsToPlayers(table, settings) {
 
 export default class GoResultsHighlighter {
 
+    /**
+     * Creates new instance of GoResultsHighlighter
+     *
+     * @param {HTMLElement} element - main element containing table with results
+     * @param {object} [settings] - plugin settings
+     * @param {string} [settings.prefixCls='go-results-'] - css class prefix
+     * @param {string} [settings.gameCls='game'] - game cell class name
+     * @param {string} [settings.currentCls='current'] - selected row class name
+     * @param {object} [settings.results] - map with possible results, by default
+     * supports 4 options. Provide with "className" -> "regexp" pattern.
+     * @param {string} [settings.results.won='([0-9]+)\\+'] - default winning regexp
+     * @param {string} [settings.results.lost='([0-9]+)\\-'] - default losing regexp
+     * @param {string} [settings.results.jigo='([0-9]+)='] - default draw regexp
+     * @param {string} [settings.results.unresolved='([0-9]+)\\?] - default unresolved regexp
+     * @param {string} [settings.rowTags='tr'] - querySelection-compatible string
+     * with tags representing players' rows
+     * @param {string} [settings.cellTags='td,th'] - querySelection-compatible
+     * string with tags holding game results
+     */
     constructor(element, settings) {
         this.element = element;
         this.settings = defaults(settings, DEFAULT_SETTINGS);
@@ -142,18 +168,43 @@ export default class GoResultsHighlighter {
         this.bindEvents();
     }
 
-    selectPlayerAtPlace(place) {
+    /**
+     * Marks the row for selected player and a cell with opponents game if
+     * provided.
+     * @param {number} [playerPlace] - player's place, selection will be remove
+     * if not player is found for given place
+     * @param {number} [opponentPlace] - player's opponent's place - to mark
+     * cells with game between player and the opponent
+     */
+    selectPlayer(playerPlace, opponentPlace) {
         const currentCls = this.settings.prefixCls + this.settings.currentCls;
-        const player = this.map[place];
+        const gameCls = this.settings.prefixCls + this.settings.gameCls;
+
+        const player = this.map[playerPlace];
+
+        const markedGames = asArray(this.element.querySelectorAll('.' + gameCls));
         const markedRow = this.element.querySelector('.' + currentCls);
         const markedPlayer = markedRow && markedRow.goResultPlace ? this.map[markedRow.goResultPlace] : null;
 
-        if (markedPlayer && markedPlayer !==  player) {
+        // remove any visible game markings
+        for (let gameCell of markedGames) {
+            gameCell.classList.remove(gameCls);
+        }
+
+        // unmark player if necessary
+        if (markedPlayer && markedPlayer !== player) {
             mark.call(this, markedPlayer, false);
         }
 
+        // mark the player if not already marked
         if (player && player !== markedPlayer) {
             mark.call(this, player, true);
+        }
+
+        // mark the game between the player and the opponent
+        if (player && opponentPlace) {
+            player.games[opponentPlace].cell.classList.add(gameCls);
+            this.map[opponentPlace].games[playerPlace].cell.classList.add(gameCls);
         }
 
         function mark(player, active) {
@@ -164,47 +215,55 @@ export default class GoResultsHighlighter {
             for (let opponentPlace of player.opponents) {
                 let opponent = this.map[opponentPlace];
 
-                opponent.row.classList[method](this.settings.prefixCls + player.games[opponentPlace]);
+                opponent.row.classList[method](this.settings.prefixCls + player.games[opponentPlace].cls);
             }
         }
     }
 
-
+    /**
+     * Binds mouseover and mouseout events listeners to the element.
+     */
     bindEvents() {
         this.element.addEventListener('mouseover', (event) => {
-            const target = event.target;
-            const related = event.relatedTarget;
-            let row = target;
-            let relatedRow = related;
+            let target = event.target;
+            let opponent = null;
+            let player = null;
 
-            while (row && row !== document && !row.goResultPlace) {
-                row = row.parentNode;
+            // fetch information about hovered element
+            while (target && target !== document) {
+
+                // game cell?
+                if (target.goOpponentPlace) {
+                    opponent = target.goOpponentPlace;
+                }
+
+                // player row? no further search is necessary
+                if (target.goResultPlace) {
+                    player = target.goResultPlace;
+                    break;
+                }
+
+                target = target.parentNode;
             }
 
-            while (relatedRow && relatedRow !== document && !relatedRow.goResultPlace) {
-                relatedRow = relatedRow.parentNode;
-            }
-
-            if (!row.goResultPlace && !relatedRow.goResultPlace) {
-                this.selectPlayerAtPlace(null);
+            if (!player) {
                 return;
             }
 
-            if (row.goResultPlace && row !== relatedRow) {
-                this.selectPlayerAtPlace(row.goResultPlace);
-            }
+            this.selectPlayer(player, opponent);
         }, false);
 
         this.element.addEventListener('mouseout', (event) => {
             let target = event.relatedTarget;
 
-
             while (target && target !== document && target !== this.element) {
                 target = target.parentNode;
             }
 
+            // if new hovered element is outside the table then remove all
+            // selections
             if (target !== this.element) {
-                this.selectPlayerAtPlace(null)
+                this.selectPlayer(-1)
             }
         }, false);
     }
