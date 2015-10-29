@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "css": "lessc --clean-css src/plugin.less > dist/go-results-highlighter.css",
-    "build": "browserify src/plugin.js -s GoResultsHighlighter -d -t babelify > dist/go-results-highlighter.js",
+    "build": "browserify src/index.js -s GoResultsHighlighter -d -t babelify > dist/go-results-highlighter.js",
     "uglify": "uglifyjs dist/go-results-highlighter.js > dist/go-results-highlighter.min.js",
     "start": "http-server . -c -1 -p 3015 -o http://127.0.0.1:3015/examples/example.htm",
     "prestart": "npm run build && npm run css",
