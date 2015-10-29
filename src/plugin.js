@@ -139,11 +139,74 @@ export default class GoResultsHighlighter {
         this.settings = defaults(settings, DEFAULT_SETTINGS);
         this.map = mapRowsToPlayers(this.element, this.settings);
 
-        console.log('Instance created.', this.map);
+        this.bindEvents();
     }
 
-    test() {
-        console.log(...['This', 'is', 'a', 'working', 'example']);
+    selectPlayerAtPlace(place) {
+        const currentCls = this.settings.prefixCls + this.settings.currentCls;
+        const player = this.map[place];
+        const markedRow = this.element.querySelector('.' + currentCls);
+        const markedPlayer = markedRow && markedRow.goResultPlace ? this.map[markedRow.goResultPlace] : null;
+
+        if (markedPlayer && markedPlayer !==  player) {
+            mark.call(this, markedPlayer, false);
+        }
+
+        if (player && player !== markedPlayer) {
+            mark.call(this, player, true);
+        }
+
+        function mark(player, active) {
+            const method = active ? 'add' : 'remove';
+
+            player.row.classList[method](currentCls);
+
+            for (let opponentPlace of player.opponents) {
+                let opponent = this.map[opponentPlace];
+
+                opponent.row.classList[method](this.settings.prefixCls + player.games[opponentPlace]);
+            }
+        }
+    }
+
+
+    bindEvents() {
+        this.element.addEventListener('mouseover', (event) => {
+            const target = event.target;
+            const related = event.relatedTarget;
+            let row = target;
+            let relatedRow = related;
+
+            while (row && row !== document && !row.goResultPlace) {
+                row = row.parentNode;
+            }
+
+            while (relatedRow && relatedRow !== document && !relatedRow.goResultPlace) {
+                relatedRow = relatedRow.parentNode;
+            }
+
+            if (!row.goResultPlace && !relatedRow.goResultPlace) {
+                this.selectPlayerAtPlace(null);
+                return;
+            }
+
+            if (row.goResultPlace && row !== relatedRow) {
+                this.selectPlayerAtPlace(row.goResultPlace);
+            }
+        }, false);
+
+        this.element.addEventListener('mouseout', (event) => {
+            let target = event.relatedTarget;
+
+
+            while (target && target !== document && target !== this.element) {
+                target = target.parentNode;
+            }
+
+            if (target !== this.element) {
+                this.selectPlayerAtPlace(null)
+            }
+        }, false);
     }
 }
 
