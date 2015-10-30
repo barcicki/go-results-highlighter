@@ -4,22 +4,21 @@
   "description": "Improves readability of Go results by highlighting opponents of selected player",
   "main": "index.js",
   "scripts": {
-    "css": "lessc --clean-css src/plugin.less > dist/go-results-highlighter.css",
-    "build": "browserify src/index.js -s GoResultsHighlighter -d -t babelify > dist/go-results-highlighter.js",
-    "uglify": "uglifyjs dist/go-results-highlighter.js > dist/go-results-highlighter.min.js",
-    "start": "http-server . -c -1 -p 3015 -o http://127.0.0.1:3015/examples/example.htm",
-    "prestart": "npm run build && npm run css",
+    "build": "gulp build",
+    "start": "gulp serve",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Artur Barcicki <barcicki@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "babelify": "^6.4.0",
-    "browserify": "^12.0.1",
-    "less": "^2.5.3",
+    "browser-sync": "^2.9.11",
+    "gulp": "^3.9.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-less": "^3.0.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^1.4.2",
     "less-plugin-clean-css": "^1.5.1",
-    "minifyify": "^7.1.0",
-    "http-server": "^0.8.5",
-    "uglifyjs": "^2.4.10"
+    "require-dir": "^0.3.0"
   }
 }

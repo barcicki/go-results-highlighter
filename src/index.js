@@ -13,7 +13,7 @@ function initialize() {
 if (document.readyState === 'complete') {
     initialize();
 } else {
-    document.addEventListener('DOMContentLoaded', initialize, false)
+    document.addEventListener('DOMContentLoaded', initialize, false);
 }
 
 export default GoResultsHighlighter;
