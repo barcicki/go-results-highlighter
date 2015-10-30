@@ -11,11 +11,12 @@ using popular package managers such as Bower or NPM.
 
 ### Installation
 
-To be described...
-
+Include `go-results-highlighter.min.js` and `go-results-highlighter.css` from 
+`dist` directory to your website.
+ 
 ### Usage
 
-To be described...
+Add `go-results` or `data-go-results` tag to elements which contains Go results.
 
 ### License
 
