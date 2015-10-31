@@ -71,7 +71,7 @@ function mapResultsSettings(results) {
  * @param {object} settings.results
  * @returns {object}
  */
-function mapRowsToPlayers(table, settings) {
+export function mapRowsToPlayers(table, settings) {
     const rows = asArray(table.querySelectorAll(settings.rowTags));
     const resultsMap = mapResultsSettings(settings.results);
     const results = [];

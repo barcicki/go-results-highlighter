@@ -6,7 +6,7 @@
   "scripts": {
     "build": "gulp build",
     "start": "gulp serve",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "karma start --single-run"
   },
   "author": "Artur Barcicki <barcicki@gmail.com>",
   "license": "MIT",
@@ -18,7 +18,15 @@
     "gulp-less": "^3.0.3",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.4.2",
+    "jasmine-core": "^2.3.4",
+    "karma": "^0.13.14",
+    "karma-browserify": "^4.4.0",
+    "karma-chrome-launcher": "^0.2.1",
+    "karma-coverage": "^0.5.3",
+    "karma-jasmine": "^0.3.6",
+    "karma-phantomjs-launcher": "^0.2.1",
     "less-plugin-clean-css": "^1.5.1",
+    "phantomjs": "^1.9.18",
     "require-dir": "^0.3.0"
   }
 }
