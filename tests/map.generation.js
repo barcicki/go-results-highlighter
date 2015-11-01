@@ -1,35 +1,45 @@
-import { mapRowsToPlayers } from '../src/plugin.js';
+'use strict';
 
-function toDomTree(string) {
-    const placeholder = document.createElement('div');
-    placeholder.innerHTML = string;
-    return placeholder.firstChild;
-}
+import { mapRowsToPlayers, defaults, DEFAULT_SETTINGS, readDomSettings } from '../src/plugin.js';
 
 describe('mapRowsToPlayers', () => {
+
+    let placeholder;
+
+    beforeAll(() => placeholder = document.createElement('div'));
+
+    function testMap(dom, settings) {
+        placeholder.innerHTML = dom;
+
+        let element = placeholder.firstChild;
+        let config = defaults(DEFAULT_SETTINGS, readDomSettings(element), settings);
+
+        return mapRowsToPlayers(element, config);
+    }
+
     describe('should be able to', () => {
         it('handle empty DOM tree', () => {
-            expect(mapRowsToPlayers(toDomTree(
+            expect(testMap(
                 `<table></table>`
-            ))).toEqual({});
+            )).toEqual({});
         });
 
         it('handle non-empty DOM tree without supported tags', function () {
-            expect(mapRowsToPlayers(toDomTree(
+            expect(testMap(
                 `<table>
                     <thead></thead>
                     <tbody></tbody>
                 </table>`
-            ))).toEqual({});
+            )).toEqual({});
         });
 
         it('handle tables with only places', function () {
-            const result = mapRowsToPlayers(toDomTree(
+            const result = testMap(
                 `<table>
                     <tr><td>1</td><td>Player 1</td></tr>
                     <tr><td>2</td><td>Player 2</td></tr>
                 </table>`
-            ));
+            );
 
             expect(result[1]).toBeDefined();
             expect(result[1].place).toBe(1);
@@ -47,7 +57,7 @@ describe('mapRowsToPlayers', () => {
         });
 
         it('handle ex aequo places', function () {
-            const result = mapRowsToPlayers(toDomTree(
+            const result = testMap(
                 `<table>
                     <tr><td>1</td><td>Player 1</td></tr>
                     <tr><td>2</td><td>Player 2</td></tr>
@@ -58,7 +68,7 @@ describe('mapRowsToPlayers', () => {
                     <tr><td>-</td><td>Player 7</td></tr>
                     <tr><td>5</td><td>Player 8</td></tr>
                 </table>`
-            ));
+            );
 
             expect(result[1].place).toBe(1);
             expect(result[2].place).toBe(2);
@@ -71,7 +81,7 @@ describe('mapRowsToPlayers', () => {
         });
 
         it('handle different types of games', function () {
-            const result = mapRowsToPlayers(toDomTree(
+            const result = testMap(
                 `<table>
                     <tr>
                         <td>1</td>
@@ -86,7 +96,7 @@ describe('mapRowsToPlayers', () => {
                         <td>10</td>
                     </tr>
                 </table>`
-            ));
+            );
 
             expect(result[1].opponents.length).toBe(6);
 
@@ -114,7 +124,7 @@ describe('mapRowsToPlayers', () => {
         });
 
         it('support using different tags', function () {
-            const result = mapRowsToPlayers(toDomTree(
+            const result = testMap(
                 `<div>
                     <div class="row">
                         <div class="place">1</div>
@@ -126,11 +136,10 @@ describe('mapRowsToPlayers', () => {
                         <div class="name">Player 2</div>
                         <div class="game">1-</div>
                     </div>
-                </div>`
-            ), {
-                rowTags: '.row',
-                cellTags: '.place, .game'
-            });
+                </div>`, {
+                    rowTags: '.row',
+                    cellTags: '.place, .game'
+                });
 
             expect(result[1].games[2]).toBeDefined();
             expect(result[1].games[2].cls).toBe('won');
@@ -142,7 +151,7 @@ describe('mapRowsToPlayers', () => {
         });
 
         it('skip preceding rows without place in the first column', function () {
-            const result = mapRowsToPlayers(toDomTree(
+            const result = testMap(
                 `<table>
                     <tr><th>ignored!</th></tr>
                     <tr><td>-</td></tr>
@@ -151,7 +160,7 @@ describe('mapRowsToPlayers', () => {
                     <tr><td>3</td><td>Player 3</td></tr>
                     <tr><td>4</td><td>Player 4</td></tr>
                 </table>`
-            ));
+            );
 
             expect(result[1].place).toBe(1);
             expect(result[2].place).toBe(2);
@@ -160,16 +169,15 @@ describe('mapRowsToPlayers', () => {
         });
 
         it('look for place in different column', function () {
-            const result = mapRowsToPlayers(toDomTree(
+            const result = testMap(
                 `<table>
                     <tr><td>Player 1</td><td>1</td></tr>
                     <tr><td>Player 2</td><td>2</td></tr>
                     <tr><td>Player 3</td><td>3</td></tr>
                     <tr><td>Player 4</td><td>4</td></tr>
-                </table>`
-            ), {
-                column: 1
-            });
+                </table>`, {
+                    column: 1
+                });
 
             expect(result[1].place).toBe(1);
             expect(result[2].place).toBe(2);
@@ -178,19 +186,52 @@ describe('mapRowsToPlayers', () => {
         });
 
         it('skip rows based on settings', function () {
-            const result = mapRowsToPlayers(toDomTree(
+            const result = testMap(
                 `<table>
                     <tr><td>1</td><td>Player 1</td></tr>
                     <tr><td>2</td><td>Player 2</td></tr>
                     <tr><td>3</td><td>Player 3</td></tr>
                     <tr><td>4</td><td>Player 4</td></tr>
-                </table>`
-            ), {
-                row: 2
-            });
+                </table>`, {
+                    row: 2
+                });
 
             expect(result[1]).not.toBeDefined();
             expect(result[2]).not.toBeDefined();
+            expect(result[3].place).toBe(3);
+            expect(result[4].place).toBe(4);
+        });
+
+        it('take column and row settings from the DOM', function () {
+            const result = testMap(
+                `<table go-results-column="1" data-go-results-row="2">
+                    <tr><td>Player 1</td><td>1</td></tr>
+                    <tr><td>Player 2</td><td>2</td></tr>
+                    <tr><td>Player 3</td><td>3</td></tr>
+                    <tr><td>Player 4</td><td>4</td></tr>
+                </table>`
+            );
+
+            expect(result[1]).not.toBeDefined();
+            expect(result[2]).not.toBeDefined();
+            expect(result[3].place).toBe(3);
+            expect(result[4].place).toBe(4);
+        });
+
+        it('take column and row settings from the DOM, but let override them', function () {
+            const result = testMap(
+                `<table go-results-column="1" data-go-results-row="2">
+                    <tr><td>1</td><td>Player 1</td></tr>
+                    <tr><td>2</td><td>Player 2</td></tr>
+                    <tr><td>3</td><td>Player 3</td></tr>
+                    <tr><td>4</td><td>Player 4</td></tr>
+                </table>`, {
+                    column: 0,
+                    row: 0
+                });
+
+            expect(result[1].place).toBe(1);
+            expect(result[2].place).toBe(2);
             expect(result[3].place).toBe(3);
             expect(result[4].place).toBe(4);
         });

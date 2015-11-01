@@ -21,6 +21,19 @@ export const DEFAULT_SETTINGS = {
 };
 
 /**
+ * Prefix for DOM settings
+ * It will be later used as: "data-prefix-attribute" or "prefix-attribute"
+ * @type {string}
+ */
+const ATTRIBUTES_PREFIX = 'go-results-';
+
+/**
+ * List of attributes to be searched for in DOM
+ * @type {Array.<string>}
+ */
+const ATTIRBUTES = ['column', 'row'];
+
+/**
  * Transforms array-like objects (such as arguments or node lists) into an array
  * @param {*} arrayLike
  * @returns {Array.<T>}
@@ -30,25 +43,28 @@ export function asArray(arrayLike) {
 }
 
 /**
- * Returns new object containing keys only from defualtObj but values will be
- * taken from obj first if exist
- * @param {object} obj
+ * Returns new object containing keys only from defaultObj but values are taken
+ * from if exist (starting from the last object provided)
  * @param {object} defaultObj
+ * @param {Array.<object>} objects
  * @returns {object}
  */
-export function defaults(obj, defaultObj) {
+export function defaults(defaultObj, ...objects) {
+    const overrides = objects
+        .filter((obj) => typeof obj === 'object')
+        .reverse();
     const result = {};
 
-    if (!obj) {
-        obj = {};
-    }
+    mainLoop: for (let key in defaultObj) {
+        for (let obj of overrides) {
 
-    for (let key in defaultObj) {
-        if (obj.hasOwnProperty(key)) {
-            result[key] = obj[key];
-        } else {
-            result[key] = defaultObj[key];
+            if (obj.hasOwnProperty(key)) {
+                result[key] = obj[key];
+                continue mainLoop;
+            }
         }
+
+        result[key] = defaultObj[key];
     }
 
     return result;
@@ -76,41 +92,63 @@ function mapResultsSettings(results) {
 }
 
 /**
+ * Reads row and column settings from the DOM element
+ * @param {HTMLElement} element - go results placeholder
+ * @returns {object} object with column and row settings if provided
+ */
+export function readDomSettings(element) {
+    const result = {};
+
+    for (let attr of ATTIRBUTES) {
+        let value = element.getAttribute(ATTRIBUTES_PREFIX + attr);
+
+        if (!value) {
+            value = element.getAttribute('data-' + ATTRIBUTES_PREFIX + attr);
+        }
+
+        if (value) {
+            result[attr] = value;
+        }
+    }
+
+    return result;
+}
+
+/**
  * Traverse provided table and create results map
  * @param {HTMLElement} table - table results container
- * @param {object} [settings] - settings for parser
- * @param {string} [settings.rowTags]
- * @param {string} [settings.cellTags]
- * @param {object} [settings.results]
- * @param {object} [settings.column]
- * @param {object} [settings.row]
+ * @param {object} settings - mandatory settings for parser
+ * @param {string} settings.rowTags
+ * @param {string} settings.cellTags
+ * @param {object} settings.results
+ * @param {object} settings.column
+ * @param {object} settings.row
  * @returns {object}
  */
 export function mapRowsToPlayers(table, settings) {
-    const config = defaults(settings, DEFAULT_SETTINGS);
-    const rows = asArray(table.querySelectorAll(config.rowTags));
-    const resultsMap = mapResultsSettings(config.results);
+    const rows = asArray(table.querySelectorAll(settings.rowTags));
+    const resultsMap = mapResultsSettings(settings.results);
     const results = {};
 
     let lastTournamentPlacement;
     let lastGridPlacement;
 
     rows.forEach((row, index) => {
-        if (index < config.row) {
+        if (index < settings.row) {
             return;
         }
 
-        const cells = asArray(row.querySelectorAll(config.cellTags));
+        const cells = asArray(row.querySelectorAll(settings.cellTags));
 
         // assign default place
         row.goGridPlacement = -1;
 
         // no cells? unlikely to be a result row
-        if (!cells.length || !cells[config.column]) {
+        if (!cells.length || !cells[settings.column]) {
             return;
         }
 
-        let tournamentPlacement = parseInt(cells[config.column].textContent, 10);
+        let tournamentPlacement = parseInt(cells[settings.column].textContent, 10);
         let gridPlacement;
 
         // if no player has been mapped
@@ -197,7 +235,7 @@ export default class GoResultsHighlighter {
      */
     constructor(element, settings) {
         this.element = element;
-        this.settings = defaults(settings, DEFAULT_SETTINGS);
+        this.settings = defaults(DEFAULT_SETTINGS, readDomSettings(element), settings);
         this.map = mapRowsToPlayers(this.element, this.settings);
 
         this.bindEvents();
