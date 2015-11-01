@@ -14,6 +14,8 @@ const DEFAULT_SETTINGS = {
         jigo: '([0-9]+)=',
         unresolved: '([0-9]+)\\?'
     },
+    row: 0,
+    column: 0,
     rowTags: 'tr',
     cellTags: 'td,th'
 };
@@ -69,6 +71,8 @@ function mapResultsSettings(results) {
  * @param {string} settings.rowTags
  * @param {string} settings.cellTags
  * @param {object} settings.results
+ * @param {object} settings.column
+ * @param {object} settings.row
  * @returns {object}
  */
 export function mapRowsToPlayers(table, settings) {
@@ -78,18 +82,22 @@ export function mapRowsToPlayers(table, settings) {
 
     let lastPlace;
 
-    rows.forEach((row) => {
+    rows.forEach((row, index) => {
+        if (index < settings.row) {
+            return;
+        }
+
         const cells = asArray(row.querySelectorAll(settings.cellTags));
 
         // assign default place
         row.goResultPlace = -1;
 
         // no cells? unlikely to be a result row
-        if (!cells.length) {
+        if (!cells.length || !cells[settings.column]) {
             return;
         }
 
-        let place = parseInt(cells[0].textContent, 10);
+        let place = parseInt(cells[settings.column].textContent, 10);
 
         // most probably not a result row
         if (isNaN(place) && !lastPlace) {
@@ -146,6 +154,9 @@ export default class GoResultsHighlighter {
      *
      * @param {HTMLElement} element - main element containing table with results
      * @param {object} [settings] - plugin settings
+     * @param {number} [settings.column=0] - index of the column
+     * where the script should expect to find player's placement
+     * @param {number} [settings.row=0] - starting row with players
      * @param {string} [settings.prefixCls='go-results-'] - css class prefix
      * @param {string} [settings.gameCls='game'] - game cell class name
      * @param {string} [settings.currentCls='current'] - selected row class name

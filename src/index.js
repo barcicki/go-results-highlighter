@@ -6,8 +6,6 @@ function initialize() {
     for (let tableEl of resultElements) {
         tableEl.goResultsHighlighter = new GoResultsHighlighter(tableEl);
     }
-
-    console.log('Initialized');
 }
 
 if (document.readyState === 'complete') {
