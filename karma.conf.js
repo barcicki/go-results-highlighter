@@ -1,22 +1,24 @@
+'use strict';
+
 module.exports = function (config) {
     config.set({
         basePath:   '',
-        frameworks: ['browserify', 'jasmine'],
+        frameworks: ['jasmine', 'browserify'],
 
         files: [
-            'src/**/*.js',
-            'tests/**/*.js'
+            { pattern: 'src/**/*.js', included: false },
+            { pattern: 'tests/**/*.js', included: true }
         ],
-
         exclude: [],
+
         preprocessors: {
-            'src/**/*.js': ['browserify'],
+            'src/**/*.js': ['browserify', 'coverage'],
             'tests/**/*.js': ['browserify']
         },
 
         browserify: {
             debug: true,
-            transform: ['babelify']
+            transform: ['babelify', 'browserify-istanbul']
         },
 
         reporters: ['progress', 'coverage'],
