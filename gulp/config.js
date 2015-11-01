@@ -6,6 +6,12 @@ module.exports = {
     name: 'GoResultsHighlighter',
     paths: {
         examples: './examples',
+        tests: {
+            all: './tests/**/*.*'
+        },
+        tasks: {
+            all: './gulp/**/*.*'
+        },
         css: {
             entry: './src/plugin.less',
             all: './src/**/*.less',

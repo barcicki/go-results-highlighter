@@ -1,0 +1,23 @@
+{
+  "ecmaFeatures": {
+    "modules": true,
+    "module": true
+  },
+  "env": {
+    "browser": true,
+    "jasmine": true,
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "quotes": [2, "single"],
+    "no-underscore-dangle": 1,
+    "no-unused-vars": 2,
+    "no-undef": 2,
+    "no-mixed-spaces-and-tabs": [2, "smart-tabs"],
+    "no-irregular-whitespace": 2,
+    "no-trailing-spaces": [2, { "skipBlankLines": true }],
+    "comma-spacing": [2, {"before": false, "after": true}],
+    "array-bracket-spacing": [2, "never"]
+  }
+}

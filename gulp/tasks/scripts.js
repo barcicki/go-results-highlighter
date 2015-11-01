@@ -10,7 +10,7 @@ const uglify = require('gulp-uglify');
 gulp.task('build-js-dev', () => {
     return gulp.src(config.paths.js.entry)
         .pipe(browserify({
-            transform: [ 'babelify' ],
+            transform: ['babelify'],
             debug: true,
             standalone: config.name
         }))
