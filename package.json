@@ -1,6 +1,6 @@
 {
   "name": "go-results-highlighter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Improves readability of Go results by highlighting opponents of selected player",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,7 @@
   "author": "Artur Barcicki <barcicki@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-polyfill": "^6.0.14",
     "babelify": "^6.4.0",
     "browser-sync": "^2.9.11",
     "browserify-istanbul": "^0.2.1",
