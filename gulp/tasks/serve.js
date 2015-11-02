@@ -17,5 +17,5 @@ gulp.task('serve', ['build'], () => {
 
     gulp.watch(config.paths.css.all, ['build-css'], browserSync.reload);
     gulp.watch(config.paths.js.all, ['build-js', browserSync.reload]);
-    gulp.watch(config.paths.examples + '/**/*.html', browserSync.reload);
+    gulp.watch(config.paths.examples + '/**/*.*', browserSync.reload);
 });
