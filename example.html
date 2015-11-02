@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>go-results-highlighter example 1</title>
+
+    <link href="go-results-highlighter.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="go-results-highlighter.js"></script>
+</head>
+<body>
+
+<h2>Typical go result tables</h2>
+<table class="tournament-results" go-results>
+    <tbody>
+    <tr>
+        <th>Pl.</th>
+        <th>Name</th>
+        <th>Str</th>
+        <th>Cl.</th>
+        <th>MMS</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>Pt</th>
+        <th>SOS</th>
+        <th>SODOS</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Player 1</td>
+        <td>7k</td>
+        <td>City</td>
+        <td>4</td>
+        <td>4+</td>
+        <td>3+</td>
+        <td>2+</td>
+        <td>5+</td>
+        <td>4</td>
+        <td>7</td>
+        <td>7</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Player 2</td>
+        <td>10k</td>
+        <td>City</td>
+        <td>2</td>
+        <td>6+</td>
+        <td>4+</td>
+        <td>1-</td>
+        <td>3-</td>
+        <td>2</td>
+        <td>9</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Player 3</td>
+        <td>8k</td>
+        <td>City</td>
+        <td>2</td>
+        <td>5+</td>
+        <td>1-</td>
+        <td>6?</td>
+        <td>2+</td>
+        <td>2</td>
+        <td>8</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Player 4</td>
+        <td>8k</td>
+        <td>City</td>
+        <td>2</td>
+        <td>1-</td>
+        <td>2-</td>
+        <td>5+</td>
+        <td>6+</td>
+        <td>2</td>
+        <td>8</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>Player 5</td>
+        <td>8k</td>
+        <td>City</td>
+        <td>1</td>
+        <td>3-</td>
+        <td>6+</td>
+        <td>4-</td>
+        <td>1-</td>
+        <td>1</td>
+        <td>9</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Player 6</td>
+        <td>10k</td>
+        <td>City</td>
+        <td>1</td>
+        <td>2-</td>
+        <td>5-</td>
+        <td>3?</td>
+        <td>4-</td>
+        <td>1</td>
+        <td>7</td>
+        <td>2</td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>Typical go result table - ex aequo placement case</h2>
+<table class="tournament-results" data-go-results>
+    <tbody>
+    <tr>
+        <th>Pl.</th>
+        <th>Name</th>
+        <th>Str</th>
+        <th>Cl.</th>
+        <th>MMS</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>Pt</th>
+        <th>SOS</th>
+        <th>SODOS</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Player 1</td>
+        <td>7k</td>
+        <td>City</td>
+        <td>4</td>
+        <td>4+</td>
+        <td>3+</td>
+        <td>2+</td>
+        <td>5+</td>
+        <td>4</td>
+        <td>7</td>
+        <td>7</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Player 2</td>
+        <td>10k</td>
+        <td>City</td>
+        <td>2</td>
+        <td>6+</td>
+        <td>4+</td>
+        <td>1-</td>
+        <td>3-</td>
+        <td>2</td>
+        <td>9</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Player 3</td>
+        <td>8k</td>
+        <td>City</td>
+        <td>2</td>
+        <td>5+</td>
+        <td>1-</td>
+        <td>6-</td>
+        <td>2+</td>
+        <td>2</td>
+        <td>8</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Player 4</td>
+        <td>8k</td>
+        <td>City</td>
+        <td>2</td>
+        <td>1-</td>
+        <td>2-</td>
+        <td>5+</td>
+        <td>6+</td>
+        <td>2</td>
+        <td>8</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>Player 5</td>
+        <td>8k</td>
+        <td>City</td>
+        <td>1</td>
+        <td>3-</td>
+        <td>6+</td>
+        <td>4-</td>
+        <td>1-</td>
+        <td>1</td>
+        <td>9</td>
+        <td>1</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Player 6</td>
+        <td>10k</td>
+        <td>City</td>
+        <td>1</td>
+        <td>2-</td>
+        <td>5-</td>
+        <td>3+</td>
+        <td>4-</td>
+        <td>1</td>
+        <td>7</td>
+        <td>2</td>
+    </tr>
+    </tbody>
+</table>
+
+<h2>OpenGotcha results</h2>
+<table class="simple results" data-go-results>
+
+    <tbody>
+    <tr>
+        <th class="left">Pl</th>
+        <th class="middle"> Nazwisko</th>
+        <th class="middle"> Pkt.</th>
+        <th class="middle">R 1</th>
+        <th class="middle">R 2</th>
+        <th class="middle">R 3</th>
+        <th class="middle">NBW</th>
+
+        <th class="middle">SOS</th>
+        <th class="right">SOSOS</th>
+    </tr>
+    <tr class="gr8 gr5 gr4" id="gr1">
+        <td class="impair"><strong>1</strong></td>
+        <td class="impair"><strong>Player 1</strong></td>
+        <td class="impair">2½</td>
+        <td class="impair"><strong>8+/w0</strong></td>
+        <td class="impair"><strong>5+/b0</strong></td>
+        <td class="impair">4=/w0</td>
+
+        <td class="impair">2½</td>
+        <td class="impair">4</td>
+        <td class="impair">16</td>
+    </tr>
+    <tr id="gr2" class="gr4 gr3 gr10">
+        <td class="pair"><strong>2</strong></td>
+        <td class="pair"><strong>Player 2</strong></td>
+        <td class="pair">2</td>
+        <td class="pair">4=/b0</td>
+        <td class="pair">3=/w0</td>
+
+        <td class="pair"><strong>10+/b0</strong></td>
+        <td class="pair">2</td>
+        <td class="pair">4</td>
+        <td class="pair">15</td>
+    </tr>
+    <tr id="gr3" class="gr10 gr2 gr6">
+        <td class="impair"><strong>3</strong></td>
+        <td class="impair"><strong>Player 3</strong></td>
+        <td class="impair">2</td>
+        <td class="impair"><strong>10+/w0</strong></td>
+
+        <td class="impair">2=/b0</td>
+        <td class="impair">6=/b0</td>
+        <td class="impair">2</td>
+        <td class="impair">4</td>
+        <td class="impair">14</td>
+    </tr>
+    <tr id="gr4" class="gr2 gr1 gr8">
+        <td class="pair">4</td>
+        <td class="pair">Player 4</td>
+        <td class="pair">1½</td>
+
+        <td class="pair">2=/w0</td>
+        <td class="pair">8=/b0</td>
+        <td class="pair">1=/b0</td>
+        <td class="pair">1½</td>
+        <td class="pair">5½</td>
+        <td class="pair">13</td>
+    </tr>
+    <tr id="gr5" class="gr1 gr7 gr6">
+        <td class="impair">5</td>
+        <td class="impair">Player 5</td>
+
+        <td class="impair">1½</td>
+        <td class="impair"><strong>6+/w0</strong></td>
+        <td class="impair">1-/w0</td>
+        <td class="impair">7=/b0</td>
+        <td class="impair">1½</td>
+        <td class="impair">5½</td>
+        <td class="impair">11½</td>
+    </tr>
+    <tr id="gr6" class="gr5 gr9 gr3">
+        <td class="pair">6</td>
+
+        <td class="pair">Player 6</td>
+        <td class="pair">1½</td>
+        <td class="pair">5-/b0</td>
+        <td class="pair"><strong>9+/b0</strong></td>
+        <td class="pair">3=/w0</td>
+        <td class="pair">1½</td>
+        <td class="pair">4½</td>
+        <td class="pair">13½</td>
+    </tr>
+
+    <tr id="gr7" class="gr9 gr10 gr5">
+        <td class="impair">7</td>
+        <td class="impair">Player 7</td>
+        <td class="impair">1½</td>
+        <td class="impair">9=/w0</td>
+        <td class="impair">10=/b0</td>
+        <td class="impair">5=/w0</td>
+        <td class="impair">1½</td>
+        <td class="impair">3</td>
+
+        <td class="impair">15</td>
+    </tr>
+    <tr id="gr8" class="gr10 gr1 gr9">
+        <td class="pair">8</td>
+        <td class="pair">Player 8</td>
+        <td class="pair">1</td>
+        <td class="pair">1-/b0</td>
+        <td class="pair">4=/w0</td>
+        <td class="pair">9=/b0</td>
+        <td class="pair">1</td>
+
+        <td class="pair">5</td>
+        <td class="pair">13½</td>
+    </tr>
+    <tr id="gr9" class="gr7 gr6 gr8">
+        <td class="impair">9</td>
+        <td class="impair">Player 9</td>
+        <td class="impair">1</td>
+        <td class="impair">7=/b0</td>
+        <td class="impair">6-/w0</td>
+        <td class="impair">8=/w0</td>
+
+        <td class="impair">1</td>
+        <td class="impair">4</td>
+        <td class="impair">12½</td>
+    </tr>
+    <tr id="gr10" class="gr3 gr7 gr2">
+        <td class="pair">10</td>
+        <td class="pair">Player 10</td>
+        <td class="pair">0½</td>
+        <td class="pair">3-/b0</td>
+        <td class="pair">7=/w0</td>
+
+        <td class="pair">2-/w0</td>
+        <td class="pair">0½</td>
+        <td class="pair">5½</td>
+        <td class="pair">11</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
