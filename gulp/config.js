@@ -26,7 +26,8 @@ module.exports = {
     names: {
         css: {
             entry: 'plugin.less',
-            dest: `${pjson.name}.css`
+            dest: `${pjson.name}.css`,
+            prod: `${pjson.name}.min.css`
         },
         js: {
             entry: 'index.js',
