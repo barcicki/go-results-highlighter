@@ -8,10 +8,7 @@ gulp.task('serve', ['build'], () => {
 
     browserSync.init({
         server: {
-            baseDir: config.paths.examples,
-            routes: {
-                '/dist': config.paths.js.dest
-            }
+            baseDir: config.paths.dest
         }
     });
 
