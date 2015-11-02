@@ -9,6 +9,11 @@ body {
     font-size: 12pt;
 }
 
+.content {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
 header,
 article,
 footer {
@@ -20,10 +25,12 @@ header {
 }
 
 header h1 {
+    padding: 0 5px;
     color: #282C1B;
 }
 
 header h3 {
+    padding: 0 5px;
     color: #4D5439;
 }
 
@@ -45,4 +52,20 @@ article table td,
 article table th {
     padding: 3px 5px;
     text-align: left;
+}
+
+aside {
+    background: #7D9CAD;
+    padding: 0 3%;
+}
+
+aside a {
+    padding: 10px;
+    color: #ffffff;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+aside a:hover {
+    background: #1D475D;
 }
