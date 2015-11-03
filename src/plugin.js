@@ -17,7 +17,9 @@ export const DEFAULT_SETTINGS = {
     row: 0,
     column: 0,
     rowTags: 'tr',
-    cellTags: 'td,th'
+    cellTags: 'td,th',
+    hovering: true,
+    clicking: true
 };
 
 /**
@@ -84,7 +86,7 @@ function mapResultsSettings(results) {
             map.push({
                 cls,
                 regexp: new RegExp(results[cls])
-            })
+            });
         }
     }
 
@@ -294,10 +296,49 @@ export default class GoResultsHighlighter {
     }
 
     /**
+     * Shows details for selected player
+     * @param {number} [playerPlace]
+     */
+    showDetails(playerPlace) {
+        console.log('Showing', playerPlace);
+    }
+
+    /**
      * Binds mouseover and mouseout events listeners to the element.
      */
     bindEvents() {
+        this.element.addEventListener('click', (event) => {
+            if (this.settings.clicking === false) {
+                return;
+            }
+
+            let target = event.target;
+            let playerPlacement = null;
+
+            // fetch information about hovered element
+            while (target && target !== document) {
+
+                // player row? no further search is necessary
+                if (target.goGridPlacement) {
+                    playerPlacement = target.goGridPlacement;
+                    break;
+                }
+
+                target = target.parentNode;
+            }
+
+            if (!playerPlacement) {
+                return;
+            }
+
+            this.showDetails(playerPlacement);
+        });
+
         this.element.addEventListener('mouseover', (event) => {
+            if (this.settings.hovering === false) {
+                return;
+            }
+
             let target = event.target;
             let opponent = null;
             let player = null;
@@ -327,6 +368,10 @@ export default class GoResultsHighlighter {
         }, false);
 
         this.element.addEventListener('mouseout', (event) => {
+            if (this.settings.hovering === false) {
+                return;
+            }
+
             let target = event.relatedTarget;
 
             while (target && target !== document && target !== this.element) {
@@ -336,7 +381,7 @@ export default class GoResultsHighlighter {
             // if new hovered element is outside the table then remove all
             // selections
             if (target !== this.element) {
-                this.selectPlayer(-1)
+                this.selectPlayer(-1);
             }
         }, false);
     }
