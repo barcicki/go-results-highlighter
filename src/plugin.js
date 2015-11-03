@@ -460,7 +460,7 @@ export default class GoResultsHighlighter {
         }, false);
 
         this.element.addEventListener('mouseout', (event) => {
-            if (this.settings.hovering === false) {
+            if (this.settings.hovering === false || this.showingDetails) {
                 return;
             }
 
