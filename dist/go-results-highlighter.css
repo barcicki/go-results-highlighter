@@ -1,18 +1,3 @@
-.go-results-table {
-  position: relative;
-}
-.go-results-overlay {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.8);
-}
-.go-results-overlay > :first-child {
-  position: absolute;
-  width: 100%;
-}
 .go-results-current td {
   background-color: #d2d2d2;
 }
@@ -44,4 +29,7 @@
 }
 .go-results-unresolved .go-results-game {
   background-color: #7D9CAD;
+}
+.go-results-disabled {
+  color: #dddddd;
 }

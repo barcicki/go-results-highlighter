@@ -6,6 +6,7 @@
  */
 export const DEFAULT_SETTINGS = {
     prefixCls: 'go-results-',
+    disabledCls: 'disabled',
     tableCls: 'table',
     gameCls: 'game',
     currentCls: 'current',
@@ -259,10 +260,10 @@ export default class GoResultsHighlighter {
         this.settings = defaults(DEFAULT_SETTINGS, readDomSettings(element), settings);
 
         this.createPlayersMap();
-        this.initOverlay();
         this.bindEvents();
 
         this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
+        this.showingDetails = false;
     }
 
     /**
@@ -277,25 +278,6 @@ export default class GoResultsHighlighter {
                 this.players.push(this.map[placement]);
             }
         }
-    }
-
-    initOverlay() {
-        this.overlay = document.createElement('div');
-        this.overlay.classList.add(this.settings.prefixCls + this.settings.overlayCls);
-        this.overlay.style.display = 'none';
-        this.overlay.appendChild(this.element.cloneNode());
-        this.element.appendChild(this.overlay);
-        this.isOverlayVisible = false;
-    }
-
-    showOverlay() {
-        this.overlay.style.display = 'block';
-        this.isOverlayVisible = true;
-    }
-
-    hideOverlay() {
-        this.overlay.style.display = 'none';
-        this.isOverlayVisible = false;
     }
 
     /**
@@ -320,6 +302,11 @@ export default class GoResultsHighlighter {
         // remove any visible game markings
         for (let gameCell of markedGames) {
             gameCell.classList.remove(gameCls);
+        }
+
+        // if showing details then allow only highlighting current player
+        if (this.showingDetails && player && !player.row.classList.contains(currentCls)) {
+            return;
         }
 
         // unmark player if necessary
@@ -352,6 +339,20 @@ export default class GoResultsHighlighter {
     }
 
     /**
+     * Restores proper order of results, removes any disabling flags
+     */
+    restoreFullResults() {
+        const disabledCls = this.settings.prefixCls + this.settings.disabledCls;
+
+        for (let player of this.players) {
+            player.row.parentNode.appendChild(player.row);
+            player.row.classList.remove(disabledCls);
+        }
+
+        this.showingDetails = false;
+    }
+
+    /**
      * Shows details for selected player
      * @param {number} [playerPlace]
      */
@@ -359,49 +360,32 @@ export default class GoResultsHighlighter {
         const player = this.map[playerPlace];
 
         if (!player) {
-            this.hideOverlay();
             return;
         }
 
-        const table = this.overlay.firstChild;
-        const copiedPlayerRow = player.row.cloneNode(true);
-        copiedPlayerRow.classList.add(this.settings.prefixCls + this.settings.currentCls);
+        const disabledCls = this.settings.prefixCls + this.settings.disabledCls;
+        const parent = player.row.parentNode;
+        let after = player.row.nextSibling;
 
-        let copyInserted = false;
+        for (let otherPlayer of this.players) {
+            otherPlayer.row.classList.add(disabledCls);
+        }
 
-        table.innerHTML = '';
         for (let opponentPlace of player.opponents) {
-            if (!copyInserted && opponentPlace > playerPlace) {
-                table.appendChild(copiedPlayerRow);
-                copyInserted = true;
+            let opponent = this.map[opponentPlace];
+
+            if (opponentPlace < playerPlace) {
+                parent.insertBefore(opponent.row, player.row);
+            } else {
+                parent.insertBefore(opponent.row, after);
+                after = opponent.row.nextSibling;
             }
 
-            let clone = this.map[opponentPlace].row.cloneNode(true);
-
-            clone.classList.add(this.settings.prefixCls + player.games[opponentPlace].cls);
-            table.appendChild(clone);
+            opponent.row.classList.remove(disabledCls);
         }
 
-        if (!copyInserted) {
-            table.appendChild(copiedPlayerRow);
-        }
-
-        const gameCls = this.settings.prefixCls + this.settings.gameCls;
-        const markedGames = asArray(table.querySelectorAll('.' + gameCls));
-        const toBeMarked = asArray(table.querySelectorAll(`[${OPPONENT_GRID_PLACEMENT_ATTR}="${playerPlace}"]`));
-
-        // remove any visible game markings
-        for (let gameCell of markedGames) {
-            gameCell.classList.remove(gameCls);
-        }
-
-        // mark games with current player
-        for (let gameCell of toBeMarked) {
-            gameCell.classList.add(gameCls);
-        }
-
-        this.showOverlay();
-        table.style.top = (player.row.offsetTop - copiedPlayerRow.offsetTop) + 'px';
+        player.row.classList.remove(disabledCls);
+        this.showingDetails = true;
     }
 
     /**
@@ -411,8 +395,11 @@ export default class GoResultsHighlighter {
         this.element.addEventListener('click', (event) => {
             if (this.settings.clicking === false) {
                 return;
-            } else if (this.isOverlayVisible) {
-                this.hideOverlay();
+            }
+
+            if (this.showingDetails) {
+                this.restoreFullResults();
+                return;
             }
 
             let target = event.target;
@@ -435,16 +422,12 @@ export default class GoResultsHighlighter {
                 return;
             }
 
+            this.selectPlayer(playerPlacement);
             this.showDetails(playerPlacement);
         });
 
-        this.overlay.addEventListener('click', (event) => {
-            this.hideOverlay();
-            event.stopPropagation();
-        });
-
         this.element.addEventListener('mouseover', (event) => {
-            if (this.settings.hovering === false || this.isOverlayVisible) {
+            if (this.settings.hovering === false) {
                 return;
             }
 
