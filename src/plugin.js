@@ -304,11 +304,6 @@ export default class GoResultsHighlighter {
             gameCell.classList.remove(gameCls);
         }
 
-        // if showing details then allow only highlighting current player
-        if (this.showingDetails && player && !player.row.classList.contains(currentCls)) {
-            return;
-        }
-
         // unmark player if necessary
         if (markedPlayer && markedPlayer !== player) {
             mark.call(this, markedPlayer, false);
@@ -319,8 +314,14 @@ export default class GoResultsHighlighter {
             mark.call(this, player, true);
         }
 
+        // mark all the games
+        if (this.showingDetails) {
+            for (let opponent of player.opponents) {
+                this.map[opponent].games[playerPlace].cell.classList.add(gameCls);
+            }
+
         // mark the game between the player and the opponent
-        if (player && opponentPlace) {
+        } else if (player && opponentPlace) {
             player.games[opponentPlace].cell.classList.add(gameCls);
             this.map[opponentPlace].games[playerPlace].cell.classList.add(gameCls);
         }
@@ -342,8 +343,6 @@ export default class GoResultsHighlighter {
      * Restores proper order of results
      */
     restoreFullResults() {
-        this.element.classList.remove(this.settings.prefixCls + this.settings.showingDetailsCls);
-
         this.players
             .filter((player) => player.row.properNextSibling)
             .reverse()
@@ -352,6 +351,7 @@ export default class GoResultsHighlighter {
                 player.row.properNextSibling = null;
             });
 
+        this.element.classList.remove(this.settings.prefixCls + this.settings.showingDetailsCls);
         this.showingDetails = false;
     }
 
@@ -384,6 +384,7 @@ export default class GoResultsHighlighter {
 
         this.element.classList.add(this.settings.prefixCls + this.settings.showingDetailsCls);
         this.showingDetails = true;
+        this.selectPlayer(playerPlace);
     }
 
     /**
@@ -425,7 +426,7 @@ export default class GoResultsHighlighter {
         });
 
         this.element.addEventListener('mouseover', (event) => {
-            if (this.settings.hovering === false) {
+            if (this.settings.hovering === false || this.showingDetails) {
                 return;
             }
 
