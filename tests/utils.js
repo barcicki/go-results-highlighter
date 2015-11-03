@@ -31,5 +31,5 @@ describe('utilities', () => {
                 test3: 7
             });
         });
-    })
+    });
 });
