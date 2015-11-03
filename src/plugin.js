@@ -6,7 +6,7 @@
  */
 export const DEFAULT_SETTINGS = {
     prefixCls: 'go-results-',
-    disabledCls: 'disabled',
+    showingDetailsCls:'showing-details',
     tableCls: 'table',
     gameCls: 'game',
     currentCls: 'current',
@@ -339,15 +339,18 @@ export default class GoResultsHighlighter {
     }
 
     /**
-     * Restores proper order of results, removes any disabling flags
+     * Restores proper order of results
      */
     restoreFullResults() {
-        const disabledCls = this.settings.prefixCls + this.settings.disabledCls;
+        this.element.classList.remove(this.settings.prefixCls + this.settings.showingDetailsCls);
 
-        for (let player of this.players) {
-            player.row.parentNode.appendChild(player.row);
-            player.row.classList.remove(disabledCls);
-        }
+        this.players
+            .filter((player) => player.row.properNextSibling)
+            .reverse()
+            .forEach((player) => {
+                player.row.parentNode.insertBefore(player.row, player.row.properNextSibling);
+                player.row.properNextSibling = null;
+            });
 
         this.showingDetails = false;
     }
@@ -363,16 +366,13 @@ export default class GoResultsHighlighter {
             return;
         }
 
-        const disabledCls = this.settings.prefixCls + this.settings.disabledCls;
         const parent = player.row.parentNode;
         let after = player.row.nextSibling;
 
-        for (let otherPlayer of this.players) {
-            otherPlayer.row.classList.add(disabledCls);
-        }
-
         for (let opponentPlace of player.opponents) {
             let opponent = this.map[opponentPlace];
+
+            opponent.row.properNextSibling = opponent.row.nextSibling;
 
             if (opponentPlace < playerPlace) {
                 parent.insertBefore(opponent.row, player.row);
@@ -380,11 +380,9 @@ export default class GoResultsHighlighter {
                 parent.insertBefore(opponent.row, after);
                 after = opponent.row.nextSibling;
             }
-
-            opponent.row.classList.remove(disabledCls);
         }
 
-        player.row.classList.remove(disabledCls);
+        this.element.classList.add(this.settings.prefixCls + this.settings.showingDetailsCls);
         this.showingDetails = true;
     }
 

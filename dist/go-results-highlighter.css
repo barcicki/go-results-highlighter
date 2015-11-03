@@ -1,11 +1,16 @@
+.go-results-showing-details td {
+  color: #dddddd;
+}
 .go-results-current td {
   background-color: #d2d2d2;
+  color: inherit;
 }
 .go-results-current .go-results-game {
   background-color: #a7a7a7;
 }
 .go-results-won td {
   background-color: #799B29;
+  color: inherit;
 }
 .go-results-won .go-results-game {
   background-color: #5A6A2C;
@@ -13,6 +18,7 @@
 }
 .go-results-lost td {
   background-color: #D97962;
+  color: inherit;
 }
 .go-results-lost .go-results-game {
   background-color: #A5422B;
@@ -20,16 +26,15 @@
 }
 .go-results-jigo td {
   background-color: #D7C3D1;
+  color: inherit;
 }
 .go-results-jigo .go-results-game {
   background-color: #9E7593;
 }
 .go-results-unresolved td {
   background-color: #CBDCE5;
+  color: inherit;
 }
 .go-results-unresolved .go-results-game {
   background-color: #7D9CAD;
-}
-.go-results-disabled {
-  color: #dddddd;
 }
