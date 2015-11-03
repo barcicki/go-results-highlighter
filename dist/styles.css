@@ -54,6 +54,10 @@ article table th {
     text-align: left;
 }
 
+article table td {
+    cursor: pointer;
+}
+
 aside {
     background: #7D9CAD;
     padding: 0 3%;

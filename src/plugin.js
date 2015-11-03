@@ -6,8 +6,10 @@
  */
 export const DEFAULT_SETTINGS = {
     prefixCls: 'go-results-',
+    tableCls: 'table',
     gameCls: 'game',
     currentCls: 'current',
+    overlayCls: 'overlay',
     results: {
         won: '([0-9]+)\\+',
         lost: '([0-9]+)\\-',
@@ -21,6 +23,9 @@ export const DEFAULT_SETTINGS = {
     hovering: true,
     clicking: true
 };
+
+const GRID_PLACEMENT_ATTR = 'data-go-place';
+const OPPONENT_GRID_PLACEMENT_ATTR = 'data-go-opponent-place';
 
 /**
  * Prefix for DOM settings
@@ -116,6 +121,10 @@ export function readDomSettings(element) {
     return result;
 }
 
+function setGridPlacement(row, placement) {
+    row.setAttribute(GRID_PLACEMENT_ATTR, placement);
+}
+
 /**
  * Traverse provided table and create results map
  * @param {HTMLElement} table - table results container
@@ -143,22 +152,21 @@ export function mapRowsToPlayers(table, settings) {
         const cells = asArray(row.querySelectorAll(settings.cellTags));
 
         // assign default place
-        row.goGridPlacement = -1;
+        let gridPlacement = -1;
 
         // no cells? unlikely to be a result row
         if (!cells.length || !cells[settings.column]) {
-            return;
+            return setGridPlacement(row, gridPlacement);
         }
 
         let tournamentPlacement = parseInt(cells[settings.column].textContent, 10);
-        let gridPlacement;
 
         // if no player has been mapped
         if (!lastGridPlacement) {
 
             // most probably not a result row
             if (isNaN(tournamentPlacement)) {
-                return;
+                return setGridPlacement(row, gridPlacement);
             }
 
             // assign tournament if defined (possibly showing an extract from greater table)
@@ -191,9 +199,10 @@ export function mapRowsToPlayers(table, settings) {
                     continue;
                 }
 
-                let opponentGridPlacement = match[1];
+                let opponentGridPlacement = Number(match[1]);
 
-                cell.goOpponentGridPosition = opponentGridPlacement;
+                cell.setAttribute(OPPONENT_GRID_PLACEMENT_ATTR, opponentGridPlacement);
+
                 player.games[opponentGridPlacement] = {
                     cell,
                     cls: result.cls
@@ -202,10 +211,14 @@ export function mapRowsToPlayers(table, settings) {
             }
         });
 
-        row.goGridPlacement = gridPlacement;
+        player.opponents.sort((a, b) => a > b ? 1 : -1);
+
+        results[gridPlacement] = player;
+
         lastTournamentPlacement = tournamentPlacement;
         lastGridPlacement = gridPlacement;
-        results[gridPlacement] = player;
+
+        return setGridPlacement(row, gridPlacement);
     });
 
     return results;
@@ -237,10 +250,52 @@ export default class GoResultsHighlighter {
      */
     constructor(element, settings) {
         this.element = element;
-        this.settings = defaults(DEFAULT_SETTINGS, readDomSettings(element), settings);
-        this.map = mapRowsToPlayers(this.element, this.settings);
 
+        if (!this.element.classList) {
+            // not supported
+            return;
+        }
+
+        this.settings = defaults(DEFAULT_SETTINGS, readDomSettings(element), settings);
+
+        this.createPlayersMap();
+        this.initOverlay();
         this.bindEvents();
+
+        this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
+    }
+
+    /**
+     * Creates players map
+     */
+    createPlayersMap() {
+        this.map = mapRowsToPlayers(this.element, this.settings);
+        this.players = [];
+
+        for (let placement in this.map) {
+            if (this.map.hasOwnProperty(placement)) {
+                this.players.push(this.map[placement]);
+            }
+        }
+    }
+
+    initOverlay() {
+        this.overlay = document.createElement('div');
+        this.overlay.classList.add(this.settings.prefixCls + this.settings.overlayCls);
+        this.overlay.style.display = 'none';
+        this.overlay.appendChild(this.element.cloneNode());
+        this.element.appendChild(this.overlay);
+        this.isOverlayVisible = false;
+    }
+
+    showOverlay() {
+        this.overlay.style.display = 'block';
+        this.isOverlayVisible = true;
+    }
+
+    hideOverlay() {
+        this.overlay.style.display = 'none';
+        this.isOverlayVisible = false;
     }
 
     /**
@@ -259,7 +314,8 @@ export default class GoResultsHighlighter {
 
         const markedGames = asArray(this.element.querySelectorAll('.' + gameCls));
         const markedRow = this.element.querySelector('.' + currentCls);
-        const markedPlayer = markedRow && markedRow.goGridPlacement ? this.map[markedRow.goGridPlacement] : null;
+        const markedRowPlacement = markedRow ? markedRow.getAttribute(GRID_PLACEMENT_ATTR) : null;
+        const markedPlayer = markedRowPlacement ? this.map[markedRowPlacement] : null;
 
         // remove any visible game markings
         for (let gameCell of markedGames) {
@@ -300,7 +356,52 @@ export default class GoResultsHighlighter {
      * @param {number} [playerPlace]
      */
     showDetails(playerPlace) {
-        console.log('Showing', playerPlace);
+        const player = this.map[playerPlace];
+
+        if (!player) {
+            this.hideOverlay();
+            return;
+        }
+
+        const table = this.overlay.firstChild;
+        const copiedPlayerRow = player.row.cloneNode(true);
+        copiedPlayerRow.classList.add(this.settings.prefixCls + this.settings.currentCls);
+
+        let copyInserted = false;
+
+        table.innerHTML = '';
+        for (let opponentPlace of player.opponents) {
+            if (!copyInserted && opponentPlace > playerPlace) {
+                table.appendChild(copiedPlayerRow);
+                copyInserted = true;
+            }
+
+            let clone = this.map[opponentPlace].row.cloneNode(true);
+
+            clone.classList.add(this.settings.prefixCls + player.games[opponentPlace].cls);
+            table.appendChild(clone);
+        }
+
+        if (!copyInserted) {
+            table.appendChild(copiedPlayerRow);
+        }
+
+        const gameCls = this.settings.prefixCls + this.settings.gameCls;
+        const markedGames = asArray(table.querySelectorAll('.' + gameCls));
+        const toBeMarked = asArray(table.querySelectorAll(`[${OPPONENT_GRID_PLACEMENT_ATTR}="${playerPlace}"]`));
+
+        // remove any visible game markings
+        for (let gameCell of markedGames) {
+            gameCell.classList.remove(gameCls);
+        }
+
+        // mark games with current player
+        for (let gameCell of toBeMarked) {
+            gameCell.classList.add(gameCls);
+        }
+
+        this.showOverlay();
+        table.style.top = (player.row.offsetTop - copiedPlayerRow.offsetTop) + 'px';
     }
 
     /**
@@ -310,6 +411,8 @@ export default class GoResultsHighlighter {
         this.element.addEventListener('click', (event) => {
             if (this.settings.clicking === false) {
                 return;
+            } else if (this.isOverlayVisible) {
+                this.hideOverlay();
             }
 
             let target = event.target;
@@ -317,10 +420,11 @@ export default class GoResultsHighlighter {
 
             // fetch information about hovered element
             while (target && target !== document) {
+                let placement = target.getAttribute(GRID_PLACEMENT_ATTR);
 
                 // player row? no further search is necessary
-                if (target.goGridPlacement) {
-                    playerPlacement = target.goGridPlacement;
+                if (placement) {
+                    playerPlacement = placement;
                     break;
                 }
 
@@ -334,8 +438,13 @@ export default class GoResultsHighlighter {
             this.showDetails(playerPlacement);
         });
 
+        this.overlay.addEventListener('click', (event) => {
+            this.hideOverlay();
+            event.stopPropagation();
+        });
+
         this.element.addEventListener('mouseover', (event) => {
-            if (this.settings.hovering === false) {
+            if (this.settings.hovering === false || this.isOverlayVisible) {
                 return;
             }
 
@@ -345,15 +454,17 @@ export default class GoResultsHighlighter {
 
             // fetch information about hovered element
             while (target && target !== document) {
+                let opponentGridPlacement = target.getAttribute(OPPONENT_GRID_PLACEMENT_ATTR);
+                let playerGridPlacement = target.getAttribute(GRID_PLACEMENT_ATTR);
 
                 // game cell?
-                if (target.goOpponentGridPosition) {
-                    opponent = target.goOpponentGridPosition;
+                if (opponentGridPlacement) {
+                    opponent = opponentGridPlacement;
                 }
 
                 // player row? no further search is necessary
-                if (target.goGridPlacement) {
-                    player = target.goGridPlacement;
+                if (playerGridPlacement) {
+                    player = playerGridPlacement;
                     break;
                 }
 
