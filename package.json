@@ -11,7 +11,6 @@
   "author": "Artur Barcicki <barcicki@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel-polyfill": "^6.0.14",
     "babelify": "^6.4.0",
     "browser-sync": "^2.9.11",
     "browserify-istanbul": "^0.2.1",

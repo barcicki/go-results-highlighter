@@ -1,7 +1,8 @@
 {
   "ecmaFeatures": {
     "modules": true,
-    "module": true
+    "module": true,
+    "forOf": false
   },
   "env": {
     "browser": true,

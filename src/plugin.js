@@ -61,13 +61,14 @@ export function defaults(defaultObj, ...objects) {
     const overrides = objects
         .filter((obj) => typeof obj === 'object')
         .reverse();
+
+    const count = overrides.length;
     const result = {};
 
     mainLoop: for (let key in defaultObj) {
-        for (let obj of overrides) {
-
-            if (obj.hasOwnProperty(key)) {
-                result[key] = obj[key];
+        for (let i = 0; i < count; i++) {
+            if (overrides[i].hasOwnProperty(key)) {
+                result[key] = overrides[i][key];
                 continue mainLoop;
             }
         }
@@ -107,7 +108,7 @@ function mapResultsSettings(results) {
 export function readDomSettings(element) {
     const result = {};
 
-    for (let attr of ATTIRBUTES) {
+    ATTIRBUTES.forEach((attr) => {
         let value = element.getAttribute(ATTRIBUTES_PREFIX + attr);
 
         if (!value) {
@@ -117,7 +118,7 @@ export function readDomSettings(element) {
         if (value) {
             result[attr] = value;
         }
-    }
+    });
 
     return result;
 }
@@ -140,6 +141,7 @@ function setGridPlacement(row, placement) {
 export function mapRowsToPlayers(table, settings) {
     const rows = asArray(table.querySelectorAll(settings.rowTags));
     const resultsMap = mapResultsSettings(settings.results);
+    const resultsMapCount = resultsMap.length;
     const results = {};
 
     let lastTournamentPlacement;
@@ -193,8 +195,8 @@ export function mapRowsToPlayers(table, settings) {
         };
 
         cells.forEach((cell) => {
-            for (let result of resultsMap) {
-                let match = cell.textContent.match(result.regexp);
+            for (let i = 0; i < resultsMapCount; i++) {
+                let match = cell.textContent.match(resultsMap[i].regexp);
 
                 if (!match) {
                     continue;
@@ -206,7 +208,7 @@ export function mapRowsToPlayers(table, settings) {
 
                 player.games[opponentGridPlacement] = {
                     cell,
-                    cls: result.cls
+                    cls: resultsMap[i].cls
                 };
                 player.opponents.push(opponentGridPlacement);
             }
@@ -300,9 +302,9 @@ export default class GoResultsHighlighter {
         const markedPlayer = markedRowPlacement ? this.map[markedRowPlacement] : null;
 
         // remove any visible game markings
-        for (let gameCell of markedGames) {
+        markedGames.forEach((gameCell) => {
             gameCell.classList.remove(gameCls);
-        }
+        });
 
         // unmark player if necessary
         if (markedPlayer && markedPlayer !== player) {
@@ -316,9 +318,9 @@ export default class GoResultsHighlighter {
 
         // mark all the games
         if (this.showingDetails) {
-            for (let opponent of player.opponents) {
+            player.opponents.forEach((opponent) => {
                 this.map[opponent].games[playerPlace].cell.classList.add(gameCls);
-            }
+            });
 
         // mark the game between the player and the opponent
         } else if (player && opponentPlace) {
@@ -331,11 +333,11 @@ export default class GoResultsHighlighter {
 
             player.row.classList[method](currentCls);
 
-            for (let opponentPlace of player.opponents) {
+            player.opponents.forEach((opponentPlace) => {
                 let opponent = this.map[opponentPlace];
 
                 opponent.row.classList[method](this.settings.prefixCls + player.games[opponentPlace].cls);
-            }
+            });
         }
     }
 
@@ -369,7 +371,7 @@ export default class GoResultsHighlighter {
         const parent = player.row.parentNode;
         let after = player.row.nextSibling;
 
-        for (let opponentPlace of player.opponents) {
+        player.opponents.forEach((opponentPlace) => {
             let opponent = this.map[opponentPlace];
 
             opponent.row.properNextSibling = opponent.row.nextSibling;
@@ -380,7 +382,7 @@ export default class GoResultsHighlighter {
                 parent.insertBefore(opponent.row, after);
                 after = opponent.row.nextSibling;
             }
-        }
+        });
 
         this.element.classList.add(this.settings.prefixCls + this.settings.showingDetailsCls);
         this.showingDetails = true;
