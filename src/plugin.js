@@ -29,6 +29,12 @@ const GRID_PLACEMENT_ATTR = 'data-go-place';
 const OPPONENT_GRID_PLACEMENT_ATTR = 'data-go-opponent-place';
 
 /**
+ * Informs if the website is run on mobile browser.
+ * @type {boolean}
+ */
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+/**
  * Prefix for DOM settings
  * It will be later used as: "data-prefix-attribute" or "prefix-attribute"
  * @type {string}
@@ -384,7 +390,13 @@ export default class GoResultsHighlighter {
             }
         });
 
-        this.element.classList.add(this.settings.prefixCls + this.settings.showingDetailsCls);
+        // unfortunately applying classes on long tables is very expensive
+        // operation causing lags. In order to provide better performance
+        // feeling a class is not added when the table exceeds 100 rows.
+        if (!isMobile || this.players.length < 100) {
+            this.element.classList.add(this.settings.prefixCls + this.settings.showingDetailsCls);
+        }
+
         this.showingDetails = true;
         this.selectPlayer(playerPlace);
     }
@@ -423,7 +435,6 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            this.selectPlayer(playerPlacement);
             this.showDetails(playerPlacement);
         });
 
