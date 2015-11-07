@@ -1,6 +1,7 @@
 'use strict';
 
-import GoResultsHighlighter, { asArray } from './plugin';
+import GoResultsHighlighter from './plugin';
+import { asArray } from './utils';
 
 function initialize() {
     const resultElements = asArray(document.querySelectorAll('[go-results],[data-go-results]'));

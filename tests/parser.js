@@ -1,8 +1,10 @@
 'use strict';
 
-import { mapRowsToPlayers, defaults, DEFAULT_SETTINGS, readDomSettings } from '../src/plugin.js';
+import { parse } from '../src/parser';
+import { combine } from '../src/utils';
+import { readTableSettingsFromDOM } from '../src/settings';
 
-describe('mapRowsToPlayers', () => {
+describe('parser', () => {
 
     let placeholder;
 
@@ -11,10 +13,10 @@ describe('mapRowsToPlayers', () => {
     function testMap(dom, settings) {
         placeholder.innerHTML = dom;
 
-        let element = placeholder.firstChild;
-        let config = defaults(DEFAULT_SETTINGS, readDomSettings(element), settings);
+        const element = placeholder.firstChild;
+        const config = combine(readTableSettingsFromDOM(element), settings);
 
-        return mapRowsToPlayers(element, config);
+        return parse(element, config);
     }
 
     describe('should be able to', () => {
@@ -42,18 +44,33 @@ describe('mapRowsToPlayers', () => {
             );
 
             expect(result[1]).toBeDefined();
-            expect(result[1].place).toBe(1);
+            expect(result[1].tournamentPlace).toBe(1);
             expect(result[1].row instanceof HTMLTableRowElement).toBeTruthy();
             expect(result[1].games).toEqual({});
             expect(result[1].opponents).toEqual([]);
 
             expect(result[2]).toBeDefined();
-            expect(result[2].place).toBe(2);
+            expect(result[2].tournamentPlace).toBe(2);
             expect(result[2].row instanceof HTMLTableRowElement).toBeTruthy();
             expect(result[2].games).toEqual({});
             expect(result[2].opponents).toEqual([]);
 
             expect(result[1].row).not.toBe(result[2].row);
+        });
+
+        it('read places from DOM', function () {
+            const result = testMap(
+                `<table>
+                    <tr data-go-place="2"><td>1</td><td>Player 1</td></tr>
+                    <tr data-go-place="5"><td>2</td><td>Player 2</td></tr>
+                </table>`
+            );
+
+            expect(result[2]).toBeDefined();
+            expect(result[2].tournamentPlace).toBe(1);
+
+            expect(result[5]).toBeDefined();
+            expect(result[5].tournamentPlace).toBe(2);
         });
 
         it('handle ex aequo places', function () {
@@ -70,14 +87,14 @@ describe('mapRowsToPlayers', () => {
                 </table>`
             );
 
-            expect(result[1].place).toBe(1);
-            expect(result[2].place).toBe(2);
-            expect(result[3].place).toBe(3);
-            expect(result[4].place).toBe(3);
-            expect(result[5].place).toBe(4);
-            expect(result[6].place).toBe(4);
-            expect(result[7].place).toBe(4);
-            expect(result[8].place).toBe(5);
+            expect(result[1].tournamentPlace).toBe(1);
+            expect(result[2].tournamentPlace).toBe(2);
+            expect(result[3].tournamentPlace).toBe(3);
+            expect(result[4].tournamentPlace).toBe(3);
+            expect(result[5].tournamentPlace).toBe(4);
+            expect(result[6].tournamentPlace).toBe(4);
+            expect(result[7].tournamentPlace).toBe(4);
+            expect(result[8].tournamentPlace).toBe(5);
         });
 
         it('handle different types of games', function () {
@@ -98,29 +115,91 @@ describe('mapRowsToPlayers', () => {
                 </table>`
             );
 
-            expect(result[1].opponents.length).toBe(6);
+            const player = result[1];
 
-            expect(result[1].games[2]).toBeDefined();
-            expect(result[1].games[2].cls).toBe('won');
-            expect(result[1].games[2].cell instanceof HTMLTableCellElement).toBeTruthy();
+            expect(player.opponents.length).toBe(6);
 
-            expect(result[1].games[3]).toBeDefined();
-            expect(result[1].games[3].cls).toBe('won');
+            expect(player.games[2]).toBeDefined();
+            expect(player.games[2].cls).toBe('won');
+            expect(player.games[2].cell instanceof HTMLTableCellElement).toBeTruthy();
 
-            expect(result[1].games[4]).toBeDefined();
+            expect(player.games[3]).toBeDefined();
+            expect(player.games[3].cls).toBe('won');
 
-            expect(result[1].games[324]).toBeDefined();
-            expect(result[1].games[324].cls).toBe('unresolved');
+            expect(player.games[4]).toBeDefined();
 
-            expect(result[1].games[18]).toBeDefined();
-            expect(result[1].games[18].cls).toBe('lost');
+            expect(player.games[324]).toBeDefined();
+            expect(player.games[324].cls).toBe('unresolved');
 
-            expect(result[1].games[19]).toBeDefined();
-            expect(result[1].games[19].cls).toBe('jigo');
+            expect(player.games[18]).toBeDefined();
+            expect(player.games[18].cls).toBe('lost');
 
-            expect(result[1].games['score']).not.toBeDefined();
-            expect(result[1].games[10]).not.toBeDefined();
+            expect(player.games[19]).toBeDefined();
+            expect(player.games[19].cls).toBe('jigo');
 
+            expect(player.games['score']).not.toBeDefined();
+            expect(player.games[10]).not.toBeDefined();
+        });
+
+        it('handle selected game columns', function () {
+            const result = testMap(
+                `<table>
+                    <tr>
+                        <td>1</td>
+                        <td>Player 1</td>
+                        <td>2+</td>
+                        <td>3+</td>
+                        <td>4+</td>
+                        <td>324?</td>
+                        <td>18-</td>
+                        <td>19=</td>
+                        <td>score</td>
+                        <td>10</td>
+                    </tr>
+                </table>`, {
+                    roundsColumns: '2, 3, 4, 6'
+                });
+
+            const player = result[1];
+
+            expect(player.opponents.length).toBe(4);
+            expect(player.games[2]).toBeDefined();
+            expect(player.games[3]).toBeDefined();
+            expect(player.games[4]).toBeDefined();
+            expect(player.games[18]).toBeDefined();
+            expect(player.games[324]).not.toBeDefined();
+            expect(player.games[19]).not.toBeDefined();
+        });
+
+        it('read results from attributes', function () {
+            const result = testMap(
+                `<table>
+                    <tr>
+                        <td>1</td>
+                        <td>Player 1</td>
+                        <td data-go-opponent="3" data-go-result="won">2+</td>
+                        <td data-go-opponent="5" data-go-result="lost">3+</td>
+                        <td data-go-opponent="8" data-go-result="jigo">4+</td>
+                        <td data-go-opponent="13" data-go-result="unresolved">18-</td>
+                        <td>score</td>
+                        <td>10</td>
+                    </tr>
+                </table>`);
+
+            const player = result[1];
+
+            expect(player.opponents.length).toBe(4);
+            expect(player.games[2]).not.toBeDefined();
+            expect(player.games[4]).not.toBeDefined();
+            expect(player.games[18]).not.toBeDefined();
+            expect(player.games[3]).toBeDefined();
+            expect(player.games[3].cls).toBe('won');
+            expect(player.games[5]).toBeDefined();
+            expect(player.games[5].cls).toBe('lost');
+            expect(player.games[8]).toBeDefined();
+            expect(player.games[8].cls).toBe('jigo');
+            expect(player.games[13]).toBeDefined();
+            expect(player.games[13].cls).toBe('unresolved');
         });
 
         it('support using different tags', function () {
@@ -155,6 +234,7 @@ describe('mapRowsToPlayers', () => {
                 `<table>
                     <tr><th>ignored!</th></tr>
                     <tr><td>-</td></tr>
+                    <tr></tr>
                     <tr><td>1</td><td>Player 1</td></tr>
                     <tr><td>2</td><td>Player 2</td></tr>
                     <tr><td>3</td><td>Player 3</td></tr>
@@ -162,10 +242,10 @@ describe('mapRowsToPlayers', () => {
                 </table>`
             );
 
-            expect(result[1].place).toBe(1);
-            expect(result[2].place).toBe(2);
-            expect(result[3].place).toBe(3);
-            expect(result[4].place).toBe(4);
+            expect(result[1].tournamentPlace).toBe(1);
+            expect(result[2].tournamentPlace).toBe(2);
+            expect(result[3].tournamentPlace).toBe(3);
+            expect(result[4].tournamentPlace).toBe(4);
         });
 
         it('look for place in different column', function () {
@@ -176,13 +256,13 @@ describe('mapRowsToPlayers', () => {
                     <tr><td>Player 3</td><td>3</td></tr>
                     <tr><td>Player 4</td><td>4</td></tr>
                 </table>`, {
-                    column: 1
+                    placeColumn: 1
                 });
 
-            expect(result[1].place).toBe(1);
-            expect(result[2].place).toBe(2);
-            expect(result[3].place).toBe(3);
-            expect(result[4].place).toBe(4);
+            expect(result[1].tournamentPlace).toBe(1);
+            expect(result[2].tournamentPlace).toBe(2);
+            expect(result[3].tournamentPlace).toBe(3);
+            expect(result[4].tournamentPlace).toBe(4);
         });
 
         it('skip rows based on settings', function () {
@@ -193,18 +273,18 @@ describe('mapRowsToPlayers', () => {
                     <tr><td>3</td><td>Player 3</td></tr>
                     <tr><td>4</td><td>Player 4</td></tr>
                 </table>`, {
-                    row: 2
+                    startingRow: 2
                 });
 
             expect(result[1]).not.toBeDefined();
             expect(result[2]).not.toBeDefined();
-            expect(result[3].place).toBe(3);
-            expect(result[4].place).toBe(4);
+            expect(result[3].tournamentPlace).toBe(3);
+            expect(result[4].tournamentPlace).toBe(4);
         });
 
         it('take column and row settings from the DOM', function () {
             const result = testMap(
-                `<table go-results-column="1" data-go-results-row="2">
+                `<table data-go-place-col="1" data-go-starting-row="2">
                     <tr><td>Player 1</td><td>1</td></tr>
                     <tr><td>Player 2</td><td>2</td></tr>
                     <tr><td>Player 3</td><td>3</td></tr>
@@ -214,26 +294,26 @@ describe('mapRowsToPlayers', () => {
 
             expect(result[1]).not.toBeDefined();
             expect(result[2]).not.toBeDefined();
-            expect(result[3].place).toBe(3);
-            expect(result[4].place).toBe(4);
+            expect(result[3].tournamentPlace).toBe(3);
+            expect(result[4].tournamentPlace).toBe(4);
         });
 
         it('take column and row settings from the DOM, but let override them', function () {
             const result = testMap(
-                `<table go-results-column="1" data-go-results-row="2">
+                `<table data-go-place-col="1" data-go-starting-row="2">
                     <tr><td>1</td><td>Player 1</td></tr>
                     <tr><td>2</td><td>Player 2</td></tr>
                     <tr><td>3</td><td>Player 3</td></tr>
                     <tr><td>4</td><td>Player 4</td></tr>
                 </table>`, {
-                    column: 0,
-                    row: 0
+                    startingRow: 0,
+                    placeColumn: 0
                 });
 
-            expect(result[1].place).toBe(1);
-            expect(result[2].place).toBe(2);
-            expect(result[3].place).toBe(3);
-            expect(result[4].place).toBe(4);
+            expect(result[1].tournamentPlace).toBe(1);
+            expect(result[2].tournamentPlace).toBe(2);
+            expect(result[3].tournamentPlace).toBe(3);
+            expect(result[4].tournamentPlace).toBe(4);
         });
     });
 });
