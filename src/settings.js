@@ -2,7 +2,7 @@
 
 /**
  * Default settings of the plugin
- * @type {{prefixCls: string, showingDetailsCls: string, tableCls: string, gameCls: string, currentCls: string, results: {won: string, lost: string, jigo: string, unresolved: string}, startingRow: number, placeColumn: number, roundsColumns: string, rowTags: string, cellTags: string, hovering: boolean, clicking: boolean}}
+ * @type {{prefixCls: string, showingDetailsCls: string, tableCls: string, gameCls: string, currentCls: string, results: {won: string, lost: string, jigo: string, unresolved: string}, startingRow: number, placeColumn: number, roundsColumns: null, rowTags: string, cellTags: string, rowSeparator: string, hovering: boolean, clicking: boolean}}
  */
 export const DEFAULT_SETTINGS = {
     prefixCls: 'go-results-',
@@ -24,6 +24,7 @@ export const DEFAULT_SETTINGS = {
 
     rowTags: 'tr',
     cellTags: 'td,th',
+    rowSeparator: '\t',
 
     hovering: true,
     clicking: true
@@ -40,6 +41,7 @@ export const DOM_ATTRIBUTES = {
     SETTING_ROUNDS_COLUMNS: 'data-go-rounds-cols',
     PLAYER_PLACEMENT: 'data-go-place',
     OPPONENT_PLACEMENT: 'data-go-opponent',
+    OPPONENTS: 'data-go-opponents',
     GAME_RESULT: 'data-go-result'
 };
 
