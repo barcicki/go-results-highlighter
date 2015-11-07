@@ -1,0 +1,93 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    color: #2F2A1C;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 12pt;
+}
+
+.content {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+header {
+    padding: 10px;
+    background: #7D9CAD;
+
+    h1 {
+        padding: 0 5px;
+        color: #ffffff;
+    }
+
+    h2 {
+        padding: 0 5px;
+        color: #1D475D;
+        font-size: 1.2em;
+    }
+}
+
+nav {
+    padding: 0 10px;
+    background: #879759;
+
+    ul {
+        &.github {
+            float: right;
+        }
+
+        li {
+            display: inline-block;
+
+            a {
+                display: block;
+                padding: 10px 5px;
+                color: #ffffff;
+
+                &:hover {
+                    background: #282C1B;
+                }
+
+                span.octicon {
+                    margin-right: 5px;
+                }
+            }
+        }
+    }
+}
+
+article {
+    padding: 10px;
+
+    h1 {
+        margin: 5px 0 10px;
+    }
+
+    table {
+        border: none;
+        min-width: 100%;
+
+        td, th {
+            padding: 3px 5px;
+            text-align: left;
+        }
+
+        td {
+            cursor: pointer;
+        }
+    }
+
+    .note {
+        text-align: center;
+        margin: 10px 0;
+        font-style: italic;
+    }
+
+    .wrapper {
+        overflow: auto;
+        padding: 5px 0;
+    }
+}

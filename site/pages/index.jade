@@ -1,0 +1,26 @@
+extends ../template/layout.jade
+
+mixin feature(desc)
+    p
+        span.octicon.octicon-check
+        span= desc
+
+block title
+    title Go Results Highlighter
+
+block content
+    article.features
+        .content
+            +feature("Makes reading Go results super easy - just move the mouse over the player to see the opponents")
+            +feature("Click on the player to see compacted results")
+            +feature("Supports HTML and raw outputs from Macmahon and OpenGotha")
+            +feature("Mobile friendly")
+            +feature("Fully customizable")
+            +feature("Supports most modern browsers (and doesn't break in old ones)")
+            +feature("Fully tested")
+
+    article.home-results
+        .content
+            .wrapper
+                include ../resources/hobby2015.html
+                p.note Example results of <strong>Hobby 2015</strong> Go tournament in Poznan.

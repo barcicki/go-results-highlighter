@@ -30,5 +30,8 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "devDependencies": {
+    "octicons": "*"
+  }
 }

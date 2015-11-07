@@ -18,6 +18,15 @@ gulp.task('build-js-dev', () => {
         .pipe(gulp.dest(config.paths.js.dest));
 });
 
+gulp.task('build-js-site', () => {
+    return gulp.src(config.paths.site.js.entry)
+        .pipe(browserify({
+            transform: ['babelify'],
+            debug: true
+        }))
+        .pipe(gulp.dest(config.paths.site.js.dest));
+});
+
 gulp.task('build-js-prod', ['build-js-dev'], () => {
     return gulp.src(path.resolve(config.paths.js.dest, config.names.js.dest))
         .pipe(uglify())
@@ -25,4 +34,4 @@ gulp.task('build-js-prod', ['build-js-dev'], () => {
         .pipe(gulp.dest(config.paths.js.dest));
 });
 
-gulp.task('build-js', ['build-js-dev', 'build-js-prod']);
+gulp.task('build-js', ['build-js-dev', 'build-js-prod', 'build-js-site']);

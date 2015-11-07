@@ -21,6 +21,23 @@ module.exports = {
             entry: './src/index.js',
             all: './src/**/*.js',
             dest: './dist'
+        },
+        site: {
+            jades: {
+                pages: './site/pages/**/*.jade',
+                all: './site/**/*.jade',
+                dest: './dist'
+            },
+            css: {
+                entry: './site/styles/styles.less',
+                all: './site/styles/**/*.less',
+                dest: './dist/styles'
+            },
+            js: {
+                entry: './site/scripts/main.js',
+                all: './site/scripts/**/*.js',
+                dest: './dist/scripts'
+            }
         }
     },
     names: {

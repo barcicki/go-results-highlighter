@@ -23,4 +23,10 @@ gulp.task('build-css-prod', () => {
         .pipe(gulp.dest(config.paths.css.dest));
 });
 
-gulp.task('build-css', ['build-css-dev', 'build-css-prod']);
+gulp.task('build-css-site', () => {
+    return gulp.src(config.paths.site.css.entry)
+        .pipe(less())
+        .pipe(gulp.dest(config.paths.site.css.dest));
+});
+
+gulp.task('build-css', ['build-css-dev', 'build-css-prod', 'build-css-site']);
