@@ -6,3 +6,10 @@ node_modules/
 
 # coverage report
 coverage
+
+# build dir except for library builts
+dist/*
+!dist/go-results-highlighter.js
+!dist/go-results-highlighter.min.js
+!dist/go-results-highlighter.css
+!dist/go-results-highlighter.min.css
