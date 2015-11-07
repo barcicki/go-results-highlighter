@@ -58,12 +58,12 @@ article table td {
     cursor: pointer;
 }
 
-aside {
+nav {
     background: #7D9CAD;
     padding: 0 3%;
 }
 
-aside a {
+nav a {
     padding: 10px;
     color: #ffffff;
     display: inline-block;
