@@ -1,10 +1,11 @@
 'use strict';
 
 import GoResultsHighlighter from './plugin';
+import { DOM_ATTRIBUTES } from './settings';
 import { asArray } from './utils';
 
 function initialize() {
-    const resultElements = asArray(document.querySelectorAll('[go-results],[data-go-results]'));
+    const resultElements = asArray(document.querySelectorAll(`[${DOM_ATTRIBUTES.RESULT_TABLE}]`));
 
     resultElements.forEach((tableEl) => {
         tableEl.goResultsHighlighter = new GoResultsHighlighter(tableEl);

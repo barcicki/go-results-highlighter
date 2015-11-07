@@ -1,6 +1,6 @@
 'use strict';
 
-import { parse } from '../src/parser';
+import parse from '../src/parser';
 import { combine } from '../src/utils';
 import { readTableSettingsFromDOM } from '../src/settings';
 

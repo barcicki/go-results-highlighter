@@ -19,7 +19,7 @@ function writeGridPlacement(row, placement) {
  * @param {object} [config.startingRow]
  * @returns {object}
  */
-export function parse(table, config) {
+export default function parse(table, config) {
     const settings = defaults(DEFAULT_SETTINGS, config);
     const rows = asArray(table.querySelectorAll(settings.rowTags));
     const resultsMap = toResultsWithRegExp(settings.results);

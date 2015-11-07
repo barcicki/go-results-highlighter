@@ -1,7 +1,8 @@
 'use strict';
 
 import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, readTableSettingsFromDOM } from './settings';
-import { parse } from './parser';
+import parse from './parser';
+import convert from './raw2table';
 import { asArray, defaults } from './utils';
 
 /**
@@ -35,14 +36,25 @@ export default class GoResultsHighlighter {
      * string with tags holding game results
      */
     constructor(element, settings) {
-        this.element = element;
+        this.settings = defaults(DEFAULT_SETTINGS, readTableSettingsFromDOM(element), settings);
+
+        if (element instanceof HTMLPreElement) {
+            let table = convert(element.innerHTML, settings);
+            let parent = element.parentNode;
+
+            parent.insertBefore(table, element);
+            parent.removeChild(element);
+
+            this.element = table;
+        } else {
+            this.element = element;
+        }
 
         if (!this.element.classList) {
             // not supported
             return;
         }
 
-        this.settings = defaults(DEFAULT_SETTINGS, readTableSettingsFromDOM(element), settings);
 
         this.createPlayersMap();
         this.bindEvents();
