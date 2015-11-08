@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  color: #2F2A1C;
+  font-family: 'Roboto Condensed', sans-serif;
+  font-size: 12pt;
+}
+.content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+header {
+  padding: 10px;
+  background: #7D9CAD;
+}
+header h1 {
+  padding: 0 5px;
+  color: #ffffff;
+}
+header h2 {
+  padding: 0 5px;
+  color: #1D475D;
+  font-size: 1.2em;
+}
+nav {
+  padding: 0 10px;
+  background: #879759;
+}
+nav ul.github {
+  float: right;
+}
+nav ul li {
+  display: inline-block;
+}
+nav ul li a {
+  display: block;
+  padding: 10px 5px;
+  color: #ffffff;
+}
+nav ul li a:hover {
+  background: #282C1B;
+}
+nav ul li a span.octicon {
+  margin-right: 5px;
+}
+article {
+  padding: 10px;
+}
+article h1 {
+  margin: 5px 0 10px;
+}
+article table {
+  border: none;
+  min-width: 100%;
+}
+article table td,
+article table th {
+  padding: 3px 5px;
+  text-align: left;
+}
+article table td {
+  cursor: pointer;
+}
+article .note {
+  text-align: center;
+  margin: 10px 0;
+  font-style: italic;
+}
+article .wrapper {
+  overflow: auto;
+  padding: 5px 0;
+}
+.features p {
+  margin: 5px;
+  font-size: 1.3em;
+  font-style: italic;
+}
+.features p span.octicon {
+  margin-right: 10px;
+}
+.home-results table {
+  font-size: 1.2em;
+}
+.docs p {
+  margin: 15px 0;
+}
+.docs h1,
+.docs h2,
+.docs h3,
+.docs h4 {
+  margin: 25px 0 20px;
+}
+.docs pre {
+  margin: 10px;
+}
