@@ -8,6 +8,7 @@ node_modules/
 coverage
 
 # build dir except for library builts
+.publish
 dist/*
 !dist/go-results-highlighter.js
 !dist/go-results-highlighter.min.js

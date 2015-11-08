@@ -5,7 +5,7 @@ const pjson = require('../package.json');
 module.exports = {
     name: 'GoResultsHighlighter',
     paths: {
-        dest: './dist',
+        dest: './dist/**/*.*',
         tests: {
             all: './tests/**/*.*'
         },
