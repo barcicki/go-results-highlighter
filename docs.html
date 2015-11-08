@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><title>Documentation - Go Results Highlighter</title><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css"><link href="go-results-highlighter.css" rel="stylesheet" type="text/css"><link href="styles/styles.css" rel="stylesheet" type="text/css"><link href="components/octicons/octicons/octicons.css" rel="stylesheet" type="text/css"><link href="components/highlightjs/styles/github.css" rel="stylesheet" type="text/css"><script src="components/highlightjs/highlight.pack.js"></script><script src="go-results-highlighter.js"></script><script src="scripts/main.js"></script></head><body><header><div class="content"><h1>Go Results Highlighter</h1><h2>by Artur Barcicki</h2></div></header><nav><div class="content"><ul class="github"><li><a href="https://github.com/barcicki/go-results-highlighter"><span class="octicon octicon-mark-github"></span><span>View on GitHub</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span class="octicon octicon-cloud-download"></span><span>Download .zip</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span class="octicon octicon-cloud-download"></span><span>Download .tar.gz</span></a></li></ul><ul><li><a href="index.html"><span class="octicon octicon-home"></span><span>Home</span></a></li><li><a href="docs.html"><span class="octicon octicon-file-text"></span><span>Documenation</span></a></li><li><a href="examples.html"><span class="octicon octicon-eye"></span><span>Examples</span></a></li></ul></div></nav><article class="docs"><div class="content"><h1>Go Results Highlighter</h1>
+<h3>About</h3>
+<p>The goal of this plugin is to improve readability of Go result tables by
+highlighting opponent rows for the selected player.</p>
+<p>This is updated version of https://github.com/barcicki/jQuery-Table-Result-for-Go.
+It was created to provide jQuery independent version of the plugin and serve it
+using popular package managers such as Bower or NPM.</p>
+<h3>Installation</h3>
+<p>Include <code>go-results-highlighter.min.js</code> and <code>go-results-highlighter.min.css</code>
+(optionally) from <code>dist</code> directory to your website.</p>
+<h3>Usage</h3>
+<p>There're several ways possible.</p>
+<h4>Let Go Results Highlighter use default settings (no additional JS code).</h4>
+<p>Add <code>data-go-results</code> attribute to <strong>table</strong> or <strong>pre</strong> tags which contain
+Go results.</p>
+<h4>Manually bind Go Results Highlighter to selected elements</h4>
+<p>Highlighter is served using Universal Module Definition, therefore can be used
+globally:</p>
+<pre><code class="language-js">var highlighter = new GoResultsHighlighter(elementWithGoResults, optionalSettings);
+</code></pre>
+<p>or using requirejs:</p>
+<pre><code class="language-js">require('go-results-highlighter', function (GoResultsHighlighter) {
+    var highlighter = new GoResultsHighlighter(elementWithGoResults, optionalSettings);
+});
+</code></pre>
+<p>if it detects globally accessible jQuery object, then it's also possible to call:</p>
+<pre><code class="language-js">$(selectorOfElementWithGoResults).goResultsHighlighter(optionalSettings);
+</code></pre>
+<h3>Configuration &amp; customization</h3>
+<p>To be described...</p>
+<h3>License</h3>
+<p>The MIT License (MIT)</p>
+<p>Copyright (c) 2015 Artur Barcicki</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.</p>
+</div></article></body></html>
