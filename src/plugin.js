@@ -5,12 +5,6 @@ import parse from './parser';
 import convert from './raw2table';
 import { asArray, defaults } from './utils';
 
-/**
- * Informs if the website is run on mobile browser.
- * @type {boolean}
- */
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
 export default class GoResultsHighlighter {
 
     /**
@@ -179,13 +173,7 @@ export default class GoResultsHighlighter {
             }
         });
 
-        // unfortunately applying classes on long tables is very expensive
-        // operation causing lags. In order to provide better performance
-        // feeling a class is not added when the table exceeds 100 rows.
-        if (!isMobile || this.players.length < 100) {
-            this.element.classList.add(this.settings.prefixCls + this.settings.showingDetailsCls);
-        }
-
+        this.element.classList.add(this.settings.prefixCls + this.settings.showingDetailsCls);
         this.showingDetails = true;
         this.selectPlayer(playerPlace);
     }
@@ -196,11 +184,6 @@ export default class GoResultsHighlighter {
     bindEvents() {
         this.element.addEventListener('click', (event) => {
             if (this.settings.clicking === false) {
-                return;
-            }
-
-            if (this.showingDetails) {
-                this.restoreFullResults();
                 return;
             }
 
@@ -224,7 +207,31 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            this.showDetails(playerPlacement);
+            let lastTargetPos;
+
+            if (!this.showingDetails) {
+                this.showDetails(playerPlacement);
+
+            } else if (target.properNextSibling) {
+                lastTargetPos = target.getBoundingClientRect().top;
+
+                this.restoreFullResults();
+                this.showDetails(playerPlacement);
+
+            } else {
+                lastTargetPos = target.getBoundingClientRect().top;
+
+                this.restoreFullResults();
+                this.selectPlayer(playerPlacement);
+            }
+
+            if (lastTargetPos) {
+                let diff = target.getBoundingClientRect().top - lastTargetPos;
+
+                if (Math.abs(diff) > 10) {
+                    window.scrollBy(0, diff);
+                }
+            }
         });
 
         this.element.addEventListener('mouseover', (event) => {
