@@ -5,7 +5,6 @@
 body {
   color: #2F2A1C;
   font-family: 'Roboto Condensed', sans-serif;
-  font-size: 12pt;
 }
 .content {
   max-width: 1000px;
@@ -73,15 +72,15 @@ article .wrapper {
   padding: 5px 0;
 }
 .features p {
-  margin: 5px;
-  font-size: 1.3em;
+  margin: 15px 20px 10px;
+  font-size: 1.2em;
   font-style: italic;
 }
 .features p span.octicon {
   margin-right: 10px;
 }
 .home-results table {
-  font-size: 1.2em;
+  font-size: 1.1em;
 }
 .docs p {
   margin: 15px 0;
