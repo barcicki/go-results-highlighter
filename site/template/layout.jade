@@ -1,20 +1,24 @@
 doctype html
 html(lang="en")
+
+    - var base = ''
+    block variables
+    
     head
         block title
         meta(charset="utf-8")
         meta(name="viewport", content="width=device-width")
-
         link(href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic", rel="stylesheet", type="text/css")
-        link(href="go-results-highlighter.css", rel="stylesheet", type="text/css")
-        link(href="styles/styles.css", rel="stylesheet", type="text/css")
-        link(href="components/octicons/octicons/octicons.css", rel="stylesheet", type="text/css")
-        link(href="components/highlightjs/styles/github.css", rel="stylesheet", type="text/css")
-        script(src="components/highlightjs/highlight.pack.js")
-        script(src="go-results-highlighter.js")
-        script(src="scripts/main.js")
+        link(href=base + "go-results-highlighter.css", rel="stylesheet", type="text/css")
+        link(href=base + "styles/styles.css", rel="stylesheet", type="text/css")
+        link(href=base + "components/octicons/octicons/octicons.css", rel="stylesheet", type="text/css")
+        link(href=base + "components/highlightjs/styles/github.css", rel="stylesheet", type="text/css")
+        script(src=base + "components/highlightjs/highlight.pack.js")
+        script(src=base + "go-results-highlighter.js")
+        script(src=base + "scripts/main.js")
+        block head
+    
     body
-
         header
             .content
                 h1 Go Results Highlighter
@@ -37,15 +41,15 @@ html(lang="en")
                             span Download .tar.gz
                 ul
                     li
-                        a(href="index.html")
+                        a(href=base + "")
                             span.octicon.octicon-home
                             span Home
                     li
-                        a(href="docs.html")
+                        a(href=base + "docs")
                             span.octicon.octicon-file-text
                             span Documenation
                     li
-                        a(href="examples.html")
+                        a(href=base + "examples")
                             span.octicon.octicon-eye
                             span Examples
 

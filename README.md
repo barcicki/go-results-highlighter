@@ -1,6 +1,6 @@
 # Go Results Highlighter
 
-### About
+## About
 
 The goal of this plugin is to improve readability of Go result tables by
 highlighting opponent rows for the selected player.
@@ -9,21 +9,21 @@ This is updated version of https://github.com/barcicki/jQuery-Table-Result-for-G
 It was created to provide jQuery independent version of the plugin and serve it
 using popular package managers such as Bower or NPM.
 
-### Installation
+## Installation
 
 Include `go-results-highlighter.min.js` and `go-results-highlighter.min.css`
 (optionally) from `dist` directory to your website.
 
-### Usage
+## Usage
 
 There're several ways possible.
 
-#### Let Go Results Highlighter use default settings (no additional JS code).
+### Variant 1 - Let Go Results Highlighter use default settings (no additional JS code)
 
 Add `data-go-results` attribute to **table** or **pre** tags which contain
 Go results.
 
-#### Manually bind Go Results Highlighter to selected elements
+### Variant 2 - Manually bind Go Results Highlighter to selected elements
 
 Highlighter is served using Universal Module Definition, therefore can be used
 globally:
@@ -45,11 +45,11 @@ if it detects globally accessible jQuery object, then it's also possible to call
 $(selectorOfElementWithGoResults).goResultsHighlighter(optionalSettings);
 ```
 
-### Configuration & customization
+## Configuration & customization
 
 To be described...
 
-### License
+## License
 
 The MIT License (MIT)
 
