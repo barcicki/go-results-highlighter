@@ -15,8 +15,20 @@ block content
         .content.docs
             h1 Manual binding
 
-            .wrapper
-            p To be described ...
+            #binding-example-1.wrapper
+                include ../../resources/macmahon.html
+
+            button(rel="binding-example-1") Add Go Results Highlighter!
+
+            pre
+                code.language-html
+                    = "<!-- html -->\n"
+                    = "<table id=\"binding-example-1\"><!-- results placeholder --></table>\n"
+                    = "<button rel=\"binding-example-1\">Add Go Results Highlighter!</button>"
+
+                code.language-js
+                    = "// javascript\n"
+                    include ../../scripts/binding-example-1.js
 
             h1 jQuery binding
             p To be described ...
