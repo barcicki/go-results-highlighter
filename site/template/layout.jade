@@ -2,7 +2,14 @@ doctype html
 html(lang="en")
 
     - var base = ''
+    - var active = 'home'
     block variables
+
+    mixin link(anchor, href, icon, activeName)
+        li(class = active === activeName ? 'active' : '')
+            a(href=href)
+                span.octicon(class = 'octicon-' + icon)
+                span= anchor
     
     head
         block title
@@ -27,30 +34,13 @@ html(lang="en")
         nav
             .content
                 ul.github
-                    li
-                        a(href="https://github.com/barcicki/go-results-highlighter")
-                            span.octicon.octicon-mark-github
-                            span View on GitHub
-                    li
-                        a(href="https://github.com/barcicki/go-results-highlighter/zipball/master")
-                            span.octicon.octicon-cloud-download
-                            span Download .zip
-                    li
-                        a(href="https://github.com/barcicki/go-results-highlighter/tarball/master")
-                            span.octicon.octicon-cloud-download
-                            span Download .tar.gz
+                    +link("View on GitHub", "https://github.com/barcicki/go-results-highlighter", "mark-github")
+                    +link("Download .zip", "https://github.com/barcicki/go-results-highlighter/zipball/master", "cloud-download")
+                    +link("Download .tar.gz", "https://github.com/barcicki/go-results-highlighter/tarball/master", "cloud-download")
+
                 ul
-                    li
-                        a(href=base + "")
-                            span.octicon.octicon-home
-                            span Home
-                    li
-                        a(href=base + "docs")
-                            span.octicon.octicon-file-text
-                            span Documenation
-                    li
-                        a(href=base + "examples")
-                            span.octicon.octicon-eye
-                            span Examples
+                    +link("Home", base + "", "home", "home")
+                    +link("Documentation", base + "docs", "file-text", "docs")
+                    +link("Examples", base + "examples", "eye", "examples")
 
         block content

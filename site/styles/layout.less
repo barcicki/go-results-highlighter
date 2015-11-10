@@ -41,9 +41,20 @@ nav {
         li {
             display: inline-block;
 
+            &.active {
+                a {
+                    background: #ffffff;
+                    color: #282C1B;
+
+                    &:hover {
+                        color: #ffffff;
+                    }
+                }
+            }
+
             a {
                 display: block;
-                padding: 10px 5px;
+                padding: 10px 15px;
                 color: #ffffff;
 
                 &:hover {
