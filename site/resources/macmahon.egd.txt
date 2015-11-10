@@ -1,0 +1,8 @@
+1	Player_8	2k	xx	xxxx	28	3	79	241	6+/w	5+/b	2+/b
+2	Player_4	4k	xx	xxxx	27	2	80	238	8+/w	3+/b	1-/w
+3	Player_6	3k	xx	xxxx	27	2	80	237	4+/b	2-/w	7+/b
+4	Player_2	3k	xx	xxxx	27	2	79	241	3-/w	6+/b	5+/w
+5	Player_3	5k	xx	xxxx	26	1	81	236	7+/b	1-/w	4-/b
+6	Player_7	5k	xx	xxxx	26	1	80	237	1-/b	4-/w	8+/w
+7	Player_1	6k	xx	xxxx	26	1	78	240	5-/w	8+/b	3-/w
+8	Player_5	8k	xx	xxxx	25	0	79	238	2-/b	7-/w	6-/b

@@ -14,7 +14,19 @@ block content
     article
         .content.docs
             h1 Raw results from Macmahon
-            p To be described ...
+
+            h3 Input:
+            pre
+                code.language-html
+                    = "<pre data-go-results>\n"
+                    include ../../resources/macmahon.raw.txt
+                    = "</pre>"
+
+            h3 Output:
+            pre(data-go-results)
+                include ../../resources/macmahon.raw.txt
+
+
 
             h1 Raw results from OpenGotha
             p To be described ...

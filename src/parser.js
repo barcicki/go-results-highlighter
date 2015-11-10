@@ -112,7 +112,8 @@ export default function parse(table, config) {
 
                 // most probably not a result row
                 if (isNaN(tournamentPlacement)) {
-                    return writeGridPlacement(row, gridPlacement);
+                    writeGridPlacement(row, gridPlacement);
+                    return;
                 }
 
                 // assign tournament if defined (possibly showing an extract from greater table)
@@ -131,6 +132,10 @@ export default function parse(table, config) {
             }
 
             writeGridPlacement(row, gridPlacement);
+        }
+
+        if (gridPlacement == -1) {
+            return;
         }
 
         parseGames(player, cells);
