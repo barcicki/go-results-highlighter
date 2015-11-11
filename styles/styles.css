@@ -33,9 +33,16 @@ nav ul.github {
 nav ul li {
   display: inline-block;
 }
+nav ul li.active a {
+  background: #ffffff;
+  color: #282C1B;
+}
+nav ul li.active a:hover {
+  color: #ffffff;
+}
 nav ul li a {
   display: block;
-  padding: 10px 5px;
+  padding: 10px 15px;
   color: #ffffff;
 }
 nav ul li a:hover {
@@ -59,8 +66,12 @@ article table th {
   padding: 3px 5px;
   text-align: left;
 }
-article table td {
+article button {
+  padding: 5px 10px;
   cursor: pointer;
+}
+article button:disabled {
+  cursor: default;
 }
 article .note {
   text-align: center;
@@ -93,4 +104,20 @@ article .wrapper {
 }
 .docs pre {
   margin: 10px;
+}
+.examples {
+  margin-top: 10px;
+  text-align: center;
+}
+.examples li {
+  display: inline-block;
+}
+.examples li a {
+  display: block;
+  padding: 5px 10px;
+  color: #282C1B;
+}
+.examples li a:hover {
+  background-color: #879759;
+  color: #ffffff;
 }

@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head><title>Manual Binding Examples - Go Results Highlighter</title><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css"><link href="../go-results-highlighter.css" rel="stylesheet" type="text/css"><link href="../styles/styles.css" rel="stylesheet" type="text/css"><link href="../components/octicons/octicons/octicons.css" rel="stylesheet" type="text/css"><link href="../components/highlightjs/styles/github.css" rel="stylesheet" type="text/css"><script src="../components/highlightjs/highlight.pack.min.js"></script><script src="../components/jquery/dist/jquery.min.js"></script><script src="../go-results-highlighter.js"></script><script src="../scripts/main.js"></script></head><body><header><div class="content"><h1>Go Results Highlighter</h1><h2>by Artur Barcicki</h2></div></header><nav><div class="content"><ul class="github"><li><a href="https://github.com/barcicki/go-results-highlighter"><span class="octicon octicon-mark-github"></span><span>View on GitHub</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span class="octicon octicon-cloud-download"></span><span>Download .zip</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span class="octicon octicon-cloud-download"></span><span>Download .tar.gz</span></a></li></ul><ul><li><a href="../"><span class="octicon octicon-home"></span><span>Home</span></a></li><li><a href="../docs"><span class="octicon octicon-file-text"></span><span>Documentation</span></a></li><li class="active"><a href="../examples/binding.html"><span class="octicon octicon-eye"></span><span>Examples</span></a></li></ul></div></nav><div class="content"><ul class="examples"><li><a href="binding.html">Manual Binding</a></li><li><a href="configuration.html">Configuration & Customization</a></li><li><a href="congress.html">Long Go Congress results</a></li><li><a href="raw.html">Raw results from Macmahon & OpenGotha</a></li></ul></div><article><div class="content docs"><h1>Manual binding</h1><div id="binding-example-1" class="wrapper"><table>
+    <tbody>
+    <tr><td colspan="11">Example Tournament - After Round 3</td></tr>
+    <tr><td>Place</td><td>Name</td><td>Club</td><td>Level</td><td>Score</td><td>1</td><td>2</td><td>3</td><td>Points</td><td>SOS</td><td>SOSOS</td></tr>
+    <tr><td>1</td><td>Player 8</td><td>AAA</td><td>2 Kyu</td><td>28</td><td>6+</td><td>5+</td><td>2+</td><td>3</td><td>79</td><td>241</td></tr>
+    <tr><td>2</td><td>Player 4</td><td>BBB</td><td>4 Kyu</td><td>27</td><td>8+</td><td>3+</td><td>1-</td><td>2</td><td>80</td><td>238</td></tr>
+    <tr><td>3</td><td>Player 6</td><td>BBB</td><td>3 Kyu</td><td>27</td><td>4+</td><td>2-</td><td>7+</td><td>2</td><td>80</td><td>237</td></tr>
+    <tr><td>4</td><td>Player 2</td><td>CCC</td><td>3 Kyu</td><td>27</td><td>3-</td><td>6+</td><td>5+</td><td>2</td><td>79</td><td>241</td></tr>
+    <tr><td>5</td><td>Player 3</td><td>CCC</td><td>5 Kyu</td><td>26</td><td>7+</td><td>1-</td><td>4-</td><td>1</td><td>81</td><td>236</td></tr>
+    <tr><td>6</td><td>Player 7</td><td>AAA</td><td>5 Kyu</td><td>26</td><td>1-</td><td>4-</td><td>8+</td><td>1</td><td>80</td><td>237</td></tr>
+    <tr><td>7</td><td>Player 1</td><td>AAA</td><td>6 Kyu</td><td>26</td><td>5-</td><td>8+</td><td>3-</td><td>1</td><td>78</td><td>240</td></tr>
+    <tr><td>8</td><td>Player 5</td><td>BBB</td><td>8 Kyu</td><td>25</td><td>2-</td><td>7-</td><td>6-</td><td>0</td><td>79</td><td>238</td></tr>
+    </tbody>
+</table></div><button rel="binding-example-1">Add Go Results Highlighter!</button><pre><code class="language-html">&lt;!-- html --&gt;
+&lt;table id=&quot;binding-example-1&quot;&gt;&lt;!-- results placeholder --&gt;&lt;/table&gt;
+&lt;button rel=&quot;binding-example-1&quot;&gt;Add Go Results Highlighter!&lt;/button&gt;</code><code class="language-js">// javascript
+document.addEventListener('DOMContentLoaded', () => {
+    let button = document.querySelector('[rel="binding-example-1"]');
+    let table = document.getElementById('binding-example-1');
+
+    if (button && table) {
+        button.addEventListener('click', () => {
+            new GoResultsHighlighter(table);
+
+            button.textContent = 'Go Results Highlighter is working.';
+            button.disabled = true;
+        });
+    }
+});</code></pre><h1>jQuery binding</h1><div id="binding-example-2" class="wrapper"><table>
+    <tbody>
+    <tr><td colspan="11">Example Tournament - After Round 3</td></tr>
+    <tr><td>Place</td><td>Name</td><td>Club</td><td>Level</td><td>Score</td><td>1</td><td>2</td><td>3</td><td>Points</td><td>SOS</td><td>SOSOS</td></tr>
+    <tr><td>1</td><td>Player 8</td><td>AAA</td><td>2 Kyu</td><td>28</td><td>6+</td><td>5+</td><td>2+</td><td>3</td><td>79</td><td>241</td></tr>
+    <tr><td>2</td><td>Player 4</td><td>BBB</td><td>4 Kyu</td><td>27</td><td>8+</td><td>3+</td><td>1-</td><td>2</td><td>80</td><td>238</td></tr>
+    <tr><td>3</td><td>Player 6</td><td>BBB</td><td>3 Kyu</td><td>27</td><td>4+</td><td>2-</td><td>7+</td><td>2</td><td>80</td><td>237</td></tr>
+    <tr><td>4</td><td>Player 2</td><td>CCC</td><td>3 Kyu</td><td>27</td><td>3-</td><td>6+</td><td>5+</td><td>2</td><td>79</td><td>241</td></tr>
+    <tr><td>5</td><td>Player 3</td><td>CCC</td><td>5 Kyu</td><td>26</td><td>7+</td><td>1-</td><td>4-</td><td>1</td><td>81</td><td>236</td></tr>
+    <tr><td>6</td><td>Player 7</td><td>AAA</td><td>5 Kyu</td><td>26</td><td>1-</td><td>4-</td><td>8+</td><td>1</td><td>80</td><td>237</td></tr>
+    <tr><td>7</td><td>Player 1</td><td>AAA</td><td>6 Kyu</td><td>26</td><td>5-</td><td>8+</td><td>3-</td><td>1</td><td>78</td><td>240</td></tr>
+    <tr><td>8</td><td>Player 5</td><td>BBB</td><td>8 Kyu</td><td>25</td><td>2-</td><td>7-</td><td>6-</td><td>0</td><td>79</td><td>238</td></tr>
+    </tbody>
+</table></div><button rel="binding-example-2">Add Go Results Highlighter!</button><pre><code class="language-html">&lt;!-- html --&gt;
+&lt;table id=&quot;binding-example-2&quot;&gt;&lt;!-- results placeholder --&gt;&lt;/table&gt;
+&lt;button rel=&quot;binding-example-2&quot;&gt;Add Go Results Highlighter!&lt;/button&gt;</code><code class="language-js">// javascript
+$(document).ready(() => {
+    let $button = $('[rel="binding-example-2"]');
+    let $table = $('#binding-example-2');
+
+    if ($button && $table) {
+        $button.click(() => {
+            $table.goResultsHighlighter();
+            $button
+                .attr('disabled', true)
+                .html('Go Results Highlighter is working.');
+        });
+    }
+});</code></pre></div></article></body></html>
