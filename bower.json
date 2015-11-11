@@ -31,6 +31,7 @@
   ],
   "devDependencies": {
     "octicons": "*",
-    "highlightjs": "~8.9.1"
+    "highlightjs": "~8.9.1",
+    "jquery": "~2.1.4"
   }
 }

@@ -31,4 +31,18 @@ block content
                     include ../../scripts/binding-example-1.js
 
             h1 jQuery binding
-            p To be described ...
+
+            #binding-example-2.wrapper
+                include ../../resources/macmahon.html
+
+            button(rel="binding-example-2") Add Go Results Highlighter!
+
+            pre
+                code.language-html
+                    = "<!-- html -->\n"
+                    = "<table id=\"binding-example-2\"><!-- results placeholder --></table>\n"
+                    = "<button rel=\"binding-example-2\">Add Go Results Highlighter!</button>"
+
+                code.language-js
+                    = "// javascript\n"
+                    include ../../scripts/binding-example-2.js

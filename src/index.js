@@ -18,4 +18,13 @@ if (document.readyState === 'complete') {
     document.addEventListener('DOMContentLoaded', initialize, false);
 }
 
+if (typeof jQuery !== 'undefined') {
+    jQuery.fn.goResultsHighlighter = function (options) {
+        this.each(function (index, element) {
+            $(element).data('GoResultsHighlighter', new GoResultsHighlighter(element, options));
+        });
+        return this;
+    };
+}
+
 export default GoResultsHighlighter;
