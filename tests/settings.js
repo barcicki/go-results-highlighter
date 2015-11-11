@@ -31,11 +31,25 @@ describe('settings', () => {
             expect(testReadingSettings('<table data-go-rounds-cols="1,2,3,4">')).toEqual({ roundsColumns: '1,2,3,4' });
         });
 
+        it('return clicking settings', function () {
+            expect(testReadingSettings('<table data-go-clicking>')).toEqual({ clicking: true });
+            expect(testReadingSettings('<table data-go-clicking="true">')).toEqual({ clicking: true });
+            expect(testReadingSettings('<table data-go-clicking="false">')).toEqual({ clicking: false });
+        });
+
+        it('return hovering settings', function () {
+            expect(testReadingSettings('<table data-go-hovering>')).toEqual({ hovering: true });
+            expect(testReadingSettings('<table data-go-hovering="true">')).toEqual({ hovering: true });
+            expect(testReadingSettings('<table data-go-hovering="false">')).toEqual({ hovering: false });
+        });
+
         it('return all settings', function () {
-            expect(testReadingSettings('<table data-go-rounds-cols="1,2,3,4" data-go-place-col="2" data-go-starting-row="4">')).toEqual({
+            expect(testReadingSettings('<table data-go-rounds-cols="1,2,3,4" data-go-place-col="2" data-go-starting-row="4" data-go-hovering data-go-clicking="false">')).toEqual({
                 startingRow: 4,
                 placeColumn: 2,
-                roundsColumns: '1,2,3,4'
+                roundsColumns: '1,2,3,4',
+                hovering: true,
+                clicking: false
             });
         });
     });

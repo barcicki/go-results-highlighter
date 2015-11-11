@@ -39,6 +39,8 @@ export const DOM_ATTRIBUTES = {
     SETTING_STARTING_ROW: 'data-go-starting-row',
     SETTING_PLACE_COLUMN: 'data-go-place-col',
     SETTING_ROUNDS_COLUMNS: 'data-go-rounds-cols',
+    SETTING_CLICKING: 'data-go-clicking',
+    SETTING_HOVERING: 'data-go-hovering',
     PLAYER_PLACEMENT: 'data-go-place',
     OPPONENT_PLACEMENT: 'data-go-opponent',
     OPPONENTS: 'data-go-opponents',
@@ -85,6 +87,14 @@ export function readTableSettingsFromDOM(table) {
 
     if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_ROUNDS_COLUMNS)) {
         output.roundsColumns = table.getAttribute(DOM_ATTRIBUTES.SETTING_ROUNDS_COLUMNS);
+    }
+
+    if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_CLICKING)) {
+        output.clicking = table.getAttribute(DOM_ATTRIBUTES.SETTING_CLICKING) !== 'false';
+    }
+
+    if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_HOVERING)) {
+        output.hovering = table.getAttribute(DOM_ATTRIBUTES.SETTING_HOVERING) !== 'false';
     }
 
     return output;
