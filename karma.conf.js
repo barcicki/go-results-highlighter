@@ -7,7 +7,7 @@ module.exports = function (config) {
 
         files: [
             { pattern: 'src/**/*.js', included: false },
-            { pattern: 'tests/**/*.txt', included: false },
+            { pattern: 'tests/**/*.*', included: false },
             { pattern: 'tests/**/*.js', included: true }
         ],
         exclude: [],

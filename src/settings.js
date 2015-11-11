@@ -24,7 +24,8 @@ export const DEFAULT_SETTINGS = {
 
     rowTags: 'tr',
     cellTags: 'td,th',
-    rowSeparator: '\t',
+    rowSeparator: '[\t ]+',
+    joinNames: true,
 
     hovering: true,
     clicking: true

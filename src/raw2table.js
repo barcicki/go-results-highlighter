@@ -8,10 +8,11 @@ import { defaults } from './utils';
  * Returns null if not valid input.
  * @param {string} rawResults
  * @param {object} [config]
- * @param {number} [config.startingRow] - informs where is the first row with results
- * @param {number} [config.placeColumn] - informs in which column is the place located
+ * @param {number} [config.startingRow=0] - informs where is the first row with results
+ * @param {number} [config.placeColumn=0] - informs in which column is the place located
  * @param {string} [config.roundsColumns] - comma separated list of columns where game results are located
- * @param {string} [config.cellSeparator='\t'] - separated used to divide rows into cells
+ * @param {string} [config.cellSeparator='[\t ]+'] - separated used to divide rows into cells
+ * @param {boolean} [config.joinNames=true] - joins two consecutive cells after the place column into one cell
  * @returns {HTMLElement|null}
  */
 export default function convertRawResultsToTable(rawResults, config) {
@@ -29,8 +30,27 @@ export default function convertRawResultsToTable(rawResults, config) {
     const resultsMap = toResultsWithRegExp(settings.results);
     const resultsMapCount = resultsMap.length;
     const output = document.createElement('table');
-    const rows = lines.map((line) => line.split(settings.rowSeparator));
+
+    const rows = lines
+        .map((line) => line
+
+            // probably unhealthy replacing space in rank in order to make sure
+            // that it won't be broken into two cells
+            .replace(/([0-9]+)\s(dan|kyu)/i, '$1_$2')
+
+            // split line to cells (consider tabs and spaces as separators by default)
+            .split(new RegExp(settings.rowSeparator))
+
+            // remove empty cells
+            .filter((cell) => cell.length > 0)
+        )
+
+        // filter out empty rows or rows starting with ';' (EGD/FFG comment)
+        .filter((cells) => cells.length > 0 && cells[0].indexOf(';') !== 0);
+
     const tableWidth = rows.reduce((prev, line) => Math.max(prev, line.length), 0);
+    const tableModifier = settings.joinNames ? -1 : 0;
+    const joinNamePos = settings.placeColumn + 1;
 
     let gamesInColumns = null;
 
@@ -49,14 +69,10 @@ export default function convertRawResultsToTable(rawResults, config) {
             return;
         }
 
-        if (width < tableWidth) {
-            if (cells.length === 1 && !cells[0] || cells[0][0] === ';') {
-                return;
-            }
-
+        if (index < settings.startingRow || width < (tableWidth + tableModifier)) {
             let cell = document.createElement('td');
 
-            cell.setAttribute('colspan', tableWidth);
+            cell.setAttribute('colspan', tableWidth + tableModifier);
             cell.textContent = cells.join(' ');
 
             row.setAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT, -1);
@@ -66,7 +82,7 @@ export default function convertRawResultsToTable(rawResults, config) {
 
             const place = parseInt(cells[settings.placeColumn], 10);
 
-            if (index < settings.startingRow || (isNaN(place) && !previousPlace)) {
+            if (isNaN(place) && !previousPlace) {
                 cells.forEach((cellContent) => {
                     let cell = document.createElement('td');
 
@@ -81,10 +97,14 @@ export default function convertRawResultsToTable(rawResults, config) {
 
                 let opponents = [];
 
+                if (settings.joinNames) {
+                    cells.splice(joinNamePos, 2, `${cells[joinNamePos]}  ${cells[joinNamePos + 1]}`);
+                }
+
                 cells.forEach((cellContent, index) => {
                     let cell = document.createElement('td');
 
-                    cell.textContent = cellContent;
+                    cell.textContent = cellContent.replace(/_/, ' ');
 
                     if (!gamesInColumns || gamesInColumns.indexOf(index) >= 0) {
                         for (let i = 0; i < resultsMapCount; i++) {

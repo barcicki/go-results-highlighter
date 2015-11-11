@@ -25,7 +25,7 @@ function testFile(path, cb) {
     return (done) => {
         loadFile('/base/tests/results/' + path, (err, data) => {
             if (err) {
-                done.fail('shit');
+                done.fail('Could not load file');
             } else {
                 cb(data);
                 done();
@@ -109,7 +109,7 @@ describe('raw2table', () => {
 
             expect(rows.length).toBe(26);
             expect(rows[0].childNodes.length).toBe(1);
-            expect(rows[2].querySelectorAll('td').length).toBe(13);
+            expect(rows[2].querySelectorAll('td').length).toBe(1);
             expect(rows[2].querySelectorAll('[data-go-opponent]').length).toBe(0);
             expect(rows[2].hasAttribute('data-go-place')).toBeTruthy();
             expect(rows[2].getAttribute('data-go-place')).toBe('-1');
@@ -199,6 +199,52 @@ describe('raw2table', () => {
             expect(player13.querySelectorAll('[data-go-opponent]').length).toBe(5);
             expect(player13.querySelectorAll('[data-go-result="lost"]').length).toBe(3);
             expect(player13.querySelectorAll('[data-go-result="won"]').length).toBe(2);
+        }));
+
+        it('parse OpenGotha EGD export results', testFile('opengotha.egd.h9', (data) => {
+            let result = raw2table(data);
+
+            expect(result instanceof HTMLTableElement).toBeTruthy();
+
+            let rows = result.querySelectorAll('tr');
+
+            expect(rows.length).toBe(8);
+            expect(rows[0].querySelectorAll('td').length).toBe(12);
+            expect(rows[0].hasAttribute('data-go-place')).toBeTruthy();
+            expect(rows[0].getAttribute('data-go-place')).toBe('1');
+            expect(rows[7].getAttribute('data-go-place')).toBe('8');
+
+            let player5 = result.querySelector('[data-go-place="5"]');
+
+            expect(player5).not.toBeNull();
+            expect(player5 instanceof HTMLTableRowElement).toBeTruthy();
+            expect(player5.querySelectorAll('[data-go-opponent]').length).toBe(3);
+            expect(player5.getAttribute('data-go-opponents')).toEqual('4,1,3');
+            expect(player5.querySelectorAll('[data-go-result="lost"]').length).toBe(2);
+            expect(player5.querySelectorAll('[data-go-result="won"]').length).toBe(1);
+        }));
+
+        it('parse OpenGotha FFG export results', testFile('opengotha.ffg.tou', (data) => {
+            let result = raw2table(data);
+
+            expect(result instanceof HTMLTableElement).toBeTruthy();
+
+            let rows = result.querySelectorAll('tr');
+
+            expect(rows.length).toBe(8);
+            expect(rows[0].querySelectorAll('td').length).toBe(7);
+            expect(rows[0].hasAttribute('data-go-place')).toBeTruthy();
+            expect(rows[0].getAttribute('data-go-place')).toBe('1');
+            expect(rows[7].getAttribute('data-go-place')).toBe('8');
+
+            let player5 = result.querySelector('[data-go-place="5"]');
+
+            expect(player5).not.toBeNull();
+            expect(player5 instanceof HTMLTableRowElement).toBeTruthy();
+            expect(player5.querySelectorAll('[data-go-opponent]').length).toBe(3);
+            expect(player5.getAttribute('data-go-opponents')).toEqual('4,1,3');
+            expect(player5.querySelectorAll('[data-go-result="lost"]').length).toBe(2);
+            expect(player5.querySelectorAll('[data-go-result="won"]').length).toBe(1);
         }));
     });
 });

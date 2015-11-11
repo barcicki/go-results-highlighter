@@ -13,9 +13,10 @@ block content
 
     article
         .content.docs
-            h1 Raw results from Macmahon
+            h1 Raw results from <a href="http://www.cgerlach.de/go/macmahon.html">MacMahon</a>
 
             h3 Input:
+            p Saved tournament walllist using MacMahon 3.4
             pre
                 code.language-html
                     = "<pre data-go-results>\n"
@@ -28,5 +29,16 @@ block content
 
 
 
-            h1 Raw results from OpenGotha
-            p To be described ...
+            h1 Raw results from <a href="http://vannier.info/jeux/gotournaments/opengotha.htm">OpenGotha</a>
+
+            h3 Input:
+            p Exported to EGD format using OpenGotha 3.42. Spaces between columns
+            pre
+                code.language-html
+                    = "<pre data-go-results>\n"
+                    include ../../resources/opengotha.egd.h9
+                    = "</pre>"
+
+            h3 Output:
+            pre(data-go-results)
+                include ../../resources/opengotha.egd.h9
