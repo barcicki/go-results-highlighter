@@ -32,14 +32,25 @@ header {
 nav {
     padding: 0 10px;
     background: #879759;
+    overflow: hidden;
+
+    .when-small({
+        padding: 0;
+    });
 
     ul {
+        float: left;
+        .when-small({ float: none;  });
+
         &.github {
             float: right;
+            .when-medium({ clear: left; float: left;});
+            .when-small({ float: none });
         }
 
         li {
             display: inline-block;
+            .when-small ({ display: block; });
 
             &.active {
                 a {

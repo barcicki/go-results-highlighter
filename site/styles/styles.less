@@ -1,3 +1,11 @@
+.when-small(@rules) {
+  @media screen and (max-width: 500px) { @rules(); }
+}
+
+.when-medium(@rules) {
+  @media screen and (max-width: 850px) { @rules(); }
+}
+
 @import "layout";
 @import "home";
 @import "docs";
