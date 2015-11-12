@@ -16,20 +16,21 @@ import { defaults } from './utils';
  * @returns {HTMLElement|null}
  */
 export default function convertRawResultsToTable(rawResults, config) {
+    const output = document.createElement('table');
+
     if (!rawResults) {
-        return null;
+        return output;
     }
 
     const settings = defaults(DEFAULT_SETTINGS, config);
     const lines = rawResults.split(/\r\n|\n/);
 
     if (lines.length <= 2 && !lines[0] && !lines[1]) {
-        return null;
+        return output;
     }
 
     const resultsMap = toResultsWithRegExp(settings.results);
     const resultsMapCount = resultsMap.length;
-    const output = document.createElement('table');
 
     const rows = lines
         .map((line) => line

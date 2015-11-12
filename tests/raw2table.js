@@ -37,10 +37,10 @@ function testFile(path, cb) {
 describe('raw2table', () => {
     describe('should be able to', () => {
 
-        it('return null on empty string', function () {
-            expect(raw2table('')).toBe(null);
-            expect(raw2table()).toBe(null);
-            expect(raw2table('\r\n')).toBe(null);
+        it('return table even on empty strings', function () {
+            expect(raw2table('') instanceof HTMLTableElement).toBeTruthy();
+            expect(raw2table() instanceof HTMLTableElement).toBeTruthy();
+            expect(raw2table('\r\n') instanceof HTMLTableElement).toBeTruthy();
         });
 
         it('parse macmahon raw results', testFile('macmahon.txt', (data) => {
