@@ -54,6 +54,7 @@ export default class GoResultsHighlighter {
         this.bindEvents();
 
         this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
+        this.element.goResultsHighlighter = this;
         this.showingDetails = false;
     }
 

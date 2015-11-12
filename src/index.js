@@ -5,11 +5,8 @@ import { DOM_ATTRIBUTES } from './settings';
 import { asArray } from './utils';
 
 function initialize() {
-    const resultElements = asArray(document.querySelectorAll(`[${DOM_ATTRIBUTES.RESULT_TABLE}]`));
-
-    resultElements.forEach((tableEl) => {
-        tableEl.goResultsHighlighter = new GoResultsHighlighter(tableEl);
-    });
+    asArray(document.querySelectorAll(`[${DOM_ATTRIBUTES.RESULT_TABLE}]`))
+        .forEach((tableEl) => new GoResultsHighlighter(tableEl));
 }
 
 if (document.readyState === 'complete') {
@@ -21,7 +18,9 @@ if (document.readyState === 'complete') {
 if (typeof jQuery !== 'undefined') {
     jQuery.fn.goResultsHighlighter = function (options) {
         this.each(function (index, element) {
-            $(element).data('GoResultsHighlighter', new GoResultsHighlighter(element, options));
+            let highlighter = new GoResultsHighlighter(element, options);
+
+            $(highlighter.element).data('GoResultsHighlighter', highlighter);
         });
         return this;
     };
