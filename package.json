@@ -30,6 +30,7 @@
     "karma-coverage": "douglasduteil/karma-coverage#next",
     "karma-jasmine": "^0.3.6",
     "karma-phantomjs-launcher": "^0.2.1",
+    "karma-spec-reporter": "0.0.22",
     "less-plugin-clean-css": "^1.5.1",
     "phantomjs": "^1.9.18",
     "require-dir": "^0.3.0"

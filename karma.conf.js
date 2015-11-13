@@ -22,12 +22,20 @@ module.exports = function (config) {
             transform: ['babelify', 'browserify-istanbul']
         },
 
-        reporters: ['progress', 'coverage'],
+        specReporter: {
+            maxLogLines: 5,
+            suppressErrorSummary: true,
+            suppressFailed: false,
+            suppressPassed: false,
+            suppressSkipped: true
+        },
+
+        reporters: ['spec', 'coverage'],
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
         autoWatch: true,
-        browsers: ['PhantomJS'],
+        browsers: ['Chrome'],
         singleRun: false,
         concurrency: Infinity
     });

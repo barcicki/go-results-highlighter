@@ -157,6 +157,7 @@ export default class GoResultsHighlighter {
 
         if (!player) {
             this.showingDetails = false;
+            this.selectPlayer(-1);
             return;
         }
 
@@ -199,7 +200,7 @@ export default class GoResultsHighlighter {
 
                 // player row? no further search is necessary
                 if (placement) {
-                    playerPlacement = placement;
+                    playerPlacement = Number(placement);
                     break;
                 }
 
@@ -224,7 +225,10 @@ export default class GoResultsHighlighter {
                 lastTargetPos = target.getBoundingClientRect().top;
 
                 this.showDetails(-1);
-                this.selectPlayer(playerPlacement);
+
+                if (this.settings.hovering) {
+                    this.selectPlayer(playerPlacement);
+                }
             }
 
             if (lastTargetPos) {
@@ -252,12 +256,12 @@ export default class GoResultsHighlighter {
 
                 // game cell?
                 if (opponentGridPlacement) {
-                    opponent = opponentGridPlacement;
+                    opponent = Number(opponentGridPlacement);
                 }
 
                 // player row? no further search is necessary
                 if (playerGridPlacement) {
-                    player = playerGridPlacement;
+                    player = Number(playerGridPlacement);
                     break;
                 }
 

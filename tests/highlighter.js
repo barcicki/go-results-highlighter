@@ -35,6 +35,22 @@ const EXAMPLE_TOURNAMENT_WITH_SETTINGS =
         </tbody>
     </table>`;
 
+const EXAMPLE_TOURNAMENT_WITH_ADDITIONAL_IDS_AND_CLASSES =
+    `<table>
+        <tbody>
+            <tr id="row1"><td colspan="11">Example Tournament - After Round 3</td></tr>
+            <tr id="row2"><td>Place</td><td>Name</td><td>Club</td><td>Level</td><td>Score</td><td>1</td><td>2</td><td>3</td><td>Points</td><td>SOS</td><td>SOSOS</td></tr>
+            <tr id="row3"><td>1</td><td>Player 8</td><td>AAA</td><td>2 Kyu</td><td>28</td><td class="game1">6+</td><td class="game2">5+</td><td class="game3">2+</td><td>3</td><td>79</td><td>241</td></tr>
+            <tr id="row4"><td>2</td><td>Player 4</td><td>BBB</td><td>4 Kyu</td><td>27</td><td class="game1">8+</td><td class="game2">3+</td><td class="game3">1-</td><td>2</td><td>80</td><td>238</td></tr>
+            <tr id="row5"><td>3</td><td>Player 6</td><td>BBB</td><td>3 Kyu</td><td>27</td><td class="game1">4+</td><td class="game2">2-</td><td class="game3">7+</td><td>2</td><td>80</td><td>237</td></tr>
+            <tr id="row6"><td>4</td><td>Player 2</td><td>CCC</td><td>3 Kyu</td><td>27</td><td class="game1">3-</td><td class="game2">6+</td><td class="game3">5+</td><td>2</td><td>79</td><td>241</td></tr>
+            <tr id="row7"><td>5</td><td>Player 3</td><td>CCC</td><td>5 Kyu</td><td>26</td><td class="game1">7+</td><td class="game2">1-</td><td class="game3">4-</td><td>1</td><td>81</td><td>236</td></tr>
+            <tr id="row8"><td>6</td><td>Player 7</td><td>AAA</td><td>5 Kyu</td><td>26</td><td class="game1">1-</td><td class="game2">4-</td><td class="game3">8+</td><td>1</td><td>80</td><td>237</td></tr>
+            <tr id="row9"><td>7</td><td>Player 1</td><td>AAA</td><td>6 Kyu</td><td>26</td><td class="game1">5-</td><td class="game2">8+</td><td class="game3">3-</td><td>1</td><td>78</td><td>240</td></tr>
+            <tr id="row10"><td>8</td><td>Player 5</td><td>BBB</td><td>8 Kyu</td><td>25</td><td class="game1">2-</td><td class="game2">7-</td><td class="game3">6-</td><td>0</td><td>79</td><td>238</td></tr>
+        </tbody>
+    </table>`;
+
 describe('GoResultsHighlighter', () => {
     let placeholder;
 
@@ -128,10 +144,11 @@ describe('GoResultsHighlighter', () => {
             highlighter = new GoResultsHighlighter(table);
         });
 
-        it('no player is selected on start', () => {
+        it('ensure no player is selected on start', () => {
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
         });
 
         it('select player', () => {
@@ -182,7 +199,20 @@ describe('GoResultsHighlighter', () => {
             expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
         });
 
-        it('players are in proper order on start', () => {
+        it('select player and mark game with opponent', () => {
+            highlighter.selectPlayer(3, 2);
+
+            expect(table.querySelectorAll('.go-results-game').length).toBe(2);
+        });
+
+        it('deselect player with marked game', () => {
+            highlighter.selectPlayer(3, 7);
+            highlighter.selectPlayer(-1);
+
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+        });
+
+        it('ensure all players are in proper order on start', () => {
             expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
             expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
             expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
@@ -199,6 +229,7 @@ describe('GoResultsHighlighter', () => {
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(2);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(3);
 
             expect(highlighter.map[3].row.classList.contains('go-results-current')).toBeTruthy();
             expect(highlighter.map[4].row.classList.contains('go-results-won')).toBeTruthy();
@@ -217,6 +248,10 @@ describe('GoResultsHighlighter', () => {
             highlighter.showDetails(-1);
 
             expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
             expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
             expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
             expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
@@ -247,6 +282,10 @@ describe('GoResultsHighlighter', () => {
             highlighter.showDetails(-1);
 
             expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
             expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
             expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
             expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
@@ -254,6 +293,201 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.map[5].row.nextElementSibling).toBe(highlighter.map[6].row);
             expect(highlighter.map[6].row.nextElementSibling).toBe(highlighter.map[7].row);
             expect(highlighter.map[7].row.nextElementSibling).toBe(highlighter.map[8].row);
+        });
+    });
+
+    describe('should support events', () => {
+        let highlighter;
+        let table;
+
+        beforeEach(() => {
+            table = createDom(EXAMPLE_TOURNAMENT_WITH_ADDITIONAL_IDS_AND_CLASSES);
+            highlighter = new GoResultsHighlighter(table);
+
+            spyOn(highlighter, 'selectPlayer').and.callThrough();
+            spyOn(highlighter, 'showDetails').and.callThrough();
+        });
+
+        it('not mark any player when hovering non-player rows', () => {
+            let event = new MouseEvent('mouseover', { bubbles: true });
+
+            table.querySelector('#row2').firstChild.dispatchEvent(event);
+
+            expect(highlighter.selectPlayer).toHaveBeenCalledWith(-1, null);
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+        });
+
+        it('mark player and opponents when hovering player rows', () => {
+            let event = new MouseEvent('mouseover', { bubbles: true });
+
+            table.querySelector('#row5').dispatchEvent(event);
+
+            expect(highlighter.selectPlayer).toHaveBeenCalledWith(3, null);
+            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(2);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+        });
+
+        it('mark player, opponents and opponent\'s game when hovering game result in player row', () => {
+            let event = new MouseEvent('mouseover', { bubbles: true });
+
+            table.querySelector('#row5').querySelector('.game3').dispatchEvent(event);
+
+            expect(highlighter.selectPlayer).toHaveBeenCalledWith(3, 7);
+            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(2);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(2);
+        });
+
+        it('not mark any player when hovering settings is disabled', () => {
+            highlighter.settings.hovering = false;
+
+            let event = new MouseEvent('mouseover', { bubbles: true });
+
+            table.querySelector('#row5').querySelector('.game3').dispatchEvent(event);
+
+            expect(highlighter.selectPlayer).not.toHaveBeenCalled();
+        });
+
+        it('mark last hovered player', () => {
+            table.querySelector('#row3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row7').querySelector('.game1').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row5').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row6').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row8').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+
+            expect(highlighter.selectPlayer.calls.count()).toBe(5);
+            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(2);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+        });
+
+        it('unmark all players when hovering non-player rows', () => {
+            table.querySelector('#row3').querySelector('.game1').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row1').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+
+            expect(highlighter.selectPlayer.calls.count()).toBe(2);
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+        });
+
+        it('unmark players when not hovering table', () => {
+            table.querySelector('#row5').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('mouseout', { bubbles: true, relatedTarget: table.querySelector('#row5') }));
+            table.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, relatedTarget: table.parentNode }));
+
+            expect(highlighter.selectPlayer.calls.count()).toBe(2);
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+        });
+
+        it('do nothing when clicking non-player rows', () => {
+            table.querySelector('#row1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+            expect(highlighter.showDetails).toHaveBeenCalledWith(-1);
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+        });
+
+        it('show details when clicking player row', () => {
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+            expect(highlighter.showDetails).toHaveBeenCalledWith(3);
+            expect(highlighter.showingDetails).toBeTruthy();
+            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(2);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(3);
+        });
+
+        it('do nothing when clicking is disabled', () => {
+            highlighter.settings.clicking = false;
+
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+            expect(highlighter.showDetails).not.toHaveBeenCalled();
+            expect(highlighter.showingDetails).toBeFalsy();
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+        });
+
+        it('hide details when clicking the same player when showing details', () => {
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+            expect(highlighter.showDetails.calls.count()).toBe(2);
+            expect(highlighter.showingDetails).toBeFalsy();
+        });
+
+        it('hide details when clicking non-player rows when showing details', () => {
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            table.querySelector('#row1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+            expect(highlighter.showDetails.calls.count()).toBe(2);
+            expect(highlighter.showingDetails).toBeFalsy();
+        });
+
+        it('disable hovering when showing details', () => {
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+            highlighter.selectPlayer.calls.reset();
+
+            table.querySelector('#row3').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row7').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+
+            expect(highlighter.showDetails).toHaveBeenCalled();
+            expect(highlighter.selectPlayer).not.toHaveBeenCalled();
+            expect(highlighter.showingDetails).toBeTruthy();
+        });
+
+        it('show details of selected opponent', () => {
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            table.querySelector('#row9').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+            expect(highlighter.showDetails.calls.count()).toBe(2);
+            expect(highlighter.showingDetails).toBeTruthy();
+            expect(table.querySelectorAll('.go-results-won').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(2);
+        });
+
+        it('mark player selected without hovering when hiding details', () => {
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            table.querySelector('#row10').querySelector('.game1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+            expect(highlighter.showDetails.calls.count()).toBe(2);
+            expect(highlighter.showingDetails).toBeFalsy();
+            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(3);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+        });
+
+        it('not mark any player when hiding details and hovering setting is disabled', () => {
+            highlighter.settings.hovering = false;
+
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            table.querySelector('#row10').querySelector('.game1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+            expect(highlighter.showDetails.calls.count()).toBe(2);
+            expect(highlighter.showingDetails).toBeFalsy();
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
         });
     });
 });
