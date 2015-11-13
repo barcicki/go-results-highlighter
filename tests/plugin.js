@@ -45,7 +45,7 @@ describe('GoResultsHighlighter', () => {
         return placeholder.firstChild;
     }
 
-    fdescribe('should be able to', () => {
+    describe('should be able to', () => {
 
         it('bind to table element with default settings', () => {
             let table = createDom('<table></table>');
@@ -57,7 +57,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.settings).toEqual(DEFAULT_SETTINGS);
         });
 
-        it('bind to pre element with replacing it with table', function () {
+        it('bind to pre element with replacing it with table', () => {
             let pre = createDom('<pre></pre>');
             let highlighter = new GoResultsHighlighter(pre);
 
@@ -68,7 +68,7 @@ describe('GoResultsHighlighter', () => {
             expect(placeholder.firstChild).toBe(highlighter.element);
         });
 
-        it('handle clean results', function () {
+        it('handle clean results', () => {
             let table = createDom(EXAMPLE_TOURNAMENT);
             let highlighter = new GoResultsHighlighter(table);
 
@@ -77,7 +77,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.map[8].opponents).toEqual([2, 6, 7]);
         });
 
-        it('handle clean results with settings', function () {
+        it('handle clean results with settings', () => {
             let table = createDom(EXAMPLE_TOURNAMENT);
             let highlighter = new GoResultsHighlighter(table, {
                 roundsColumns: '5,7'
@@ -117,7 +117,143 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.map[8].opponents).toEqual([2, 6, 7]);
         });
 
+    });
 
+    describe('should provide API able to', () => {
+        let highlighter;
+        let table;
 
+        beforeEach(() => {
+            table = createDom(EXAMPLE_TOURNAMENT);
+            highlighter = new GoResultsHighlighter(table);
+        });
+
+        it('no player is selected on start', () => {
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+        });
+
+        it('select player', () => {
+            highlighter.selectPlayer(3);
+
+            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(2);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
+
+            expect(highlighter.map[3].row.classList.contains('go-results-current')).toBeTruthy();
+            expect(highlighter.map[4].row.classList.contains('go-results-won')).toBeTruthy();
+            expect(highlighter.map[7].row.classList.contains('go-results-won')).toBeTruthy();
+            expect(highlighter.map[2].row.classList.contains('go-results-lost')).toBeTruthy();
+        });
+
+        it('deselect player', () => {
+            highlighter.selectPlayer(3);
+            highlighter.selectPlayer(-1);
+
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+        });
+
+        it('change selected player', () => {
+            highlighter.selectPlayer(3);
+            highlighter.selectPlayer(2);
+            highlighter.selectPlayer(7);
+
+            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(2);
+
+            expect(highlighter.map[7].row.classList.contains('go-results-current')).toBeTruthy();
+            expect(highlighter.map[5].row.classList.contains('go-results-lost')).toBeTruthy();
+            expect(highlighter.map[8].row.classList.contains('go-results-won')).toBeTruthy();
+            expect(highlighter.map[3].row.classList.contains('go-results-lost')).toBeTruthy();
+        });
+
+        it('deselect player after many changes', () => {
+            highlighter.selectPlayer(3);
+            highlighter.selectPlayer(2);
+            highlighter.selectPlayer(7);
+            highlighter.selectPlayer(-1);
+
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+        });
+
+        it('players are in proper order on start', () => {
+            expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
+            expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
+            expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
+            expect(highlighter.map[4].row.nextElementSibling).toBe(highlighter.map[5].row);
+            expect(highlighter.map[5].row.nextElementSibling).toBe(highlighter.map[6].row);
+            expect(highlighter.map[6].row.nextElementSibling).toBe(highlighter.map[7].row);
+            expect(highlighter.map[7].row.nextElementSibling).toBe(highlighter.map[8].row);
+        });
+
+        it('show player details', () => {
+            highlighter.showDetails(3);
+
+            expect(table.classList.contains('go-results-showing-details')).toBeTruthy();
+            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(2);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
+
+            expect(highlighter.map[3].row.classList.contains('go-results-current')).toBeTruthy();
+            expect(highlighter.map[4].row.classList.contains('go-results-won')).toBeTruthy();
+            expect(highlighter.map[7].row.classList.contains('go-results-won')).toBeTruthy();
+            expect(highlighter.map[2].row.classList.contains('go-results-lost')).toBeTruthy();
+
+            expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
+            expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
+            expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
+            expect(highlighter.map[4].row.nextElementSibling).toBe(highlighter.map[7].row);
+            expect(highlighter.map[7].row.nextElementSibling).toBe(highlighter.map[5].row);
+        });
+
+        it('hide player details', () => {
+            highlighter.showDetails(3);
+            highlighter.showDetails(-1);
+
+            expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
+            expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
+            expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
+            expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
+            expect(highlighter.map[4].row.nextElementSibling).toBe(highlighter.map[5].row);
+            expect(highlighter.map[5].row.nextElementSibling).toBe(highlighter.map[6].row);
+            expect(highlighter.map[6].row.nextElementSibling).toBe(highlighter.map[7].row);
+            expect(highlighter.map[7].row.nextElementSibling).toBe(highlighter.map[8].row);
+        });
+
+        it('change player details', () => {
+            highlighter.showDetails(3);
+            highlighter.showDetails(5);
+            highlighter.showDetails(6);
+
+            expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
+            expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[5].row);
+            expect(highlighter.map[5].row.nextElementSibling).toBe(highlighter.map[1].row);
+            expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[4].row);
+            expect(highlighter.map[4].row.nextElementSibling).toBe(highlighter.map[6].row);
+            expect(highlighter.map[6].row.nextElementSibling).toBe(highlighter.map[8].row);
+            expect(highlighter.map[8].row.nextElementSibling).toBe(highlighter.map[7].row);
+        });
+
+        it('hide player details after changes', () => {
+            highlighter.showDetails(3);
+            highlighter.showDetails(5);
+            highlighter.showDetails(6);
+            highlighter.showDetails(-1);
+
+            expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
+            expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
+            expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
+            expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
+            expect(highlighter.map[4].row.nextElementSibling).toBe(highlighter.map[5].row);
+            expect(highlighter.map[5].row.nextElementSibling).toBe(highlighter.map[6].row);
+            expect(highlighter.map[6].row.nextElementSibling).toBe(highlighter.map[7].row);
+            expect(highlighter.map[7].row.nextElementSibling).toBe(highlighter.map[8].row);
+        });
     });
 });

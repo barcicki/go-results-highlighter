@@ -132,45 +132,47 @@ export default class GoResultsHighlighter {
     }
 
     /**
-     * Restores proper order of results
-     */
-    restoreFullResults() {
-        this.players
-            .filter((player) => player.row.properNextSibling)
-            .reverse()
-            .forEach((player) => {
-                player.row.parentNode.insertBefore(player.row, player.row.properNextSibling);
-                player.row.properNextSibling = null;
-            });
-
-        this.element.classList.remove(this.settings.prefixCls + this.settings.showingDetailsCls);
-        this.showingDetails = false;
-    }
-
-    /**
      * Shows details for selected player
-     * @param {number} [playerPlace]
+     * @param {number} [playerPlace] - if player with provided place doesn't
+     * exist and some other details are shown then the table is reset
      */
     showDetails(playerPlace) {
         const player = this.map[playerPlace];
 
+        if (this.showingDetails) {
+            this.players
+                .filter((player) => player.row.properNextSibling)
+                .reverse()
+                .forEach((player) => {
+                    if (player.row.properNextSibling === -1) {
+                        player.row.parentNode.appendChild(player.row);
+                    } else {
+                        player.row.parentNode.insertBefore(player.row, player.row.properNextSibling);
+                    }
+                    player.row.properNextSibling = null;
+                });
+
+            this.element.classList.remove(this.settings.prefixCls + this.settings.showingDetailsCls);
+        }
+
         if (!player) {
+            this.showingDetails = false;
             return;
         }
 
         const parent = player.row.parentNode;
-        let after = player.row.nextSibling;
+        let after = player.row.nextElementSibling;
 
         player.opponents.forEach((opponentPlace) => {
             let opponent = this.map[opponentPlace];
 
-            opponent.row.properNextSibling = opponent.row.nextSibling;
+            opponent.row.properNextSibling = opponent.row.nextElementSibling || -1;
 
             if (opponentPlace < playerPlace) {
                 parent.insertBefore(opponent.row, player.row);
             } else {
                 parent.insertBefore(opponent.row, after);
-                after = opponent.row.nextSibling;
+                after = opponent.row.nextElementSibling;
             }
         });
 
@@ -216,13 +218,12 @@ export default class GoResultsHighlighter {
             } else if (target.properNextSibling) {
                 lastTargetPos = target.getBoundingClientRect().top;
 
-                this.restoreFullResults();
                 this.showDetails(playerPlacement);
 
             } else {
                 lastTargetPos = target.getBoundingClientRect().top;
 
-                this.restoreFullResults();
+                this.showDetails(-1);
                 this.selectPlayer(playerPlacement);
             }
 
