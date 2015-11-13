@@ -1,8 +1,8 @@
 'use strict';
 
-import GoResultsHighlighter from './plugin';
-import { DOM_ATTRIBUTES } from './settings';
-import { asArray } from './utils';
+import GoResultsHighlighter from './lib/highlighter';
+import { DOM_ATTRIBUTES } from './lib/settings';
+import { asArray } from './lib/utils';
 
 function initialize() {
     asArray(document.querySelectorAll(`[${DOM_ATTRIBUTES.RESULT_TABLE}]`))

@@ -1,6 +1,6 @@
 'use strict';
 
-import { defaults } from '../src/utils';
+import { defaults } from '../src/lib/utils';
 
 describe('utilities', () => {
     describe('defaults function should be able to', () => {

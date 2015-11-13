@@ -1,6 +1,6 @@
 'use strict';
 
-import { readTableSettingsFromDOM } from '../src/settings';
+import { readTableSettingsFromDOM } from '../src/lib/settings';
 
 describe('settings', () => {
 

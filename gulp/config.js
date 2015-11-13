@@ -13,7 +13,7 @@ module.exports = {
             all: './gulp/**/*.*'
         },
         css: {
-            entry: './src/plugin.less',
+            entry: './src/styles/highlighter.less',
             all: './src/**/*.less',
             dest: './dist'
         },
@@ -43,7 +43,7 @@ module.exports = {
     },
     names: {
         css: {
-            entry: 'plugin.less',
+            entry: 'highlighter.less',
             dest: `${pjson.name}.css`,
             prod: `${pjson.name}.min.css`
         },

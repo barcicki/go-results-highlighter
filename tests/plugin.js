@@ -1,7 +1,7 @@
 'use strict';
 
-import GoResultsHighlighter from '../src/plugin';
-import { DEFAULT_SETTINGS } from '../src/settings';
+import GoResultsHighlighter from '../src/lib/highlighter';
+import { DEFAULT_SETTINGS } from '../src/lib/settings';
 
 const EXAMPLE_TOURNAMENT =
     `<table>

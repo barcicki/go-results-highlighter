@@ -1,6 +1,6 @@
 'use strict';
 
-import raw2table from '../src/raw2table';
+import raw2table from '../src/lib/raw2table';
 
 function loadFile(path, cb) {
     const xhr = new XMLHttpRequest();

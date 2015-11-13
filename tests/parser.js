@@ -1,8 +1,8 @@
 'use strict';
 
-import parse from '../src/parser';
-import { combine } from '../src/utils';
-import { readTableSettingsFromDOM } from '../src/settings';
+import parse from '../src/lib/parser';
+import { combine } from '../src/lib/utils';
+import { readTableSettingsFromDOM } from '../src/lib/settings';
 
 describe('parser', () => {
 
