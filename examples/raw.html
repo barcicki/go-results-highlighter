@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><title>Raw results parsing - Go Results Highlighter</title><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css"><link href="../go-results-highlighter.css" rel="stylesheet" type="text/css"><link href="../styles/styles.css" rel="stylesheet" type="text/css"><link href="../components/octicons/octicons/octicons.css" rel="stylesheet" type="text/css"><link href="../components/highlightjs/styles/github.css" rel="stylesheet" type="text/css"><script src="../components/highlightjs/highlight.pack.min.js"></script><script src="../components/jquery/dist/jquery.min.js"></script><script src="../go-results-highlighter.js"></script><script src="../scripts/main.js"></script></head><body><header><div class="content"><h1>Go Results Highlighter</h1><h2>by Artur Barcicki</h2></div></header><nav><div class="content"><ul class="github"><li><a href="https://github.com/barcicki/go-results-highlighter"><span class="octicon octicon-mark-github"></span><span>View on GitHub</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span class="octicon octicon-cloud-download"></span><span>Download .zip</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span class="octicon octicon-cloud-download"></span><span>Download .tar.gz</span></a></li></ul><ul><li><a href="../"><span class="octicon octicon-home"></span><span>Home</span></a></li><li><a href="../docs"><span class="octicon octicon-file-text"></span><span>Documentation</span></a></li><li class="active"><a href="../examples/binding.html"><span class="octicon octicon-eye"></span><span>Examples</span></a></li></ul></div></nav><div class="content"><ul class="examples"><li><a href="binding.html">Manual Binding</a></li><li><a href="configuration.html">Configuration & Customization</a></li><li><a href="congress.html">Long Go Congress results</a></li><li><a href="raw.html">Raw results from Macmahon & OpenGotha</a></li></ul></div><article><div class="content docs"><h1>Raw results from <a href="http://www.cgerlach.de/go/macmahon.html">MacMahon</a></h1><h3>Input:</h3><p>Saved tournament walllist using MacMahon 3.4</p><pre><code class="language-html">&lt;pre data-go-results&gt;
+<!DOCTYPE html><html lang="en"><head><title>Raw results parsing - Go Results Highlighter</title><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css"><link href="../go-results-highlighter.css" rel="stylesheet" type="text/css"><link href="../styles/styles.css" rel="stylesheet" type="text/css"><link href="../components/octicons/octicons/octicons.css" rel="stylesheet" type="text/css"><link href="../components/highlightjs/styles/github.css" rel="stylesheet" type="text/css"><script src="../components/highlightjs/highlight.pack.min.js"></script><script src="../components/jquery/dist/jquery.min.js"></script><script src="../go-results-highlighter.js"></script><script src="../scripts/main.js"></script></head><body><header><div class="content"><h1>Go Results Highlighter</h1><h2>by Artur Barcicki</h2></div></header><nav><div class="content"><ul><li><a href="../"><span class="octicon octicon-home"></span><span>Home</span></a></li><li><a href="../docs"><span class="octicon octicon-file-text"></span><span>Documentation</span></a></li><li class="active"><a href="../examples/binding.html"><span class="octicon octicon-eye"></span><span>Examples</span></a></li></ul><ul class="github"><li><a href="https://github.com/barcicki/go-results-highlighter"><span class="octicon octicon-mark-github"></span><span>View on GitHub</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span class="octicon octicon-cloud-download"></span><span>Download .zip</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span class="octicon octicon-cloud-download"></span><span>Download .tar.gz</span></a></li></ul></div></nav><div class="content"><ul class="examples"><li><a href="binding.html">Manual Binding</a></li><li><a href="configuration.html">Configuration & Customization</a></li><li><a href="congress.html">Long Go Congress results</a></li><li><a href="raw.html">Raw results from Macmahon & OpenGotha</a></li></ul></div><article><div class="content docs"><h1>Raw results from <a href="http://www.cgerlach.de/go/macmahon.html">MacMahon</a></h1><h3>Input:</h3><p>Saved tournament walllist using MacMahon 3.4</p><pre><code class="language-html">&lt;pre data-go-results&gt;
 Example Tournament - After Round 3
 Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
 1	Player 8	AAA	2 Kyu	28	6+	5+	2+	3	79	241
@@ -9,7 +9,7 @@ Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
 6	Player 7	AAA	5 Kyu	26	1-	4-	8+	1	80	237
 7	Player 1	AAA	6 Kyu	26	5-	8+	3-	1	78	240
 8	Player 5	BBB	8 Kyu	25	2-	7-	6-	0	79	238
-&lt;/pre&gt;</code></pre><h3>Output:</h3><pre data-go-results>Example Tournament - After Round 3
+&lt;/pre&gt;</code></pre><h3>Output:</h3><div class="wrapper"><pre data-go-results>Example Tournament - After Round 3
 Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
 1	Player 8	AAA	2 Kyu	28	6+	5+	2+	3	79	241
 2	Player 4	BBB	4 Kyu	27	8+	3+	1-	2	80	238
@@ -19,7 +19,7 @@ Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
 6	Player 7	AAA	5 Kyu	26	1-	4-	8+	1	80	237
 7	Player 1	AAA	6 Kyu	26	5-	8+	3-	1	78	240
 8	Player 5	BBB	8 Kyu	25	2-	7-	6-	0	79	238
-</pre><h1>Raw results from <a href="http://vannier.info/jeux/gotournaments/opengotha.htm">OpenGotha</a></h1><h3>Input:</h3><p>Exported to EGD format using OpenGotha 3.42. Spaces between columns</p><pre><code class="language-html">&lt;pre data-go-results&gt;
+</pre></div><h1>Raw results from <a href="http://vannier.info/jeux/gotournaments/opengotha.htm">OpenGotha</a></h1><h3>Input:</h3><p>Exported to EGD format using OpenGotha 3.42. Spaces between columns</p><pre><code class="language-html">&lt;pre data-go-results&gt;
 ; CL[A]
 ; EV[Example Tournament]
 ; PC[,Location name]
@@ -39,7 +39,7 @@ Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
    6 Player_3 C                      5K XX  CCC   21   66  190 0    3+/w0    2-/b0    4-/b0
    7 Player_1 A                      6K XX  AAA   21   64  194 0    2-/w0    3-/b0    8+/b0
    8 Player_5 E                      8K XX  BBB   20   66  189 0    1-/w0    4-/b0    7-/w0
-&lt;/pre&gt;</code></pre><h3>Output:</h3><pre data-go-results>; CL[A]
+&lt;/pre&gt;</code></pre><h3>Output:</h3><div class="wrapper"><pre data-go-results>; CL[A]
 ; EV[Example Tournament]
 ; PC[,Location name]
 ; DT[2015-11-11,2015-11-11]
@@ -58,4 +58,4 @@ Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
    6 Player_3 C                      5K XX  CCC   21   66  190 0    3+/w0    2-/b0    4-/b0
    7 Player_1 A                      6K XX  AAA   21   64  194 0    2-/w0    3-/b0    8+/b0
    8 Player_5 E                      8K XX  BBB   20   66  189 0    1-/w0    4-/b0    7-/w0
-</pre></div></article></body></html>
+</pre></div></div></article></body></html>

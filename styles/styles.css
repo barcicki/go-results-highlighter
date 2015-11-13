@@ -26,12 +26,42 @@ header h2 {
 nav {
   padding: 0 10px;
   background: #879759;
+  overflow: hidden;
+}
+@media screen and (max-width: 500px) {
+  nav {
+    padding: 0;
+  }
+}
+nav ul {
+  float: left;
+}
+@media screen and (max-width: 500px) {
+  nav ul {
+    float: none;
+  }
 }
 nav ul.github {
   float: right;
 }
+@media screen and (max-width: 850px) {
+  nav ul.github {
+    clear: left;
+    float: left;
+  }
+}
+@media screen and (max-width: 500px) {
+  nav ul.github {
+    float: none;
+  }
+}
 nav ul li {
   display: inline-block;
+}
+@media screen and (max-width: 500px) {
+  nav ul li {
+    display: block;
+  }
 }
 nav ul li.active a {
   background: #ffffff;
@@ -107,10 +137,14 @@ article .wrapper {
 }
 .examples {
   margin-top: 10px;
-  text-align: center;
 }
 .examples li {
   display: inline-block;
+}
+@media screen and (max-width: 500px) {
+  .examples li {
+    display: block;
+  }
 }
 .examples li a {
   display: block;
