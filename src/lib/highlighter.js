@@ -1,6 +1,6 @@
 'use strict';
 
-import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, readTableSettingsFromDOM } from './settings';
+import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toPrefixedClasses, readTableSettingsFromDOM } from './settings';
 import parse from './parser';
 import convert from './raw2table';
 import { asArray, defaults } from './utils';
@@ -49,13 +49,12 @@ export default class GoResultsHighlighter {
             return;
         }
 
-
         this.createPlayersMap();
         this.bindEvents();
 
         this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
         this.element.goResultsHighlighter = this;
-        this.showingDetails = false;
+        this.isShowingDetails = false;
     }
 
     /**
@@ -73,113 +72,95 @@ export default class GoResultsHighlighter {
     }
 
     /**
-     * Marks the row for selected player and a cell with opponents game if
-     * provided.
-     * @param {number} [playerPlace] - player's place, selection will be remove
-     * if not player is found for given place
-     * @param {number} [opponentPlace] - player's opponent's place - to mark
-     * cells with game between player and the opponent
+     * Marks player and his opponents highlighted.
+     * @param {object|number|null} [settings] - highlighting settings or player to be highlighted
+     * @param {number} [settings.player] - player whose opponents should be
+     * highlighted
+     * @param {boolean} [settings.compact=false] - whether the table should be
+     * rearranged to display results in compact size
+     * @param {number} [settings.opponent] - the opponent whose game with the
+     * player should be highlighted
+     * @param {boolean} [compact=false] - if settings are not provided than this
+     * argument is checked for compact flag
      */
-    selectPlayer(playerPlace, opponentPlace) {
-        const currentCls = this.settings.prefixCls + this.settings.currentCls;
-        const gameCls = this.settings.prefixCls + this.settings.gameCls;
+    highlight(settings, compact = false) {
+        let playerPlace;
+        let gameWithOpponent;
+
+        if (settings && typeof settings === 'object') {
+            playerPlace = settings.player;
+            compact = settings.compact === true;
+            gameWithOpponent = settings.opponent;
+        } else {
+            playerPlace = settings;
+        }
 
         const player = this.map[playerPlace];
+        const classes = toPrefixedClasses(this.settings);
 
-        const markedGames = asArray(this.element.querySelectorAll('.' + gameCls));
-        const markedRow = this.element.querySelector('.' + currentCls);
+        // if table is already rearranged then transform it back to default state
+        if (this.isShowingDetails) {
+            restoreNaturalOrder(this.players);
+        }
+
+        // rearrange the table if player and appropriate setting is provided
+        if (player && compact) {
+            rearrangeOrder(player, player.opponents.map((opponentPlace) => this.map[opponentPlace]));
+
+            this.element.classList.add(classes.showingDetailsCls);
+            this.isShowingDetails = true;
+        } else {
+            this.element.classList.remove(classes.showingDetailsCls);
+            this.isShowingDetails = false;
+        }
+
+        const markedGames = asArray(this.element.querySelectorAll('.' + classes.gameCls));
+        const markedRow = this.element.querySelector('.' + classes.currentCls);
         const markedRowPlacement = markedRow ? markedRow.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT) : null;
         const markedPlayer = markedRowPlacement ? this.map[markedRowPlacement] : null;
-
-        // remove any visible game markings
-        markedGames.forEach((gameCell) => {
-            gameCell.classList.remove(gameCls);
-        });
-
-        // unmark player if necessary
-        if (markedPlayer && markedPlayer !== player) {
-            mark.call(this, markedPlayer, false);
-        }
-
-        // mark the player if not already marked
-        if (player && player !== markedPlayer) {
-            mark.call(this, player, true);
-        }
-
-        // mark all the games
-        if (this.showingDetails) {
-            player.opponents.forEach((opponent) => {
-                this.map[opponent].games[playerPlace].cell.classList.add(gameCls);
-            });
-
-        // mark the game between the player and the opponent
-        } else if (player && opponentPlace) {
-            player.games[opponentPlace].cell.classList.add(gameCls);
-            this.map[opponentPlace].games[playerPlace].cell.classList.add(gameCls);
-        }
-
-        function mark(player, active) {
+        const mark = (player, active) => {
             const method = active ? 'add' : 'remove';
 
-            player.row.classList[method](currentCls);
+            player.row.classList[method](classes.currentCls);
 
             player.opponents.forEach((opponentPlace) => {
                 let opponent = this.map[opponentPlace];
 
                 opponent.row.classList[method](this.settings.prefixCls + player.games[opponentPlace].cls);
             });
-        }
-    }
+        };
 
-    /**
-     * Shows details for selected player
-     * @param {number} [playerPlace] - if player with provided place doesn't
-     * exist and some other details are shown then the table is reset
-     */
-    showDetails(playerPlace) {
-        const player = this.map[playerPlace];
-
-        if (this.showingDetails) {
-            this.players
-                .filter((player) => player.row.properNextSibling)
-                .reverse()
-                .forEach((player) => {
-                    if (player.row.properNextSibling === -1) {
-                        player.row.parentNode.appendChild(player.row);
-                    } else {
-                        player.row.parentNode.insertBefore(player.row, player.row.properNextSibling);
-                    }
-                    player.row.properNextSibling = null;
-                });
-
-            this.element.classList.remove(this.settings.prefixCls + this.settings.showingDetailsCls);
-        }
-
-        if (!player) {
-            this.showingDetails = false;
-            this.selectPlayer(-1);
-            return;
-        }
-
-        const parent = player.row.parentNode;
-        let after = player.row.nextElementSibling;
-
-        player.opponents.forEach((opponentPlace) => {
-            let opponent = this.map[opponentPlace];
-
-            opponent.row.properNextSibling = opponent.row.nextElementSibling || -1;
-
-            if (opponentPlace < playerPlace) {
-                parent.insertBefore(opponent.row, player.row);
-            } else {
-                parent.insertBefore(opponent.row, after);
-                after = opponent.row.nextElementSibling;
-            }
+        // remove any visible game markings
+        markedGames.forEach((gameCell) => {
+            gameCell.classList.remove(classes.gameCls);
         });
 
-        this.element.classList.add(this.settings.prefixCls + this.settings.showingDetailsCls);
-        this.showingDetails = true;
-        this.selectPlayer(playerPlace);
+        // unmark player if necessary
+        if (markedPlayer && markedPlayer !== player) {
+            mark(markedPlayer, false);
+        }
+
+        // mark the player if not already marked
+        if (player && player !== markedPlayer) {
+            mark(player, true);
+        }
+
+        if (player) {
+            if (gameWithOpponent && this.map[gameWithOpponent]) {
+                let game = player.games[gameWithOpponent];
+                let opponent = this.map[gameWithOpponent];
+
+                if (game && opponent) {
+                    game.cell.classList.add(classes.gameCls);
+                    opponent.games[playerPlace].cell.classList.add(classes.gameCls);
+                }
+            } else if (this.isShowingDetails) {
+                player.opponents.forEach((opponent) => {
+                    this.map[opponent].games[playerPlace].cell.classList.add(classes.gameCls);
+                });
+
+            }
+        }
     }
 
     /**
@@ -213,21 +194,21 @@ export default class GoResultsHighlighter {
 
             let lastTargetPos;
 
-            if (!this.showingDetails) {
-                this.showDetails(playerPlacement);
+            if (!this.isShowingDetails) {
+                this.highlight(playerPlacement, true);
 
             } else if (target.properNextSibling) {
                 lastTargetPos = target.getBoundingClientRect().top;
 
-                this.showDetails(playerPlacement);
+                this.highlight(playerPlacement, true);
 
             } else {
                 lastTargetPos = target.getBoundingClientRect().top;
 
-                this.showDetails(-1);
-
                 if (this.settings.hovering) {
-                    this.selectPlayer(playerPlacement);
+                    this.highlight(playerPlacement);
+                } else {
+                    this.highlight(-1);
                 }
             }
 
@@ -241,7 +222,7 @@ export default class GoResultsHighlighter {
         });
 
         this.element.addEventListener('mouseover', (event) => {
-            if (this.settings.hovering === false || this.showingDetails) {
+            if (this.settings.hovering === false || this.isShowingDetails) {
                 return;
             }
 
@@ -272,11 +253,11 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            this.selectPlayer(player, opponent);
+            this.highlight({ player, opponent });
         }, false);
 
         this.element.addEventListener('mouseout', (event) => {
-            if (this.settings.hovering === false || this.showingDetails) {
+            if (this.settings.hovering === false || this.isShowingDetails) {
                 return;
             }
 
@@ -289,10 +270,49 @@ export default class GoResultsHighlighter {
             // if new hovered element is outside the table then remove all
             // selections
             if (target !== this.element) {
-                this.selectPlayer(-1);
+                this.highlight(-1);
             }
         }, false);
     }
+}
+
+/**
+ * Restores default order of rows in the table
+ * @param {Array.<object>} players - list of mapping data for all rows
+ */
+function restoreNaturalOrder(players) {
+    players
+        .filter((player) => player.row.properNextSibling)
+        .reverse()
+        .forEach((player) => {
+            if (player.row.properNextSibling === -1) {
+                player.row.parentNode.appendChild(player.row);
+            } else {
+                player.row.parentNode.insertBefore(player.row, player.row.properNextSibling);
+            }
+            player.row.properNextSibling = null;
+        });
+}
+
+/**
+ * Rearranges the rows in a table
+ * @param {object} player - player mapping data
+ * @param {Array.<object>} opponents - list of opponents mapping data
+ */
+function rearrangeOrder(player, opponents) {
+    const parent = player.row.parentNode;
+    let after = player.row.nextElementSibling;
+
+    opponents.forEach((opponent) => {
+        opponent.row.properNextSibling = opponent.row.nextElementSibling || -1;
+
+        if (opponent.tournamentPlace < player.tournamentPlace) {
+            parent.insertBefore(opponent.row, player.row);
+        } else {
+            parent.insertBefore(opponent.row, after);
+            after = opponent.row.nextElementSibling;
+        }
+    });
 }
 
 GoResultsHighlighter.DEFAULT_SETTINGS = DEFAULT_SETTINGS;

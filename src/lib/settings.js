@@ -31,6 +31,13 @@ export const DEFAULT_SETTINGS = {
     clicking: true
 };
 
+const CLASSES_TO_BE_PREFIXED = [
+    'showingDetailsCls',
+    'tableCls',
+    'gameCls',
+    'currentCls'
+];
+
 /**
  * Names of attributes used in this plugin
  * @type {{RESULT_TABLE: string, SETTING_STARTING_ROW: string, SETTING_PLACE_COLUMN: string, SETTING_ROUNDS_COLUMNS: string, PLAYER_PLACEMENT: string, OPPONENT_PLACEMENT: string, GAME_RESULT: string}}
@@ -67,6 +74,21 @@ export function toResultsWithRegExp(results) {
     }
 
     return map;
+}
+
+/**
+ * Returns object with prefixed classes based on settings
+ * @param {object} settings
+ * @returns {{}}
+ */
+export function toPrefixedClasses(settings) {
+    let result = {};
+
+    CLASSES_TO_BE_PREFIXED.forEach((cls) => {
+        result[cls] = settings.prefixCls + settings[cls];
+    });
+
+    return result;
 }
 
 /**
