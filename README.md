@@ -1,5 +1,7 @@
 # Go Results Highlighter
 
+[![Build Status](https://travis-ci.org/barcicki/go-results-highlighter.svg)](https://travis-ci.org/barcicki/go-results-highlighter)
+
 ## About
 
 The goal of this plugin is to improve readability of Go result tables by
