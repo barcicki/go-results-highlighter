@@ -1,14 +1,22 @@
 {
   "name": "go-results-highlighter",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Improves readability of Go results by highlighting opponents of selected player",
-  "main": "index.js",
   "scripts": {
     "build": "gulp build",
     "start": "gulp serve",
     "test": "karma start --single-run"
   },
   "author": "Artur Barcicki <barcicki@gmail.com>",
+  "homepage": "http://barcicki.github.io/go-results-highlighter",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/barcicki/go-results-highlighter.git"
+  },
+  "bugs": {
+    "url" : "https://github.com/barcicki/go-results-highlighter/issues",
+    "email" : "barcicki@gmail.com"
+  },
   "license": "MIT",
   "devDependencies": {
     "babelify": "^6.4.0",
@@ -35,10 +43,8 @@
     "karma-spec-reporter": "0.0.22",
     "less-plugin-clean-css": "^1.5.1",
     "phantomjs": "^1.9.18",
-    "require-dir": "^0.3.0"
-  },
-  "optionalDependencies": {
+    "estraverse": "^4.1.1",
     "eslint": "^1.8.0",
-    "estraverse": "^4.1.1"
+    "require-dir": "^0.3.0"
   }
 }
