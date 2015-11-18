@@ -3,7 +3,7 @@
 <h2>About</h2>
 <p>The goal of this plugin is to improve readability of Go result tables by
 highlighting opponent rows for the selected player.</p>
-<p>This is updated version of https://github.com/barcicki/jQuery-Table-Result-for-Go.
+<p>This is the rewritten version of <a href="https://github.com/barcicki/jQuery-Table-Result-for-Go">jQuery Table Result for Go</a>.
 It was created to provide jQuery independent version of the plugin and serve it
 using popular package managers such as Bower or NPM.</p>
 <h2>Installation</h2>
@@ -15,8 +15,14 @@ using popular package managers such as Bower or NPM.</p>
 <pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;bower_components/go-results-highlighter/dist/go-results-highlighter.min.css&quot;&gt;
 &lt;script src=&quot;bower_components/go-results-highlighter/dist/go-results-highlighter.min.js&quot;&gt;&lt;/script&gt;
 </code></pre>
+<h4>Using NPM</h4>
+<p>Download Go Results Highlighter using following command:</p>
+<pre><code class="language-bash">npm install go-results-highlighter
+</code></pre>
+<p>Include <code>go-results-highlighter.min.js</code> and <code>go-results-highlighter.min.css</code>
+from <code>node_modules/go-results-highlighter/dist</code> directory to your website.</p>
 <h4>Downloading manually</h4>
-<p><a href="https://github.com/barcicki/go-results-highlighter/releases/latest">Download latest release from GitHub</a></p>
+<p><a href="https://github.com/barcicki/go-results-highlighter/releases/latest">Download the latest release from GitHub</a></p>
 <p>Include <code>go-results-highlighter.min.js</code> and <code>go-results-highlighter.min.css</code>
 from <code>dist</code> directory to your website.</p>
 <h2>Basic usage</h2>
@@ -37,7 +43,7 @@ globally:</p>
 <p>if it detects globally accessible jQuery object, then it's also possible to call:</p>
 <pre><code class="language-js">$(selectorOfElementWithGoResults).goResultsHighlighter(optionalSettings);
 </code></pre>
-<h2>Configuration &amp; customization</h2>
+<h2>Configuration</h2>
 <table>
 <thead>
 <tr>
@@ -164,7 +170,7 @@ globally:</p>
 </tr>
 </tbody>
 </table>
-<h2>Highlighter API</h2>
+<h2>Go Results Highlighter API</h2>
 <h3><code>highlight(playerPlace, [compact = false])</code></h3>
 <p>Highlights row with the player and his/hers opponents.</p>
 <p>Arguments:</p>
