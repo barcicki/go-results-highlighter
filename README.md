@@ -7,7 +7,7 @@
 The goal of this plugin is to improve readability of Go result tables by
 highlighting opponent rows for the selected player.
 
-This is updated version of https://github.com/barcicki/jQuery-Table-Result-for-Go.
+This is the rewritten version of [jQuery Table Result for Go](https://github.com/barcicki/jQuery-Table-Result-for-Go).
 It was created to provide jQuery independent version of the plugin and serve it
 using popular package managers such as Bower or NPM.
 
@@ -28,9 +28,20 @@ Then add highlighter files to your website
 <script src="bower_components/go-results-highlighter/dist/go-results-highlighter.min.js"></script>
 ```
 
+#### Using NPM
+
+Download Go Results Highlighter using following command:
+
+```bash
+npm install go-results-highlighter
+```
+
+Include `go-results-highlighter.min.js` and `go-results-highlighter.min.css`
+from `node_modules/go-results-highlighter/dist` directory to your website.
+
 #### Downloading manually
 
-[Download latest release from GitHub](https://github.com/barcicki/go-results-highlighter/releases/latest)
+[Download the latest release from GitHub](https://github.com/barcicki/go-results-highlighter/releases/latest)
 
 Include `go-results-highlighter.min.js` and `go-results-highlighter.min.css`
 from `dist` directory to your website.
@@ -66,7 +77,7 @@ if it detects globally accessible jQuery object, then it's also possible to call
 $(selectorOfElementWithGoResults).goResultsHighlighter(optionalSettings);
 ```
 
-## Configuration & customization
+## Configuration
 
 |Setting|Attribute|&nbsp;&nbsp;Default&nbsp;value&nbsp;&nbsp;|Description|
 |:---:|:---:|:------:|---|
@@ -90,7 +101,7 @@ $(selectorOfElementWithGoResults).goResultsHighlighter(optionalSettings);
 |`gameCls`|-|`"game"`|className of highlighted game call|
 |`currentCls`|-|`"current"`|className of the row with highlighted player|
 
-## Highlighter API
+## Go Results Highlighter API
 
 ### `highlight(playerPlace, [compact = false])`
 
