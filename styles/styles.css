@@ -103,6 +103,10 @@ article button {
 article button:disabled {
   cursor: default;
 }
+article ul,
+article li {
+  margin-left: 20px;
+}
 article .note {
   text-align: center;
   margin: 10px 0;
