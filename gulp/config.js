@@ -38,6 +38,9 @@ module.exports = {
                 entry: './site/scripts/main.js',
                 all: './site/scripts/**/*.js',
                 dest: './dist/scripts'
+            },
+            resources: {
+                all: ['./site/resources/**/*.*', './README.md']
             }
         }
     },

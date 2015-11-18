@@ -40,7 +40,7 @@ export default function convertRawResultsToTable(rawResults, config) {
             .replace(/([0-9]+)\s(dan|kyu)/i, '$1_$2')
 
             // split line to cells (consider tabs and spaces as separators by default)
-            .split(new RegExp(settings.rowSeparator))
+            .split(new RegExp(settings.cellSeparator))
 
             // remove empty cells
             .filter((cell) => cell.length > 0)
