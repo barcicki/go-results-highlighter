@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function (config) {
-    config.set({
+    var configuration = {
         basePath:   '',
         frameworks: ['jasmine', 'browserify'],
 
@@ -38,5 +38,11 @@ module.exports = function (config) {
         browsers: ['Chrome'],
         singleRun: false,
         concurrency: Infinity
-    });
+    };
+
+    if (process.env.TRAVIS) {
+        configuration.browsers = ['Firefox'];
+    }
+
+    config.set(configuration);
 };
