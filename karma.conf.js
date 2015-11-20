@@ -35,6 +35,16 @@ module.exports = function (config) {
         },
 
         reporters: ['spec', 'coverage'],
+
+        coverageReporter: {
+            dir: 'coverage',
+            reporters: [
+                { type: 'html', subdir: '.' },
+                { type: 'lcovonly', subdir: '.', file: 'lcov.info' },
+                { type: 'text-summary', subdir: '.', file: 'summary.txt' }
+            ]
+        },
+
         port: 9876,
         colors: true,
         logLevel: config.LOG_INFO,
@@ -46,6 +56,7 @@ module.exports = function (config) {
 
     if (process.env.TRAVIS) {
         configuration.browsers = ['Firefox'];
+        configuration.reporters.push('coveralls');
     }
 
     config.set(configuration);

@@ -4,6 +4,7 @@ node_js:
   - "4.1"
   - "4.0"
 before_script:
+  - "npm install karma-coveralls"
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 cache:
