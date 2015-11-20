@@ -39,6 +39,10 @@ module.exports = {
                 all: './site/scripts/**/*.js',
                 dest: './dist/scripts'
             },
+            assets: {
+                all: './site/assets/**/*.*',
+                dest: './dist/assets'
+            },
             resources: {
                 all: ['./site/resources/**/*.*', './README.md']
             }

@@ -6,6 +6,16 @@
 [![Dependency Status](https://david-dm.org/barcicki/go-results-highlighter.svg)](https://david-dm.org/barcicki/go-results-highlighter)
 [![devDependency Status](https://david-dm.org/barcicki/go-results-highlighter/dev-status.svg)](https://david-dm.org/barcicki/go-results-highlighter#info=devDependencies)
 
+
+Highlighted results:
+
+![Results with highlight](http://barcicki.github.io/go-results-highlighter/assets/results-hover.png)
+
+Highlighted results in compact mode:
+
+![Results in compact mode](http://barcicki.github.io/go-results-highlighter/assets/results-click.png)
+
+
 ## About
 
 The goal of this plugin is to improve readability of Go result tables by
