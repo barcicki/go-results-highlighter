@@ -1,5 +1,9 @@
 'use strict';
 
+const babelify = require('babelify').configure({
+    presets: ['es2015']
+});
+
 module.exports = function (config) {
     var configuration = {
         basePath:   '',
@@ -19,7 +23,7 @@ module.exports = function (config) {
 
         browserify: {
             debug: true,
-            transform: ['babelify', 'browserify-istanbul']
+            transform: [babelify, 'browserify-istanbul']
         },
 
         specReporter: {

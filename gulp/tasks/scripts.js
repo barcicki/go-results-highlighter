@@ -6,11 +6,14 @@ const config = require('../config');
 const browserify = require('gulp-browserify');
 const rename = require('gulp-rename');
 const uglify = require('gulp-uglify');
+const babelify = require('babelify').configure({
+    presets: ['es2015']
+});
 
 gulp.task('build-js-dev', () => {
     return gulp.src(config.paths.js.entry)
         .pipe(browserify({
-            transform: ['babelify'],
+            transform: [babelify],
             debug: true,
             standalone: config.name
         }))
@@ -21,7 +24,8 @@ gulp.task('build-js-dev', () => {
 gulp.task('build-js-site', () => {
     return gulp.src(config.paths.site.js.entry)
         .pipe(browserify({
-            transform: ['babelify'],
+            transform: [babelify],
+            sourceType: 'module',
             debug: true
         }))
         .pipe(gulp.dest(config.paths.site.js.dest));

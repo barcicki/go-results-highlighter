@@ -1,6 +1,9 @@
 # Go Results Highlighter
 
+[![npm version](https://badge.fury.io/js/go-results-highlighter.svg)](https://badge.fury.io/js/go-results-highlighter)
 [![Build Status](https://travis-ci.org/barcicki/go-results-highlighter.svg)](https://travis-ci.org/barcicki/go-results-highlighter)
+[![Dependency Status](https://david-dm.org/barcicki/go-results-highlighter.svg)](https://david-dm.org/barcicki/go-results-highlighter)
+[![devDependency Status](https://david-dm.org/barcicki/go-results-highlighter/dev-status.svg)](https://david-dm.org/barcicki/go-results-highlighter#info=devDependencies)
 
 ## About
 
