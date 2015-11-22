@@ -675,6 +675,10 @@ describe('GoResultsHighlighter', () => {
         });
     });
 
+    /**
+     * Currently TouchEvent constructor is not available to use therefore
+     * MouseEvent is used in its place.
+     */
     describe('should support touch events', () => {
 
         let highlighter;
@@ -686,11 +690,26 @@ describe('GoResultsHighlighter', () => {
         });
 
         it('highlight player and opponents when touched', () => {
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            let el = table.querySelector('#row5');
+
+            el.dispatchEvent(new MouseEvent('touchstart', { bubbles: true }));
+            el.dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(3);
             expect(highlighter.isShowingDetails).toBe(false);
             expect(highlighter.isHighlighting).toBe(true);
+        });
+
+        it('ignore touchend event when touchmove was triggered', function () {
+            let el = table.querySelector('#row5');
+
+            el.dispatchEvent(new MouseEvent('touchstart', { bubbles: true }));
+            el.dispatchEvent(new MouseEvent('touchmove', { bubbles: true }));
+            el.dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+
+            expect(highlighter.current).toBe(null);
+            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isHighlighting).toBe(false);
         });
 
         it('change highlight when touched other player', () => {

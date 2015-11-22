@@ -176,9 +176,18 @@ export default class GoResultsHighlighter {
      * Binds touchend, click, mouseover and mouseout events listeners to the element.
      */
     bindEvents() {
+        let hasTouchMoved = false;
+
+        this.element.addEventListener('touchstart', () => {
+            hasTouchMoved = false;
+        });
+
+        this.element.addEventListener('touchmove', () => {
+            hasTouchMoved = true;
+        });
 
         this.element.addEventListener('touchend', (event) => {
-            if (this.settings.clicking === false && this.settings.hovering === false) {
+            if (hasTouchMoved || (this.settings.clicking === false && this.settings.hovering === false)) {
                 return;
             }
 
@@ -208,11 +217,7 @@ export default class GoResultsHighlighter {
             this.highlight({ player, opponent, compact });
 
             if (lastTargetPos) {
-                let diff = target.getBoundingClientRect().top - lastTargetPos;
-
-                if (Math.abs(diff) > 10) {
-                    window.scrollBy(0, diff);
-                }
+                updateTopPosition(target, lastTargetPos);
             }
 
             event.preventDefault();
@@ -245,11 +250,7 @@ export default class GoResultsHighlighter {
             this.highlight({ player, opponent, compact });
 
             if (lastTargetPos) {
-                let diff = target.getBoundingClientRect().top - lastTargetPos;
-
-                if (Math.abs(diff) > 10) {
-                    window.scrollBy(0, diff);
-                }
+                updateTopPosition(target, lastTargetPos);
             }
         });
 
@@ -284,6 +285,20 @@ export default class GoResultsHighlighter {
                 this.highlight(false);
             }
         }, false);
+    }
+}
+
+/**
+ * Compare current target's top position with previous value and scroll window
+ * to previous value if it differs
+ * @param {HTMLElement} target
+ * @param {number} previousTop
+ */
+function updateTopPosition(target, previousTop) {
+    let diff = target.getBoundingClientRect().top - previousTop;
+
+    if (Math.abs(diff) > 10) {
+        window.scrollBy(0, diff);
     }
 }
 
