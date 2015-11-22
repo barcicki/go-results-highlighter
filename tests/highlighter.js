@@ -485,7 +485,7 @@ describe('GoResultsHighlighter', () => {
 
             table.querySelector('#row2').firstChild.dispatchEvent(event);
 
-            expect(highlighter.highlight).toHaveBeenCalledWith({ player: -1, opponent: null });
+            expect(highlighter.current).toBe(null);
             expect(highlighter.isShowingDetails).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
         });
@@ -495,7 +495,7 @@ describe('GoResultsHighlighter', () => {
 
             table.querySelector('#row5').dispatchEvent(event);
 
-            expect(highlighter.highlight).toHaveBeenCalledWith({ player: 3, opponent: null });
+            expect(highlighter.current).toBe(3);
             expect(highlighter.isHighlighting).toBe(true);
             expect(highlighter.isShowingDetails).toBe(false);
         });
@@ -570,8 +570,7 @@ describe('GoResultsHighlighter', () => {
 
             expect(highlighter.isHighlighting).toBe(false);
             expect(highlighter.isShowingDetails).toBe(false);
-            expect(highlighter.highlight).toHaveBeenCalled();
-            expect(highlighter.highlight.calls.argsFor(0)[0]).toBe(-1);
+            expect(highlighter.current).toBe(null);
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
@@ -583,7 +582,7 @@ describe('GoResultsHighlighter', () => {
 
             expect(highlighter.isHighlighting).toBe(true);
             expect(highlighter.isShowingDetails).toBe(true);
-            expect(highlighter.highlight).toHaveBeenCalledWith(3, true);
+            expect(highlighter.current).toBe(3);
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(2);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
@@ -653,10 +652,11 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.highlight.calls.count()).toBe(2);
             expect(highlighter.isShowingDetails).toBe(false);
             expect(highlighter.isHighlighting).toBe(true);
+            expect(highlighter.current).toBe(8);
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(3);
-            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(2);
         });
 
         it('not mark any player when hiding details and hovering setting is disabled', () => {

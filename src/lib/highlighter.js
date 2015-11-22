@@ -173,40 +173,9 @@ export default class GoResultsHighlighter {
     }
 
     /**
-     * Binds mouseover and mouseout events listeners to the element.
+     * Binds touchend, click, mouseover and mouseout events listeners to the element.
      */
     bindEvents() {
-
-        function fetchInformationAboutTarget(target) {
-            var result = {
-                player: null,
-                opponent: null,
-                target: null
-            };
-
-            // fetch information about hovered element
-            while (target && target !== document) {
-                let opponentGridPlacement = target.getAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT);
-                let playerGridPlacement = target.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT);
-
-                // game cell?
-                if (opponentGridPlacement) {
-                    result.opponent = Number(opponentGridPlacement);
-                }
-
-                // player row? no further search is necessary
-                if (playerGridPlacement) {
-                    result.player = Number(playerGridPlacement);
-                    break;
-                }
-
-                target = target.parentNode;
-            }
-
-            result.target = target;
-
-            return result;
-        }
 
         this.element.addEventListener('touchend', (event) => {
             if (this.settings.clicking === false && this.settings.hovering === false) {
@@ -254,45 +223,26 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            let target = event.target;
-            let playerPlacement = null;
+            let { target, player, opponent } = fetchInformationAboutTarget(event.target);
+            let compact = false;
+            let lastTargetPos;
 
-            // fetch information about hovered element
-            while (target && target !== document) {
-                let placement = target.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT);
-
-                // player row? no further search is necessary
-                if (placement) {
-                    playerPlacement = Number(placement);
-                    break;
-                }
-
-                target = target.parentNode;
-            }
-
-            if (!playerPlacement) {
+            if (!player) {
                 return;
             }
 
-            let lastTargetPos;
+            if (!this.isShowingDetails || target.properNextSibling) {
+                compact = true;
 
-            if (!this.isShowingDetails) {
-                this.highlight(playerPlacement, true);
-
-            } else if (target.properNextSibling) {
-                lastTargetPos = target.getBoundingClientRect().top;
-
-                this.highlight(playerPlacement, true);
-
-            } else {
-                lastTargetPos = target.getBoundingClientRect().top;
-
-                if (this.settings.hovering) {
-                    this.highlight(playerPlacement);
-                } else {
-                    this.highlight(-1);
-                }
+            } else if (!this.settings.hovering) {
+                player = null;
             }
+
+            if (compact) {
+                lastTargetPos = target.getBoundingClientRect().top;
+            }
+
+            this.highlight({ player, opponent, compact });
 
             if (lastTargetPos) {
                 let diff = target.getBoundingClientRect().top - lastTargetPos;
@@ -308,28 +258,7 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            let target = event.target;
-            let opponent = null;
-            let player = null;
-
-            // fetch information about hovered element
-            while (target && target !== document) {
-                let opponentGridPlacement = target.getAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT);
-                let playerGridPlacement = target.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT);
-
-                // game cell?
-                if (opponentGridPlacement) {
-                    opponent = Number(opponentGridPlacement);
-                }
-
-                // player row? no further search is necessary
-                if (playerGridPlacement) {
-                    player = Number(playerGridPlacement);
-                    break;
-                }
-
-                target = target.parentNode;
-            }
+            let { player, opponent } = fetchInformationAboutTarget(event.target);
 
             if (!player) {
                 return;
@@ -352,10 +281,47 @@ export default class GoResultsHighlighter {
             // if new hovered element is outside the table then remove all
             // selections
             if (target !== this.element) {
-                this.highlight(-1);
+                this.highlight(false);
             }
         }, false);
     }
+}
+
+/**
+ * Retrieves information about player and opponent placement from provided element
+ * or its parents. Returns also the row with player placement information.
+ * @param {HTMLElement} target - target of the event
+ * @returns {object}
+ */
+function fetchInformationAboutTarget(target) {
+    var result = {
+        player: null,
+        opponent: null,
+        target: null
+    };
+
+    // fetch information about hovered element
+    while (target && target !== document) {
+        let opponentGridPlacement = target.getAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT);
+        let playerGridPlacement = target.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT);
+
+        // game cell?
+        if (opponentGridPlacement) {
+            result.opponent = Number(opponentGridPlacement);
+        }
+
+        // player row? no further search is necessary
+        if (playerGridPlacement) {
+            result.player = Number(playerGridPlacement);
+            break;
+        }
+
+        target = target.parentNode;
+    }
+
+    result.target = target;
+
+    return result;
 }
 
 /**

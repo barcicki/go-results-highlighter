@@ -1,6 +1,6 @@
 {
   "name": "go-results-highlighter",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "description": "Improves readability of Go results by highlighting opponents of selected player",
   "scripts": {
     "build": "gulp build",
@@ -18,7 +18,7 @@
     "email": "barcicki@gmail.com"
   },
   "license": "MIT",
-  "keywords": ["go", "baduk", "weiqi", "results", "highlighter", "highlight", "table"],
+  "keywords": ["go", "igo", "baduk", "weiqi", "results", "highlighter", "highlight", "table", "go-results", "results-highlighter"],
   "engines" : {
     "node" : ">=4.0.0"
   },
