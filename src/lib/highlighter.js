@@ -54,7 +54,10 @@ export default class GoResultsHighlighter {
 
         this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
         this.element.goResultsHighlighter = this;
+
+        this.current = null;
         this.isShowingDetails = false;
+        this.isHighlighting = false;
     }
 
     /**
@@ -160,6 +163,12 @@ export default class GoResultsHighlighter {
                 });
 
             }
+
+            this.current = playerPlace;
+            this.isHighlighting = true;
+        } else {
+            this.current = null;
+            this.isHighlighting = false;
         }
     }
 
@@ -167,6 +176,79 @@ export default class GoResultsHighlighter {
      * Binds mouseover and mouseout events listeners to the element.
      */
     bindEvents() {
+
+        function fetchInformationAboutTarget(target) {
+            var result = {
+                player: null,
+                opponent: null,
+                target: null
+            };
+
+            // fetch information about hovered element
+            while (target && target !== document) {
+                let opponentGridPlacement = target.getAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT);
+                let playerGridPlacement = target.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT);
+
+                // game cell?
+                if (opponentGridPlacement) {
+                    result.opponent = Number(opponentGridPlacement);
+                }
+
+                // player row? no further search is necessary
+                if (playerGridPlacement) {
+                    result.player = Number(playerGridPlacement);
+                    break;
+                }
+
+                target = target.parentNode;
+            }
+
+            result.target = target;
+
+            return result;
+        }
+
+        this.element.addEventListener('touchend', (event) => {
+            if (this.settings.clicking === false && this.settings.hovering === false) {
+                return;
+            }
+
+            let { target, player, opponent } = fetchInformationAboutTarget(event.target);
+
+            if (!player) {
+                return;
+            }
+
+            let compact = false;
+            let lastTargetPos;
+
+            if (this.current === player) {
+                if (!this.settings.clicking || !this.settings.hovering) {
+                    player = null;
+                }
+                compact = !this.isShowingDetails;
+
+            } else if (this.isShowingDetails || !this.settings.hovering) {
+                compact = true;
+            }
+
+            if (compact) {
+                lastTargetPos = target.getBoundingClientRect().top;
+            }
+
+            this.highlight({ player, opponent, compact });
+
+            if (lastTargetPos) {
+                let diff = target.getBoundingClientRect().top - lastTargetPos;
+
+                if (Math.abs(diff) > 10) {
+                    window.scrollBy(0, diff);
+                }
+            }
+
+            event.preventDefault();
+        });
+
         this.element.addEventListener('click', (event) => {
             if (this.settings.clicking === false) {
                 return;
