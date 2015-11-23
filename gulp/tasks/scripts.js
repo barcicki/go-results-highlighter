@@ -3,15 +3,22 @@
 const gulp = require('gulp');
 const path = require('path');
 const config = require('../config');
-const browserify = require('gulp-browserify');
 const rename = require('gulp-rename');
 const uglify = require('gulp-uglify');
+const replace = require('gulp-replace');
+const browserify = require('gulp-browserify');
 const babelify = require('babelify').configure({
     presets: ['es2015']
 });
 
 gulp.task('build-js-dev', () => {
     return gulp.src(config.paths.js.entry)
+
+        // dirty hack replacing export default with module.exports
+        // due to the change in babel resulting with no possiblity to export
+        // default properties without omitting default property
+        .pipe(replace(`export default ${config.name};`, `module.exports = ${config.name};`))
+
         .pipe(browserify({
             transform: [babelify],
             debug: true,
