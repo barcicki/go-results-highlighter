@@ -7,6 +7,8 @@ const rename = require('gulp-rename');
 const uglify = require('gulp-uglify');
 const replace = require('gulp-replace');
 const browserify = require('gulp-browserify');
+const transform = require('vinyl-transform');
+const exorcist = require('exorcist');
 const babelify = require('babelify').configure({
     presets: ['es2015']
 });
@@ -25,6 +27,7 @@ gulp.task('build-js-dev', () => {
             standalone: config.name
         }))
         .pipe(rename(config.names.js.dest))
+        .pipe(transform(() => exorcist(path.join(config.paths.js.dest, config.names.js.map), null, config.package, '.')))
         .pipe(gulp.dest(config.paths.js.dest));
 });
 

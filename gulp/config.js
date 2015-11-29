@@ -3,8 +3,10 @@
 const pjson = require('../package.json');
 
 module.exports = {
+    package: pjson.name,
     name: 'GoResultsHighlighter',
     paths: {
+        src: './src',
         dest: './dist',
         tests: {
             all: './tests/**/*.*'
@@ -57,6 +59,7 @@ module.exports = {
         js: {
             entry: 'index.js',
             dest: `${pjson.name}.js`,
+            map: `${pjson.name}.map.js`,
             prod: `${pjson.name}.min.js`
         }
     }

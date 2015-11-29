@@ -40,6 +40,7 @@
     "browserify-istanbul": "^0.2.1",
     "eslint": "^1.8.0",
     "estraverse": "^4.1.1",
+    "exorcist": "^0.4.0",
     "gulp": "^3.9.0",
     "gulp-browserify": "^0.5.1",
     "gulp-eslint": "^1.0.0",
@@ -62,6 +63,7 @@
     "karma-spec-reporter": "0.0.22",
     "less-plugin-clean-css": "^1.5.1",
     "phantomjs": "^1.9.18",
-    "require-dir": "^0.3.0"
+    "require-dir": "^0.3.0",
+    "vinyl-transform": "^1.0.0"
   }
 }
