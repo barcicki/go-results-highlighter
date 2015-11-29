@@ -2,7 +2,7 @@
   "version": 3,
   "sources": [
     "node_modules\\gulp-browserify\\node_modules\\browser-pack\\_prelude.js",
-    "fake_326573ea.js",
+    "fake_5d377be4.js",
     "highlighter.js",
     "parser.js",
     "raw2table.js",

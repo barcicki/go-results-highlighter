@@ -997,6 +997,6 @@ function combine() {
 }
 
 },{}]},{},[1])
-//# sourceMappingURL=go-results-highlighter.map.js
+//# sourceMappingURL=go-results-highlighter.js.map
 (1)
 });

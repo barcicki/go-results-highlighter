@@ -59,7 +59,7 @@ module.exports = {
         js: {
             entry: 'index.js',
             dest: `${pjson.name}.js`,
-            map: `${pjson.name}.map.js`,
+            map: `${pjson.name}.js.map`,
             prod: `${pjson.name}.min.js`
         }
     }
