@@ -2,9 +2,10 @@
 
 const gulp = require('gulp');
 const config = require('../config');
-const browserSync = require('browser-sync');
 
 gulp.task('serve', ['build'], (done) => {
+    const browserSync = require('browser-sync');
+
     browserSync.init({
         server: {
             baseDir: config.paths.dest
@@ -13,6 +14,8 @@ gulp.task('serve', ['build'], (done) => {
 });
 
 gulp.task('serve-watch', ['serve'], () => {
+    const browserSync = require('browser-sync');
+
     gulp.watch(config.paths.css.all, ['build-css', browserSync.reload]);
     gulp.watch(config.paths.js.all, ['build-js', browserSync.reload]);
     gulp.watch(config.paths.site.css.all, ['build-css', browserSync.reload]);

@@ -2,9 +2,10 @@
 
 const gulp = require('gulp');
 const config = require('../config');
-const eslint = require('gulp-eslint');
 
 gulp.task('lint', () => {
+    const eslint = require('gulp-eslint');
+
     gulp.src([
         config.paths.js.all,
         config.paths.site.js.all,

@@ -1,19 +1,19 @@
 'use strict';
 
 const gulp = require('gulp');
-const path = require('path');
 const config = require('../config');
-const rename = require('gulp-rename');
-const uglify = require('gulp-uglify');
-const replace = require('gulp-replace');
-const browserify = require('gulp-browserify');
-const transform = require('vinyl-transform');
-const exorcist = require('exorcist');
-const babelify = require('babelify').configure({
-    presets: ['es2015']
-});
 
 gulp.task('build-js-dev', () => {
+    const path = require('path');
+    const exorcist = require('exorcist');
+    const rename = require('gulp-rename');
+    const replace = require('gulp-replace');
+    const browserify = require('gulp-browserify');
+    const transform = require('vinyl-transform');
+    const babelify = require('babelify').configure({
+        presets: ['es2015']
+    });
+
     return gulp.src(config.paths.js.entry)
 
         // dirty hack replacing export default with module.exports
@@ -32,6 +32,11 @@ gulp.task('build-js-dev', () => {
 });
 
 gulp.task('build-js-site', () => {
+    const browserify = require('gulp-browserify');
+    const babelify = require('babelify').configure({
+        presets: ['es2015']
+    });
+
     return gulp.src(config.paths.site.js.entry)
         .pipe(browserify({
             transform: [babelify],
@@ -42,6 +47,10 @@ gulp.task('build-js-site', () => {
 });
 
 gulp.task('build-js-prod', ['build-js-dev'], () => {
+    const path = require('path');
+    const uglify = require('gulp-uglify');
+    const rename = require('gulp-rename');
+
     return gulp.src(path.resolve(config.paths.js.dest, config.names.js.dest))
         .pipe(uglify())
         .pipe(rename(config.names.js.prod))
