@@ -5,11 +5,11 @@
  * @type {{prefixCls: string, showingDetailsCls: string, tableCls: string, gameCls: string, currentCls: string, results: {won: string, lost: string, jigo: string, unresolved: string}, startingRow: number, placeColumn: number, roundsColumns: null, rowTags: string, cellTags: string, rowSeparator: string, hovering: boolean, clicking: boolean}}
  */
 export const DEFAULT_SETTINGS = {
-    prefixCls: 'go-results-',
-    showingDetailsCls:'showing-details',
-    tableCls: 'table',
-    gameCls: 'game',
-    currentCls: 'current',
+    prefixCls:     'go-results-',
+    rearrangedCls: 'rearranged',
+    tableCls:      'table',
+    gameCls:       'game',
+    currentCls:    'current',
 
     results: {
         won: '([0-9]+)\\+',
@@ -27,12 +27,12 @@ export const DEFAULT_SETTINGS = {
     cellSeparator: '[\t ]+',
     joinNames: true,
 
-    hovering: true,
-    clicking: true
+    hovering:    true,
+    rearranging: true
 };
 
 const CLASSES_TO_BE_PREFIXED = [
-    'showingDetailsCls',
+    'rearrangedCls',
     'tableCls',
     'gameCls',
     'currentCls'
@@ -40,19 +40,19 @@ const CLASSES_TO_BE_PREFIXED = [
 
 /**
  * Names of attributes used in this plugin
- * @type {{RESULT_TABLE: string, SETTING_STARTING_ROW: string, SETTING_PLACE_COLUMN: string, SETTING_ROUNDS_COLUMNS: string, PLAYER_PLACEMENT: string, OPPONENT_PLACEMENT: string, GAME_RESULT: string}}
+ * @type {{RESULT_TABLE: string, SETTING_STARTING_ROW: string, SETTING_PLACE_COLUMN: string, SETTING_ROUNDS_COLUMNS: string, SETTING_REARRANGING: string, SETTING_HOVERING: string, PLAYER_PLACEMENT: string, OPPONENT_PLACEMENT: string, OPPONENTS: string, GAME_RESULT: string}}
  */
 export const DOM_ATTRIBUTES = {
-    RESULT_TABLE: 'data-go-results',
-    SETTING_STARTING_ROW: 'data-go-starting-row',
-    SETTING_PLACE_COLUMN: 'data-go-place-col',
-    SETTING_ROUNDS_COLUMNS: 'data-go-rounds-cols',
-    SETTING_CLICKING: 'data-go-clicking',
-    SETTING_HOVERING: 'data-go-hovering',
-    PLAYER_PLACEMENT: 'data-go-place',
-    OPPONENT_PLACEMENT: 'data-go-opponent',
-    OPPONENTS: 'data-go-opponents',
-    GAME_RESULT: 'data-go-result'
+    RESULT_TABLE:           'data-go-results',
+    SETTING_STARTING_ROW:   'data-go-starting-row',
+    SETTING_PLACE_COLUMN:   'data-go-place-column',
+    SETTING_ROUNDS_COLUMNS: 'data-go-rounds-columns',
+    SETTING_REARRANGING:    'data-go-rearranging',
+    SETTING_HOVERING:       'data-go-hovering',
+    PLAYER_PLACEMENT:       'data-go-place',
+    OPPONENT_PLACEMENT:     'data-go-opponent',
+    OPPONENTS:              'data-go-opponents',
+    GAME_RESULT:            'data-go-result'
 };
 
 /**
@@ -112,8 +112,8 @@ export function readTableSettingsFromDOM(table) {
         output.roundsColumns = table.getAttribute(DOM_ATTRIBUTES.SETTING_ROUNDS_COLUMNS);
     }
 
-    if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_CLICKING)) {
-        output.clicking = table.getAttribute(DOM_ATTRIBUTES.SETTING_CLICKING) !== 'false';
+    if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_REARRANGING)) {
+        output.rearranging = table.getAttribute(DOM_ATTRIBUTES.SETTING_REARRANGING) !== 'false';
     }
 
     if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_HOVERING)) {

@@ -116,8 +116,14 @@ function GoResultsHighlighter(element, settings) {
                 placeColumn: highlighter.settings.placeColumn,
                 roundsColumns: highlighter.settings.roundsColumns,
                 prefixCls: highlighter.settings.prefixCls,
+                rearrangedCls: highlighter.settings.rearrangedCls,
                 tableCls: highlighter.settings.tableCls,
                 gameCls: highlighter.settings.gameCls,
+                currentCls: highlighter.settings.currentCls,
+                rowTags: highlighter.settings.rowTags,
+                cellTags: highlighter.settings.cellTags,
+                cellSeparator: highlighter.settings.cellSeparator,
+                joinNames: highlighter.settings.joinNames,
                 results
             };
         }),
@@ -132,12 +138,11 @@ function GoResultsHighlighter(element, settings) {
                     highlighter.highlight(null);
                 }
 
-                highlighter.settings.rearranging = value;
+                highlighter.settings.rearranging = !!value;
             },
             get: () => highlighter.settings.rearranging,
             configurable: false,
-            enumerable: true,
-            writable: false
+            enumerable: true
         },
 
         /**
@@ -145,13 +150,14 @@ function GoResultsHighlighter(element, settings) {
          * @type {boolean}
          */
         hovering: {
-            set: (value) => highlighter.settings.hovering = value,
-            get: () => highlighter.settings.rearranging,
+            set: (value) => highlighter.settings.hovering = !!value,
+            get: () => highlighter.settings.hovering,
             configurable: false,
-            enumerable: true,
-            writable: false
+            enumerable: true
         }
     });
+
+    highlighter.element.goResultsHighlighter = this;
 }
 
 /**
@@ -163,8 +169,7 @@ function getter(callback) {
     return {
         get: callback,
         enumerable: true,
-        configurable: false,
-        writable: false
+        configurable: false
     };
 }
 

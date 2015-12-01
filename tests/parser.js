@@ -5,7 +5,6 @@ import { combine } from '../src/lib/utils';
 import { readTableSettingsFromDOM } from '../src/lib/settings';
 
 describe('parser', () => {
-
     let placeholder;
 
     beforeAll(() => placeholder = document.createElement('div'));
@@ -284,7 +283,7 @@ describe('parser', () => {
 
         it('take column and row settings from the DOM', function () {
             const result = testMap(
-                `<table data-go-place-col="1" data-go-starting-row="2">
+                `<table data-go-place-column="1" data-go-starting-row="2">
                     <tr><td>Player 1</td><td>1</td></tr>
                     <tr><td>Player 2</td><td>2</td></tr>
                     <tr><td>Player 3</td><td>3</td></tr>

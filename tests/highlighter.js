@@ -20,7 +20,7 @@ const EXAMPLE_TOURNAMENT =
     </table>`;
 
 const EXAMPLE_TOURNAMENT_WITH_SETTINGS =
-    `<table data-go-starting-row="2" data-go-hovering="false" data-go-place-col="1" data-go-rounds-cols="6,8">
+    `<table data-go-starting-row="2" data-go-hovering="false" data-go-place-column="1" data-go-rounds-columns="6,8">
         <tbody>
             <tr><td colspan="12">Example Tournament - After Round 3</td></tr>
             <tr><td>St. pos</td><td>Place</td><td>Name</td><td>Club</td><td>Level</td><td>Score</td><td>1</td><td>2</td><td>3</td><td>Points</td><td>SOS</td><td>SOSOS</td></tr>
@@ -51,7 +51,7 @@ const EXAMPLE_TOURNAMENT_WITH_ADDITIONAL_IDS_AND_CLASSES =
         </tbody>
     </table>`;
 
-describe('GoResultsHighlighter', () => {
+describe('highlighter', () => {
     let placeholder;
 
     beforeAll(() => placeholder = document.createElement('div'));
@@ -68,7 +68,6 @@ describe('GoResultsHighlighter', () => {
             let highlighter = new GoResultsHighlighter(table);
 
             expect(highlighter.element).toBe(table);
-            expect(table.goResultsHighlighter).toBe(highlighter);
             expect(table.className).toBe('go-results-table');
             expect(highlighter.settings).toEqual(DEFAULT_SETTINGS);
         });
@@ -78,7 +77,6 @@ describe('GoResultsHighlighter', () => {
             let highlighter = new GoResultsHighlighter(pre);
 
             expect(highlighter.element).not.toBe(pre);
-            expect(pre.goResultsHighlighter).not.toBeDefined();
             expect(pre.className).not.toBe('go-results-table');
             expect(placeholder.firstChild).not.toBe(pre);
             expect(placeholder.firstChild).toBe(highlighter.element);
@@ -154,11 +152,13 @@ describe('GoResultsHighlighter', () => {
             expect(table.querySelectorAll('.go-results-game').length).toBe(0);
         });
 
-        it('select player using numeric argument', () => {
-            highlighter.highlight(3);
+        it('highlight player', () => {
+            let player = 3;
+
+            highlighter.highlight({ player });
 
             expect(highlighter.isHighlighting).toBe(true);
-            expect(highlighter.current).toBe(3);
+            expect(highlighter.current).toBe(player);
 
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(2);
@@ -170,26 +170,8 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.map[2].row.classList.contains('go-results-lost')).toBeTruthy();
         });
 
-        it('select player using object', () => {
-            highlighter.highlight({
-                player: 3
-            });
-
-            expect(highlighter.isHighlighting).toBe(true);
-            expect(highlighter.current).toBe(3);
-
-            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
-            expect(table.querySelectorAll('.go-results-won').length).toBe(2);
-            expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
-
-            expect(highlighter.map[3].row.classList.contains('go-results-current')).toBeTruthy();
-            expect(highlighter.map[4].row.classList.contains('go-results-won')).toBeTruthy();
-            expect(highlighter.map[7].row.classList.contains('go-results-won')).toBeTruthy();
-            expect(highlighter.map[2].row.classList.contains('go-results-lost')).toBeTruthy();
-        });
-
-        it('deselect player', () => {
-            highlighter.highlight(3);
+        it('unhighlight player', () => {
+            highlighter.highlight({ player: 3 });
             highlighter.highlight(null);
 
             expect(highlighter.isHighlighting).toBe(false);
@@ -201,9 +183,9 @@ describe('GoResultsHighlighter', () => {
         });
 
         it('change selected player', () => {
-            highlighter.highlight(3);
             highlighter.highlight({ player: 3 });
-            highlighter.highlight(7);
+            highlighter.highlight({ player: 2 });
+            highlighter.highlight({ player: 7 });
 
             expect(highlighter.isHighlighting).toBe(true);
             expect(highlighter.current).toBe(7);
@@ -219,9 +201,9 @@ describe('GoResultsHighlighter', () => {
         });
 
         it('deselect player after many changes', () => {
-            highlighter.highlight(3);
-            highlighter.highlight(2);
-            highlighter.highlight(7);
+            highlighter.highlight({ player: 3 });
+            highlighter.highlight({ player: 2 });
+            highlighter.highlight({ player: 7 });
             highlighter.highlight(null);
 
             expect(highlighter.isHighlighting).toBe(false);
@@ -283,53 +265,14 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.map[7].row.nextElementSibling).toBe(highlighter.map[8].row);
         });
 
-        it('show player details using settings arguments', () => {
+        it('rearrange player rows', () => {
             highlighter.highlight({
                 player: 3,
-                compact: true
+                rearrange: true
             });
 
             expect(highlighter.isRearranged).toBe(true);
-            expect(table.classList.contains('go-results-showing-details')).toBeTruthy();
-            expect(table.querySelectorAll('.go-results-current').length).toBe(1);
-            expect(table.querySelectorAll('.go-results-won').length).toBe(2);
-            expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
-            expect(table.querySelectorAll('.go-results-game').length).toBe(3);
-
-            expect(highlighter.map[3].row.classList.contains('go-results-current')).toBeTruthy();
-            expect(highlighter.map[4].row.classList.contains('go-results-won')).toBeTruthy();
-            expect(highlighter.map[7].row.classList.contains('go-results-won')).toBeTruthy();
-            expect(highlighter.map[2].row.classList.contains('go-results-lost')).toBeTruthy();
-
-            expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
-            expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
-            expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
-            expect(highlighter.map[4].row.nextElementSibling).toBe(highlighter.map[7].row);
-            expect(highlighter.map[7].row.nextElementSibling).toBe(highlighter.map[5].row);
-        });
-
-        it('ignore second argument if the first one is an object', () => {
-            highlighter.highlight({
-                player: 3
-            }, true);
-
-            expect(highlighter.isRearranged).toBe(false);
-            expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
-
-            expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
-            expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
-            expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
-            expect(highlighter.map[4].row.nextElementSibling).toBe(highlighter.map[5].row);
-            expect(highlighter.map[5].row.nextElementSibling).toBe(highlighter.map[6].row);
-            expect(highlighter.map[6].row.nextElementSibling).toBe(highlighter.map[7].row);
-            expect(highlighter.map[7].row.nextElementSibling).toBe(highlighter.map[8].row);
-        });
-
-        it('show player details using two arguments', () => {
-            highlighter.highlight(3, true);
-
-            expect(highlighter.isRearranged).toBe(true);
-            expect(table.classList.contains('go-results-showing-details')).toBeTruthy();
+            expect(table.classList.contains('go-results-rearranged')).toBeTruthy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(2);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
@@ -351,11 +294,11 @@ describe('GoResultsHighlighter', () => {
             highlighter.highlight({
                 player: 3,
                 opponent: 7,
-                compact: true
+                rearrange: true
             });
 
             expect(highlighter.isRearranged).toBe(true);
-            expect(table.classList.contains('go-results-showing-details')).toBeTruthy();
+            expect(table.classList.contains('go-results-rearranged')).toBeTruthy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(2);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(1);
@@ -374,11 +317,11 @@ describe('GoResultsHighlighter', () => {
         });
 
         it('hide player details', () => {
-            highlighter.highlight(3, true);
-            highlighter.highlight(-1);
+            highlighter.highlight({ player: 3, rearrange: true });
+            highlighter.highlight(null);
 
             expect(highlighter.isRearranged).toBe(false);
-            expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
+            expect(table.classList.contains('go-results-rearranged')).toBeFalsy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
@@ -393,9 +336,9 @@ describe('GoResultsHighlighter', () => {
         });
 
         it('change player details', () => {
-            highlighter.highlight(3, true);
-            highlighter.highlight({ player: 5, compact: true });
-            highlighter.highlight(6, true);
+            highlighter.highlight({ player: 3, rearrange: true });
+            highlighter.highlight({ player: 5, rearrange: true });
+            highlighter.highlight({ player: 6, rearrange: true });
 
             expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
@@ -408,13 +351,13 @@ describe('GoResultsHighlighter', () => {
         });
 
         it('hide player details after changes', () => {
-            highlighter.highlight(3, true);
-            highlighter.highlight(5, true);
-            highlighter.highlight({ player: 6, compact: true });
-            highlighter.highlight(-1);
+            highlighter.highlight({ player: 3, rearrange: true });
+            highlighter.highlight({ player: 5, rearrange: true });
+            highlighter.highlight({ player: 6, rearrange: true });
+            highlighter.highlight(null);
 
             expect(highlighter.isRearranged).toBe(false);
-            expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
+            expect(table.classList.contains('go-results-rearranged')).toBeFalsy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
@@ -429,12 +372,12 @@ describe('GoResultsHighlighter', () => {
         });
 
         it('select player then show details', () => {
-            highlighter.highlight(3);
-            highlighter.highlight(5, true);
+            highlighter.highlight({ player: 3 });
+            highlighter.highlight({ player: 5, rearrange: true });
 
             expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.isHighlighting).toBe(true);
-            expect(table.classList.contains('go-results-showing-details')).toBeTruthy();
+            expect(table.classList.contains('go-results-rearranged')).toBeTruthy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(1);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(2);
@@ -449,12 +392,12 @@ describe('GoResultsHighlighter', () => {
         });
 
         it('show details then select player', () => {
-            highlighter.highlight(3, true);
-            highlighter.highlight(5);
+            highlighter.highlight({ player: 3, rearrange: true });
+            highlighter.highlight({ player: 5 });
 
             expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(true);
-            expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
+            expect(table.classList.contains('go-results-rearranged')).toBeFalsy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(1);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(2);
@@ -577,7 +520,7 @@ describe('GoResultsHighlighter', () => {
             expect(table.querySelectorAll('.go-results-game').length).toBe(0);
         });
 
-        it('show details when clicking player row', () => {
+        it('rearrange rows when clicking player rows', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             expect(highlighter.isHighlighting).toBe(true);
@@ -589,8 +532,8 @@ describe('GoResultsHighlighter', () => {
             expect(table.querySelectorAll('.go-results-game').length).toBe(3);
         });
 
-        it('do nothing when clicking is disabled', () => {
-            highlighter.settings.clicking = false;
+        it('do nothing when rearranging is disabled', () => {
+            highlighter.settings.rearranging = false;
 
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -603,7 +546,7 @@ describe('GoResultsHighlighter', () => {
             expect(table.querySelectorAll('.go-results-game').length).toBe(0);
         });
 
-        it('hide details when clicking the same player when showing details but keep player highlighted', () => {
+        it('restore initial order when clicking the same player but keep player highlighted', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -612,7 +555,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(true);
         });
 
-        it('hide details when clicking non-player rows when showing details', () => {
+        it('restore initial order when clicking non-player rows when rows are rearranged', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
             table.querySelector('#row1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -621,7 +564,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(false);
         });
 
-        it('disable hovering when showing details', () => {
+        it('disable hovering when rows are rearranged', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             highlighter.highlight.calls.reset();
@@ -634,7 +577,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(true);
         });
 
-        it('show details of selected opponent', () => {
+        it('rearrange rows to highlight opponent', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
             table.querySelector('#row9').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -645,7 +588,7 @@ describe('GoResultsHighlighter', () => {
             expect(table.querySelectorAll('.go-results-lost').length).toBe(2);
         });
 
-        it('mark player selected without hovering when hiding details', () => {
+        it('mark player selected without hovering when restoring initial order', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
             table.querySelector('#row10').querySelector('.game1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
@@ -659,7 +602,7 @@ describe('GoResultsHighlighter', () => {
             expect(table.querySelectorAll('.go-results-game').length).toBe(2);
         });
 
-        it('not mark any player when hiding details and hovering setting is disabled', () => {
+        it('not mark any player when restoring initial order but hovering setting is disabled', () => {
             highlighter.settings.hovering = false;
 
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
@@ -721,7 +664,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(true);
         });
 
-        it('show details when highlighted player touched again', () => {
+        it('rearrange rows when highlighted player touched again', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
@@ -730,7 +673,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(true);
         });
 
-        it('change details when touched other player in compact mode', () => {
+        it('rearrange rows again when touched other player when already rearranged', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
             table.querySelector('#row4').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
@@ -740,7 +683,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(true);
         });
 
-        it('hide details but keep highlighted when touched highlighted player in compact mode', () => {
+        it('restore initial order but keep highlighted when touched highlighted player when rearranged', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
@@ -759,7 +702,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(false);
         });
 
-        it('hide highlight and restore natural order when touching non-player row in compact mode', () => {
+        it('hide highlight and restore initial order when touching non-player row', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
             table.querySelector('#row1').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
@@ -769,8 +712,8 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(false);
         });
 
-        it('remove highlight instead of entering compact mode if clicking is disabled when touched the highlighted player second time', () => {
-            highlighter.settings.clicking = false;
+        it('remove highlight instead of rearranging if rearranging is disabled when touched the highlighted player second time', () => {
+            highlighter.settings.rearranging = false;
 
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
@@ -780,7 +723,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(false);
         });
 
-        it('enter compact mode if hovering is disabled and touched any player', () => {
+        it('rearrange rows if hovering is disabled and touched any player', () => {
             highlighter.settings.hovering = false;
 
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
@@ -801,9 +744,9 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.isHighlighting).toBe(false);
         });
 
-        it('do nothing on touch when clicking and hovering is disabled', () => {
+        it('do nothing on touch when rearranging and hovering is disabled', () => {
             highlighter.settings.hovering = false;
-            highlighter.settings.clicking = false;
+            highlighter.settings.rearranging = false;
 
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 

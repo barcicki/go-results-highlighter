@@ -53,7 +53,6 @@ export default class GoResultsHighlighter {
         this.bindEvents();
 
         this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
-        this.element.goResultsHighlighter = this;
 
         this.current = null;
         this.isRearranged = false;
@@ -76,27 +75,22 @@ export default class GoResultsHighlighter {
 
     /**
      * Marks player and his opponents highlighted.
-     * @param {object|number|null} [settings] - highlighting settings or player to be highlighted
+     * @param {object} [settings] - highlighting settings or player to be highlighted
      * @param {number} [settings.player] - player whose opponents should be
      * highlighted
-     * @param {boolean} [settings.compact=false] - whether the table should be
+     * @param {boolean} [settings.rearrange=false] - whether the table should be
      * rearranged to display results in compact size
      * @param {number} [settings.opponent] - the opponent whose game with the
      * player should be highlighted
-     * @param {boolean} [compact=false] - if settings are not provided than this
-     * argument is checked for compact flag
      */
-    highlight(settings, compact = false) {
-        let playerPlace;
-        let gameWithOpponent;
-
-        if (settings && typeof settings === 'object') {
-            playerPlace = settings.player;
-            compact = settings.compact === true;
-            gameWithOpponent = settings.opponent;
-        } else {
-            playerPlace = settings;
+    highlight(settings) {
+        if (!settings) {
+            settings = {};
         }
+
+        let playerPlace = settings.player;
+        let rearrange = settings.rearrange === true;
+        let gameWithOpponent = settings.opponent;
 
         const player = this.map[playerPlace];
         const classes = toPrefixedClasses(this.settings);
@@ -107,13 +101,13 @@ export default class GoResultsHighlighter {
         }
 
         // rearrange the table if player and appropriate setting is provided
-        if (player && compact) {
+        if (player && rearrange) {
             rearrangeOrder(player, player.opponents.map((opponentPlace) => this.map[opponentPlace]));
 
-            this.element.classList.add(classes.showingDetailsCls);
+            this.element.classList.add(classes.rearrangedCls);
             this.isRearranged = true;
         } else {
-            this.element.classList.remove(classes.showingDetailsCls);
+            this.element.classList.remove(classes.rearrangedCls);
             this.isRearranged = false;
         }
 
@@ -187,7 +181,7 @@ export default class GoResultsHighlighter {
         });
 
         this.element.addEventListener('touchend', (event) => {
-            if (hasTouchMoved || (this.settings.clicking === false && this.settings.hovering === false)) {
+            if (hasTouchMoved || (this.settings.rearranging === false && this.settings.hovering === false)) {
                 return;
             }
 
@@ -197,24 +191,24 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            let compact = false;
+            let rearrange = false;
             let lastTargetPos;
 
             if (this.current === player) {
-                if (!this.settings.clicking || !this.settings.hovering) {
+                if (!this.settings.rearranging || !this.settings.hovering) {
                     player = null;
                 }
-                compact = !this.isRearranged;
+                rearrange = !this.isRearranged;
 
             } else if (this.isRearranged || !this.settings.hovering) {
-                compact = true;
+                rearrange = true;
             }
 
-            if (compact) {
+            if (rearrange) {
                 lastTargetPos = target.getBoundingClientRect().top;
             }
 
-            this.highlight({ player, opponent, compact });
+            this.highlight({ player, opponent, rearrange });
 
             if (lastTargetPos) {
                 updateTopPosition(target, lastTargetPos);
@@ -224,12 +218,12 @@ export default class GoResultsHighlighter {
         });
 
         this.element.addEventListener('click', (event) => {
-            if (this.settings.clicking === false) {
+            if (this.settings.rearranging === false) {
                 return;
             }
 
             let { target, player, opponent } = fetchInformationAboutTarget(event.target);
-            let compact = false;
+            let rearrange = false;
             let lastTargetPos;
 
             if (!player) {
@@ -237,17 +231,17 @@ export default class GoResultsHighlighter {
             }
 
             if (!this.isRearranged || target.properNextSibling) {
-                compact = true;
+                rearrange = true;
 
             } else if (!this.settings.hovering) {
                 player = null;
             }
 
-            if (compact) {
+            if (rearrange) {
                 lastTargetPos = target.getBoundingClientRect().top;
             }
 
-            this.highlight({ player, opponent, compact });
+            this.highlight({ player, opponent, rearrange });
 
             if (lastTargetPos) {
                 updateTopPosition(target, lastTargetPos);

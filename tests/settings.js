@@ -24,17 +24,17 @@ describe('settings', () => {
         });
 
         it('return place column settings', function () {
-            expect(testReadingSettings('<table data-go-place-col="2">')).toEqual({ placeColumn: 2 });
+            expect(testReadingSettings('<table data-go-place-column="2">')).toEqual({ placeColumn: 2 });
         });
 
         it('return game rounds columns settings', function () {
-            expect(testReadingSettings('<table data-go-rounds-cols="1,2,3,4">')).toEqual({ roundsColumns: '1,2,3,4' });
+            expect(testReadingSettings('<table data-go-rounds-columns="1,2,3,4">')).toEqual({ roundsColumns: '1,2,3,4' });
         });
 
-        it('return clicking settings', function () {
-            expect(testReadingSettings('<table data-go-clicking>')).toEqual({ clicking: true });
-            expect(testReadingSettings('<table data-go-clicking="true">')).toEqual({ clicking: true });
-            expect(testReadingSettings('<table data-go-clicking="false">')).toEqual({ clicking: false });
+        it('return rearranging settings', function () {
+            expect(testReadingSettings('<table data-go-rearranging>')).toEqual({ rearranging: true });
+            expect(testReadingSettings('<table data-go-rearranging="true">')).toEqual({ rearranging: true });
+            expect(testReadingSettings('<table data-go-rearranging="false">')).toEqual({ rearranging: false });
         });
 
         it('return hovering settings', function () {
@@ -44,12 +44,12 @@ describe('settings', () => {
         });
 
         it('return all settings', function () {
-            expect(testReadingSettings('<table data-go-rounds-cols="1,2,3,4" data-go-place-col="2" data-go-starting-row="4" data-go-hovering data-go-clicking="false">')).toEqual({
-                startingRow: 4,
-                placeColumn: 2,
+            expect(testReadingSettings('<table data-go-rounds-columns="1,2,3,4" data-go-place-column="2" data-go-starting-row="4" data-go-hovering data-go-rearranging="false">')).toEqual({
+                startingRow:   4,
+                placeColumn:   2,
                 roundsColumns: '1,2,3,4',
-                hovering: true,
-                clicking: false
+                hovering:      true,
+                rearranging:   false
             });
         });
     });
