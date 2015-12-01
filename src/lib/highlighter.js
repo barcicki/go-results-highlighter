@@ -56,7 +56,7 @@ export default class GoResultsHighlighter {
         this.element.goResultsHighlighter = this;
 
         this.current = null;
-        this.isShowingDetails = false;
+        this.isRearranged = false;
         this.isHighlighting = false;
     }
 
@@ -102,7 +102,7 @@ export default class GoResultsHighlighter {
         const classes = toPrefixedClasses(this.settings);
 
         // if table is already rearranged then transform it back to default state
-        if (this.isShowingDetails) {
+        if (this.isRearranged) {
             restoreNaturalOrder(this.players);
         }
 
@@ -111,10 +111,10 @@ export default class GoResultsHighlighter {
             rearrangeOrder(player, player.opponents.map((opponentPlace) => this.map[opponentPlace]));
 
             this.element.classList.add(classes.showingDetailsCls);
-            this.isShowingDetails = true;
+            this.isRearranged = true;
         } else {
             this.element.classList.remove(classes.showingDetailsCls);
-            this.isShowingDetails = false;
+            this.isRearranged = false;
         }
 
         const markedGames = asArray(this.element.querySelectorAll('.' + classes.gameCls));
@@ -157,7 +157,7 @@ export default class GoResultsHighlighter {
                     game.cell.classList.add(classes.gameCls);
                     opponent.games[playerPlace].cell.classList.add(classes.gameCls);
                 }
-            } else if (this.isShowingDetails) {
+            } else if (this.isRearranged) {
                 player.opponents.forEach((opponent) => {
                     this.map[opponent].games[playerPlace].cell.classList.add(classes.gameCls);
                 });
@@ -204,9 +204,9 @@ export default class GoResultsHighlighter {
                 if (!this.settings.clicking || !this.settings.hovering) {
                     player = null;
                 }
-                compact = !this.isShowingDetails;
+                compact = !this.isRearranged;
 
-            } else if (this.isShowingDetails || !this.settings.hovering) {
+            } else if (this.isRearranged || !this.settings.hovering) {
                 compact = true;
             }
 
@@ -236,7 +236,7 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            if (!this.isShowingDetails || target.properNextSibling) {
+            if (!this.isRearranged || target.properNextSibling) {
                 compact = true;
 
             } else if (!this.settings.hovering) {
@@ -255,7 +255,7 @@ export default class GoResultsHighlighter {
         });
 
         this.element.addEventListener('mouseover', (event) => {
-            if (this.settings.hovering === false || this.isShowingDetails) {
+            if (this.settings.hovering === false || this.isRearranged) {
                 return;
             }
 
@@ -269,7 +269,7 @@ export default class GoResultsHighlighter {
         }, false);
 
         this.element.addEventListener('mouseout', (event) => {
-            if (this.settings.hovering === false || this.isShowingDetails) {
+            if (this.settings.hovering === false || this.isRearranged) {
                 return;
             }
 

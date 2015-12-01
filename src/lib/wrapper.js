@@ -1,6 +1,6 @@
 'use strict';
 
-import createHighlighter from './highlighter';
+import Highlighter from './highlighter';
 
 /**
  * Class wrapper for highlighter
@@ -21,7 +21,7 @@ function GoResultsHighlighter(element, settings) {
         return new GoResultsHighlighter(element, settings);
     }
 
-    const highlighter = createHighlighter(element, settings);
+    const highlighter = new Highlighter(element, settings);
 
     /**
      * Highlights player and his/hers opponents
@@ -113,7 +113,7 @@ function GoResultsHighlighter(element, settings) {
 
             return {
                 startingRow: highlighter.settings.startingRow,
-                placementColumn: highlighter.settings.placementColumn,
+                placeColumn: highlighter.settings.placeColumn,
                 roundsColumns: highlighter.settings.roundsColumns,
                 prefixCls: highlighter.settings.prefixCls,
                 tableCls: highlighter.settings.tableCls,

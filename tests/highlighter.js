@@ -273,7 +273,7 @@ describe('GoResultsHighlighter', () => {
         });
 
         it('ensure all players are in proper order on start', () => {
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
             expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
             expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[4].row);
@@ -289,7 +289,7 @@ describe('GoResultsHighlighter', () => {
                 compact: true
             });
 
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(table.classList.contains('go-results-showing-details')).toBeTruthy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(2);
@@ -313,7 +313,7 @@ describe('GoResultsHighlighter', () => {
                 player: 3
             }, true);
 
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
 
             expect(highlighter.map[1].row.nextElementSibling).toBe(highlighter.map[2].row);
@@ -328,7 +328,7 @@ describe('GoResultsHighlighter', () => {
         it('show player details using two arguments', () => {
             highlighter.highlight(3, true);
 
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(table.classList.contains('go-results-showing-details')).toBeTruthy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(2);
@@ -354,7 +354,7 @@ describe('GoResultsHighlighter', () => {
                 compact: true
             });
 
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(table.classList.contains('go-results-showing-details')).toBeTruthy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(2);
@@ -377,7 +377,7 @@ describe('GoResultsHighlighter', () => {
             highlighter.highlight(3, true);
             highlighter.highlight(-1);
 
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
@@ -397,7 +397,7 @@ describe('GoResultsHighlighter', () => {
             highlighter.highlight({ player: 5, compact: true });
             highlighter.highlight(6, true);
 
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.map[2].row.nextElementSibling).toBe(highlighter.map[3].row);
             expect(highlighter.map[3].row.nextElementSibling).toBe(highlighter.map[5].row);
             expect(highlighter.map[5].row.nextElementSibling).toBe(highlighter.map[1].row);
@@ -413,7 +413,7 @@ describe('GoResultsHighlighter', () => {
             highlighter.highlight({ player: 6, compact: true });
             highlighter.highlight(-1);
 
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
@@ -432,7 +432,7 @@ describe('GoResultsHighlighter', () => {
             highlighter.highlight(3);
             highlighter.highlight(5, true);
 
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.isHighlighting).toBe(true);
             expect(table.classList.contains('go-results-showing-details')).toBeTruthy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
@@ -452,7 +452,7 @@ describe('GoResultsHighlighter', () => {
             highlighter.highlight(3, true);
             highlighter.highlight(5);
 
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(true);
             expect(table.classList.contains('go-results-showing-details')).toBeFalsy();
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
@@ -486,7 +486,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row2').firstChild.dispatchEvent(event);
 
             expect(highlighter.current).toBe(null);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
         });
 
@@ -497,7 +497,7 @@ describe('GoResultsHighlighter', () => {
 
             expect(highlighter.current).toBe(3);
             expect(highlighter.isHighlighting).toBe(true);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
         });
 
         it('mark player, opponents and opponent\'s game when hovering game result in player row', () => {
@@ -507,7 +507,7 @@ describe('GoResultsHighlighter', () => {
 
             expect(highlighter.highlight).toHaveBeenCalledWith({ player: 3, opponent: 7 });
             expect(highlighter.isHighlighting).toBe(true);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
         });
 
         it('not mark any player when hovering settings is disabled', () => {
@@ -519,7 +519,7 @@ describe('GoResultsHighlighter', () => {
 
             expect(highlighter.highlight).not.toHaveBeenCalled();
             expect(highlighter.isHighlighting).toBe(false);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
         });
 
         it('mark last hovered player', () => {
@@ -530,7 +530,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row8').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
 
             expect(highlighter.isHighlighting).toBe(true);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.highlight.calls.count()).toBe(5);
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(1);
@@ -543,7 +543,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row1').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
 
             expect(highlighter.isHighlighting).toBe(false);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.highlight.calls.count()).toBe(2);
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
@@ -557,7 +557,7 @@ describe('GoResultsHighlighter', () => {
             table.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, relatedTarget: table.parentNode }));
 
             expect(highlighter.isHighlighting).toBe(false);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.highlight.calls.count()).toBe(2);
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
@@ -569,7 +569,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             expect(highlighter.isHighlighting).toBe(false);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.current).toBe(null);
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
@@ -581,7 +581,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             expect(highlighter.isHighlighting).toBe(true);
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.current).toBe(3);
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
             expect(table.querySelectorAll('.go-results-won').length).toBe(2);
@@ -595,7 +595,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             expect(highlighter.isHighlighting).toBe(false);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.highlight).not.toHaveBeenCalled();
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
@@ -608,7 +608,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             expect(highlighter.highlight.calls.count()).toBe(2);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(true);
         });
 
@@ -617,7 +617,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             expect(highlighter.highlight.calls.count()).toBe(2);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
         });
 
@@ -630,7 +630,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row7').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
 
             expect(highlighter.highlight).not.toHaveBeenCalled();
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.isHighlighting).toBe(true);
         });
 
@@ -639,7 +639,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row9').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             expect(highlighter.highlight.calls.count()).toBe(2);
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.isHighlighting).toBe(true);
             expect(table.querySelectorAll('.go-results-won').length).toBe(1);
             expect(table.querySelectorAll('.go-results-lost').length).toBe(2);
@@ -650,7 +650,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row10').querySelector('.game1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             expect(highlighter.highlight.calls.count()).toBe(2);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(true);
             expect(highlighter.current).toBe(8);
             expect(table.querySelectorAll('.go-results-current').length).toBe(1);
@@ -666,7 +666,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row10').querySelector('.game1').dispatchEvent(new MouseEvent('click', { bubbles: true }));
 
             expect(highlighter.highlight.calls.count()).toBe(2);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
             expect(table.querySelectorAll('.go-results-current').length).toBe(0);
             expect(table.querySelectorAll('.go-results-won').length).toBe(0);
@@ -696,7 +696,7 @@ describe('GoResultsHighlighter', () => {
             el.dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(3);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(true);
         });
 
@@ -708,7 +708,7 @@ describe('GoResultsHighlighter', () => {
             el.dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(null);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
         });
 
@@ -717,7 +717,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row6').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(4);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(true);
         });
 
@@ -726,7 +726,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(3);
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.isHighlighting).toBe(true);
         });
 
@@ -736,7 +736,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row4').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(2);
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.isHighlighting).toBe(true);
         });
 
@@ -746,7 +746,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(3);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(true);
         });
 
@@ -755,7 +755,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row1').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(null);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
         });
 
@@ -765,7 +765,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row1').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(null);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
         });
 
@@ -776,7 +776,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(null);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
         });
 
@@ -786,7 +786,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(3);
-            expect(highlighter.isShowingDetails).toBe(true);
+            expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.isHighlighting).toBe(true);
         });
 
@@ -797,7 +797,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(null);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
         });
 
@@ -808,7 +808,7 @@ describe('GoResultsHighlighter', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
 
             expect(highlighter.current).toBe(null);
-            expect(highlighter.isShowingDetails).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
             expect(highlighter.isHighlighting).toBe(false);
         });
 
