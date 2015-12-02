@@ -55,6 +55,7 @@ export default class GoResultsHighlighter {
         this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
 
         this.current = null;
+        this.games = [];
         this.isRearranged = false;
         this.isHighlighting = false;
     }
@@ -75,12 +76,12 @@ export default class GoResultsHighlighter {
 
     /**
      * Marks player and his opponents highlighted.
-     * @param {object} [settings] - highlighting settings or player to be highlighted
+     * @param {object|null} [settings] - highlighting settings or player to be highlighted
      * @param {number} [settings.player] - player whose opponents should be
      * highlighted
      * @param {boolean} [settings.rearrange=false] - whether the table should be
      * rearranged to display results in compact size
-     * @param {number} [settings.opponent] - the opponent whose game with the
+     * @param {Array.<number>} [settings.games] - the opponent whose game with the
      * player should be highlighted
      */
     highlight(settings) {
@@ -90,7 +91,7 @@ export default class GoResultsHighlighter {
 
         let playerPlace = settings.player;
         let rearrange = settings.rearrange === true;
-        let gameWithOpponent = settings.opponent;
+        let gamesToHighlight = settings.games;
 
         const player = this.map[playerPlace];
         const classes = toPrefixedClasses(this.settings);
@@ -142,20 +143,30 @@ export default class GoResultsHighlighter {
             mark(player, true);
         }
 
-        if (player) {
-            if (gameWithOpponent && this.map[gameWithOpponent]) {
-                let game = player.games[gameWithOpponent];
-                let opponent = this.map[gameWithOpponent];
+        // clear list of highlighted games
+        this.games.length = 0;
 
-                if (game && opponent) {
-                    game.cell.classList.add(classes.gameCls);
-                    opponent.games[playerPlace].cell.classList.add(classes.gameCls);
-                }
+        if (player) {
+            if (typeof gamesToHighlight === 'number') {
+                gamesToHighlight = [gamesToHighlight];
+            }
+
+            if (gamesToHighlight && typeof gamesToHighlight.length === 'number') {
+                gamesToHighlight.forEach((opponentPlace) => {
+                    let opponent = this.map[opponentPlace];
+                    let game = player.games[opponentPlace];
+
+                    if (opponent && game) {
+                        game.cell.classList.add(classes.gameCls);
+                        opponent.games[playerPlace].cell.classList.add(classes.gameCls);
+                        this.games.push(opponentPlace);
+                    }
+                });
             } else if (this.isRearranged) {
                 player.opponents.forEach((opponent) => {
                     this.map[opponent].games[playerPlace].cell.classList.add(classes.gameCls);
+                    this.games.push(opponent);
                 });
-
             }
 
             this.current = playerPlace;
@@ -185,7 +196,7 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            let { target, player, opponent } = fetchInformationAboutTarget(event.target);
+            let { target, player, games } = fetchInformationAboutTarget(event.target);
 
             if (!player) {
                 return;
@@ -208,7 +219,7 @@ export default class GoResultsHighlighter {
                 lastTargetPos = target.getBoundingClientRect().top;
             }
 
-            this.highlight({ player, opponent, rearrange });
+            this.highlight({ player, games, rearrange });
 
             if (lastTargetPos) {
                 updateTopPosition(target, lastTargetPos);
@@ -222,7 +233,7 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            let { target, player, opponent } = fetchInformationAboutTarget(event.target);
+            let { target, player, games } = fetchInformationAboutTarget(event.target);
             let rearrange = false;
             let lastTargetPos;
 
@@ -241,7 +252,7 @@ export default class GoResultsHighlighter {
                 lastTargetPos = target.getBoundingClientRect().top;
             }
 
-            this.highlight({ player, opponent, rearrange });
+            this.highlight({ player, games, rearrange });
 
             if (lastTargetPos) {
                 updateTopPosition(target, lastTargetPos);
@@ -249,17 +260,18 @@ export default class GoResultsHighlighter {
         });
 
         this.element.addEventListener('mouseover', (event) => {
-            if (this.settings.hovering === false || this.isRearranged) {
+            if (this.settings.hovering === false) {
                 return;
             }
 
-            let { player, opponent } = fetchInformationAboutTarget(event.target);
+            let { player, games } = fetchInformationAboutTarget(event.target);
+            let rearrange = this.isRearranged;
 
-            if (!player) {
+            if (!player || (this.isRearranged && player !== this.current)) {
                 return;
             }
 
-            this.highlight({ player, opponent });
+            this.highlight({ player, rearrange, games });
         }, false);
 
         this.element.addEventListener('mouseout', (event) => {
@@ -276,7 +288,7 @@ export default class GoResultsHighlighter {
             // if new hovered element is outside the table then remove all
             // selections
             if (target !== this.element) {
-                this.highlight(false);
+                this.highlight(null);
             }
         }, false);
     }
@@ -305,7 +317,7 @@ function updateTopPosition(target, previousTop) {
 function fetchInformationAboutTarget(target) {
     var result = {
         player: null,
-        opponent: null,
+        games: null,
         target: null
     };
 
@@ -316,7 +328,7 @@ function fetchInformationAboutTarget(target) {
 
         // game cell?
         if (opponentGridPlacement) {
-            result.opponent = Number(opponentGridPlacement);
+            result.games = Number(opponentGridPlacement);
         }
 
         // player row? no further search is necessary

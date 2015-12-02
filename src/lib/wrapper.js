@@ -27,15 +27,22 @@ function GoResultsHighlighter(element, settings) {
      * Highlights player and his/hers opponents
      * @param {number|object} player - placement of the player or the object with
      * properties containing player, rearrange and opponent fields
+     * @param {number|Array.<number>|boolean} [games] - opponent with whom the game should be
      * @param {boolean} [rearrange] - whether to rearrange result rows
-     * @param {number} [opponent] - opponent with whom the game should be
      * highlighted
      */
-    this.highlight = (player, rearrange, opponent) => {
+    this.highlight = (player, games, rearrange) => {
         if (typeof player === 'object') {
             highlighter.highlight(player);
+
         } else {
-            highlighter.highlight({ player, rearrange, opponent });
+
+            if (typeof games === 'boolean') {
+                rearrange = games;
+                games = null;
+            }
+
+            highlighter.highlight({ player, rearrange, games });
         }
     };
 
@@ -87,7 +94,7 @@ function GoResultsHighlighter(element, settings) {
          * @type {number|null}
          * @readonly
          */
-        player: getter(() => highlighter.player || null),
+        player: getter(() => highlighter.current || null),
 
         /**
          * Contains count of player rows
@@ -95,6 +102,13 @@ function GoResultsHighlighter(element, settings) {
          * @readonly
          */
         players: getter(() => highlighter.players.length),
+
+        /**
+         * Contains list of highlighted games (placements of opponents)
+         * @type {Array.<number>}
+         * @readonly
+         */
+        games: getter(() => highlighter.games),
 
         /**
          * Contains current configuration of Go Results Highlighter
