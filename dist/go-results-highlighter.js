@@ -247,6 +247,31 @@ var GoResultsHighlighter = (function () {
         }
 
         /**
+         * Change settings
+         * @param {object} settings
+         */
+
+    }, {
+        key: 'configure',
+        value: function configure(settings) {
+
+            // remove any highlighting
+            this.highlight(null);
+
+            // remove class name added to the table
+            this.element.classList.remove(this.settings.prefixCls + this.settings.tableCls);
+
+            // update settings
+            this.settings = (0, _utils.defaults)(this.settings, settings);
+
+            // create new player map (parse rows)
+            this.createPlayersMap();
+
+            // add new class name to the table
+            this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
+        }
+
+        /**
          * Binds touchend, click, mouseover and mouseout events listeners to the element.
          */
 

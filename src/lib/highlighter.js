@@ -178,6 +178,28 @@ export default class GoResultsHighlighter {
     }
 
     /**
+     * Change settings
+     * @param {object} settings
+     */
+    configure(settings) {
+
+        // remove any highlighting
+        this.highlight(null);
+
+        // remove class name added to the table
+        this.element.classList.remove(this.settings.prefixCls + this.settings.tableCls);
+
+        // update settings
+        this.settings = defaults(this.settings, settings);
+
+        // create new player map (parse rows)
+        this.createPlayersMap();
+
+        // add new class name to the table
+        this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
+    }
+
+    /**
      * Binds touchend, click, mouseover and mouseout events listeners to the element.
      */
     bindEvents() {

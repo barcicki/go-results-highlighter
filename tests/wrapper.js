@@ -46,6 +46,13 @@ describe('GoResultsHighlighter', () => {
             expect(pre.goResultsHighlighter).not.toBeDefined();
         });
 
+        it('return highlighter instance when called without new', () => {
+            let table = createDom('<table></table>');
+            let highlighter = GoResultsHighlighter(table);
+
+            expect(highlighter instanceof GoResultsHighlighter).toBe(true);
+        });
+
         it('start with initial configuration', () => {
             let table = createDom('<table></table>');
             let highlighter = new GoResultsHighlighter(table);
@@ -76,6 +83,87 @@ describe('GoResultsHighlighter', () => {
                 roundsColumns: null,
 
                 rowTags: 'tr',
+                cellTags: 'td,th',
+                cellSeparator: '[\t ]+',
+                joinNames: true
+            });
+        });
+
+        it('handle extra configuration in constructor', () => {
+            let table = createDom('<table></table>');
+            let highlighter = new GoResultsHighlighter(table, {
+                hovering: false,
+                prefixCls: 'table-',
+                roundsColumns: '2,3'
+            });
+
+            expect(highlighter.players).toBe(0);
+            expect(highlighter.player).toBe(null);
+            expect(highlighter.games).toEqual([]);
+            expect(highlighter.hovering).toBe(false);
+            expect(highlighter.rearranging).toBe(true);
+            expect(highlighter.isHighlighting).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
+            expect(highlighter.configuration).toEqual({
+                prefixCls: 'table-',
+                rearrangedCls: 'rearranged',
+                tableCls: 'table',
+                gameCls: 'game',
+                currentCls: 'current',
+
+                results: {
+                    won: '([0-9]+)\\+',
+                    lost: '([0-9]+)\\-',
+                    jigo: '([0-9]+)=',
+                    unresolved: '([0-9]+)\\?'
+                },
+
+                startingRow: 0,
+                placeColumn: 0,
+                roundsColumns: '2,3',
+
+                rowTags: 'tr',
+                cellTags: 'td,th',
+                cellSeparator: '[\t ]+',
+                joinNames: true
+            });
+        });
+
+        it('let reconfigure', () => {
+            let table = createDom('<table></table>');
+            let highlighter = new GoResultsHighlighter(table);
+
+            highlighter.configure({
+                startingRow: 1,
+                rowTags: 'div'
+            });
+
+            expect(highlighter.players).toBe(0);
+            expect(highlighter.player).toBe(null);
+            expect(highlighter.games).toEqual([]);
+            expect(highlighter.hovering).toBe(true);
+            expect(highlighter.rearranging).toBe(true);
+            expect(highlighter.isHighlighting).toBe(false);
+            expect(highlighter.isRearranged).toBe(false);
+            expect(highlighter.configuration).toEqual({
+                prefixCls: 'go-results-',
+                rearrangedCls: 'rearranged',
+                tableCls: 'table',
+                gameCls: 'game',
+                currentCls: 'current',
+
+                results: {
+                    won: '([0-9]+)\\+',
+                    lost: '([0-9]+)\\-',
+                    jigo: '([0-9]+)=',
+                    unresolved: '([0-9]+)\\?'
+                },
+
+                startingRow: 1,
+                placeColumn: 0,
+                roundsColumns: null,
+
+                rowTags: 'div',
                 cellTags: 'td,th',
                 cellSeparator: '[\t ]+',
                 joinNames: true
@@ -124,7 +212,7 @@ describe('GoResultsHighlighter', () => {
             expect(highlighter.rearranging).toBe(false);
         });
 
-        it('load simple results', () => {
+        it('parse simple results', () => {
             let table = createDom(EXAMPLE_TOURNAMENT);
             let highlighter = new GoResultsHighlighter(table);
 

@@ -17,7 +17,7 @@ import Highlighter from './highlighter';
 function GoResultsHighlighter(element, settings) {
 
     // force new instance
-    if (!this instanceof GoResultsHighlighter) {
+    if (!(this instanceof GoResultsHighlighter)) {
         return new GoResultsHighlighter(element, settings);
     }
 

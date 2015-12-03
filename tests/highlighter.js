@@ -489,7 +489,7 @@ describe('highlighter', () => {
             expect(highlighter.games).toEqual([]);
         });
 
-        it('neither higlight nor unhighlight when hovering the table directly', () => {
+        it('neither highlight nor remove highlight when hovering the table directly', () => {
             table.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
             expect(highlighter.current).toBe(null);
             expect(highlighter.isRearranged).toBe(false);
@@ -902,5 +902,71 @@ describe('highlighter', () => {
             expect(highlighter.games).toEqual([]);
         });
 
+    });
+
+    describe('should allow reconfiguration', () => {
+        let highlighter;
+        let table;
+
+        beforeEach(() => {
+            table = createDom(EXAMPLE_TOURNAMENT);
+            highlighter = new GoResultsHighlighter(table);
+        });
+
+        it('keep same settings if no new settings provided', () => {
+            let settings = highlighter.settings;
+            highlighter.configure();
+
+            expect(highlighter.settings).toEqual(settings);
+
+            highlighter.configure({});
+            expect(highlighter.settings).toEqual(settings);
+        });
+
+        it('update settings', () => {
+            let settings = highlighter.settings;
+            highlighter.configure({
+                rearranging: false,
+                prefixCls: 'test'
+            });
+
+            expect(highlighter.settings).not.toEqual(settings);
+            expect(highlighter.settings.rearranging).toBe(false);
+            expect(highlighter.settings.prefixCls).toBe('test');
+        });
+
+        it('remove any highlighting on configure call', () => {
+            highlighter.highlight({ player: 1 });
+            highlighter.configure();
+
+            expect(highlighter.isHighlighting).toBe(false);
+
+            highlighter.highlight({ player: 1, rearrange: true });
+            highlighter.configure();
+
+            expect(highlighter.isRearranged).toBe(false);
+
+            highlighter.highlight({ player: 1, rearrange: true, games: [2] });
+            highlighter.configure();
+
+            expect(highlighter.games).toEqual([]);
+        });
+
+        it('update element class name on configure call', () => {
+            expect(highlighter.element.classList.contains('go-results-table')).toBe(true);
+
+            highlighter.configure({ tableCls: 'test' });
+            expect(highlighter.element.classList.contains('go-results-test')).toBe(true);
+
+            highlighter.configure({ prefixCls: 'table-' });
+            expect(highlighter.element.classList.contains('table-test')).toBe(true);
+        });
+
+        it('recalculate rows on configure', () => {
+            expect(highlighter.players.length).toBe(8);
+
+            highlighter.configure({ startingRow: 3 });
+            expect(highlighter.players.length).toBe(7);
+        });
     });
 });
