@@ -1,9 +1,9 @@
 !function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.GoResultsHighlighter=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 'use strict';
 
-var _highlighter = _dereq_('./lib/highlighter');
+var _wrapper = _dereq_('./lib/wrapper');
 
-var _highlighter2 = _interopRequireDefault(_highlighter);
+var _wrapper2 = _interopRequireDefault(_wrapper);
 
 var _settings = _dereq_('./lib/settings');
 
@@ -13,7 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function initialize() {
     (0, _utils.asArray)(document.querySelectorAll('[' + _settings.DOM_ATTRIBUTES.RESULT_TABLE + ']')).forEach(function (tableEl) {
-        return new _highlighter2.default(tableEl);
+        return new _wrapper2.default(tableEl);
     });
 }
 
@@ -26,7 +26,7 @@ if (document.readyState === 'complete') {
 if (typeof jQuery !== 'undefined') {
     jQuery.fn.goResultsHighlighter = function (options) {
         this.each(function (index, element) {
-            var highlighter = new _highlighter2.default(element, options);
+            var highlighter = new _wrapper2.default(element, options);
 
             $(highlighter.element).data('GoResultsHighlighter', highlighter);
         });
@@ -34,9 +34,9 @@ if (typeof jQuery !== 'undefined') {
     };
 }
 
-module.exports = _highlighter2.default;
+module.exports = _wrapper2.default;
 
-},{"./lib/highlighter":2,"./lib/settings":5,"./lib/utils":6}],2:[function(_dereq_,module,exports){
+},{"./lib/settings":5,"./lib/utils":6,"./lib/wrapper":7}],2:[function(_dereq_,module,exports){
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -58,8 +58,6 @@ var _raw2table2 = _interopRequireDefault(_raw2table);
 var _utils = _dereq_('./utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -114,10 +112,10 @@ var GoResultsHighlighter = (function () {
         this.bindEvents();
 
         this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
-        this.element.goResultsHighlighter = this;
 
         this.current = null;
-        this.isShowingDetails = false;
+        this.games = [];
+        this.isRearranged = false;
         this.isHighlighting = false;
     }
 
@@ -140,15 +138,13 @@ var GoResultsHighlighter = (function () {
 
         /**
          * Marks player and his opponents highlighted.
-         * @param {object|number|null} [settings] - highlighting settings or player to be highlighted
+         * @param {object|null} [settings] - highlighting settings or player to be highlighted
          * @param {number} [settings.player] - player whose opponents should be
          * highlighted
-         * @param {boolean} [settings.compact=false] - whether the table should be
+         * @param {boolean} [settings.rearrange=false] - whether the table should be
          * rearranged to display results in compact size
-         * @param {number} [settings.opponent] - the opponent whose game with the
+         * @param {Array.<number>} [settings.games] - the opponent whose game with the
          * player should be highlighted
-         * @param {boolean} [compact=false] - if settings are not provided than this
-         * argument is checked for compact flag
          */
 
     }, {
@@ -156,38 +152,33 @@ var GoResultsHighlighter = (function () {
         value: function highlight(settings) {
             var _this = this;
 
-            var compact = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
-
-            var playerPlace = undefined;
-            var gameWithOpponent = undefined;
-
-            if (settings && (typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) === 'object') {
-                playerPlace = settings.player;
-                compact = settings.compact === true;
-                gameWithOpponent = settings.opponent;
-            } else {
-                playerPlace = settings;
+            if (!settings) {
+                settings = {};
             }
+
+            var playerPlace = settings.player;
+            var rearrange = settings.rearrange === true;
+            var gamesToHighlight = settings.games;
 
             var player = this.map[playerPlace];
             var classes = (0, _settings.toPrefixedClasses)(this.settings);
 
             // if table is already rearranged then transform it back to default state
-            if (this.isShowingDetails) {
+            if (this.isRearranged) {
                 restoreNaturalOrder(this.players);
             }
 
             // rearrange the table if player and appropriate setting is provided
-            if (player && compact) {
+            if (player && rearrange) {
                 rearrangeOrder(player, player.opponents.map(function (opponentPlace) {
                     return _this.map[opponentPlace];
                 }));
 
-                this.element.classList.add(classes.showingDetailsCls);
-                this.isShowingDetails = true;
+                this.element.classList.add(classes.rearrangedCls);
+                this.isRearranged = true;
             } else {
-                this.element.classList.remove(classes.showingDetailsCls);
-                this.isShowingDetails = false;
+                this.element.classList.remove(classes.rearrangedCls);
+                this.isRearranged = false;
             }
 
             var markedGames = (0, _utils.asArray)(this.element.querySelectorAll('.' + classes.gameCls));
@@ -221,18 +212,29 @@ var GoResultsHighlighter = (function () {
                 mark(player, true);
             }
 
-            if (player) {
-                if (gameWithOpponent && this.map[gameWithOpponent]) {
-                    var game = player.games[gameWithOpponent];
-                    var opponent = this.map[gameWithOpponent];
+            // clear list of highlighted games
+            this.games.length = 0;
 
-                    if (game && opponent) {
-                        game.cell.classList.add(classes.gameCls);
-                        opponent.games[playerPlace].cell.classList.add(classes.gameCls);
-                    }
-                } else if (this.isShowingDetails) {
+            if (player) {
+                if (typeof gamesToHighlight === 'number') {
+                    gamesToHighlight = [gamesToHighlight];
+                }
+
+                if (gamesToHighlight && typeof gamesToHighlight.length === 'number') {
+                    gamesToHighlight.forEach(function (opponentPlace) {
+                        var opponent = _this.map[opponentPlace];
+                        var game = player.games[opponentPlace];
+
+                        if (opponent && game) {
+                            game.cell.classList.add(classes.gameCls);
+                            opponent.games[playerPlace].cell.classList.add(classes.gameCls);
+                            _this.games.push(opponentPlace);
+                        }
+                    });
+                } else if (this.isRearranged) {
                     player.opponents.forEach(function (opponent) {
                         _this.map[opponent].games[playerPlace].cell.classList.add(classes.gameCls);
+                        _this.games.push(opponent);
                     });
                 }
 
@@ -264,7 +266,7 @@ var GoResultsHighlighter = (function () {
             });
 
             this.element.addEventListener('touchend', function (event) {
-                if (hasTouchMoved || _this2.settings.clicking === false && _this2.settings.hovering === false) {
+                if (hasTouchMoved || _this2.settings.rearranging === false && _this2.settings.hovering === false) {
                     return;
                 }
 
@@ -272,29 +274,29 @@ var GoResultsHighlighter = (function () {
 
                 var target = _fetchInformationAbou.target;
                 var player = _fetchInformationAbou.player;
-                var opponent = _fetchInformationAbou.opponent;
+                var games = _fetchInformationAbou.games;
 
                 if (!player) {
                     return;
                 }
 
-                var compact = false;
+                var rearrange = false;
                 var lastTargetPos = undefined;
 
                 if (_this2.current === player) {
-                    if (!_this2.settings.clicking || !_this2.settings.hovering) {
+                    if (!_this2.settings.rearranging || !_this2.settings.hovering) {
                         player = null;
                     }
-                    compact = !_this2.isShowingDetails;
-                } else if (_this2.isShowingDetails || !_this2.settings.hovering) {
-                    compact = true;
+                    rearrange = !_this2.isRearranged;
+                } else if (_this2.isRearranged || !_this2.settings.hovering) {
+                    rearrange = true;
                 }
 
-                if (compact) {
+                if (rearrange) {
                     lastTargetPos = target.getBoundingClientRect().top;
                 }
 
-                _this2.highlight({ player: player, opponent: opponent, compact: compact });
+                _this2.highlight({ player: player, games: games, rearrange: rearrange });
 
                 if (lastTargetPos) {
                     updateTopPosition(target, lastTargetPos);
@@ -304,7 +306,7 @@ var GoResultsHighlighter = (function () {
             });
 
             this.element.addEventListener('click', function (event) {
-                if (_this2.settings.clicking === false) {
+                if (_this2.settings.rearranging === false) {
                     return;
                 }
 
@@ -312,26 +314,26 @@ var GoResultsHighlighter = (function () {
 
                 var target = _fetchInformationAbou2.target;
                 var player = _fetchInformationAbou2.player;
-                var opponent = _fetchInformationAbou2.opponent;
+                var games = _fetchInformationAbou2.games;
 
-                var compact = false;
+                var rearrange = false;
                 var lastTargetPos = undefined;
 
                 if (!player) {
                     return;
                 }
 
-                if (!_this2.isShowingDetails || target.properNextSibling) {
-                    compact = true;
+                if (!_this2.isRearranged || target.properNextSibling) {
+                    rearrange = true;
                 } else if (!_this2.settings.hovering) {
                     player = null;
                 }
 
-                if (compact) {
+                if (rearrange) {
                     lastTargetPos = target.getBoundingClientRect().top;
                 }
 
-                _this2.highlight({ player: player, opponent: opponent, compact: compact });
+                _this2.highlight({ player: player, games: games, rearrange: rearrange });
 
                 if (lastTargetPos) {
                     updateTopPosition(target, lastTargetPos);
@@ -339,24 +341,37 @@ var GoResultsHighlighter = (function () {
             });
 
             this.element.addEventListener('mouseover', function (event) {
-                if (_this2.settings.hovering === false || _this2.isShowingDetails) {
+                if (_this2.settings.hovering === false) {
                     return;
                 }
 
                 var _fetchInformationAbou3 = fetchInformationAboutTarget(event.target);
 
                 var player = _fetchInformationAbou3.player;
-                var opponent = _fetchInformationAbou3.opponent;
+                var games = _fetchInformationAbou3.games;
+
+                var rearrange = _this2.isRearranged;
 
                 if (!player) {
                     return;
                 }
 
-                _this2.highlight({ player: player, opponent: opponent });
+                if (_this2.isRearranged) {
+                    if ((!games || player !== _this2.current) && _this2.games.length === _this2.map[_this2.current].opponents.length) {
+                        return;
+                    }
+
+                    if (player !== _this2.current) {
+                        player = _this2.current;
+                        games = null;
+                    }
+                }
+
+                _this2.highlight({ player: player, rearrange: rearrange, games: games });
             }, false);
 
             this.element.addEventListener('mouseout', function (event) {
-                if (_this2.settings.hovering === false || _this2.isShowingDetails) {
+                if (_this2.settings.hovering === false) {
                     return;
                 }
 
@@ -367,9 +382,14 @@ var GoResultsHighlighter = (function () {
                 }
 
                 // if new hovered element is outside the table then remove all
-                // selections
+                // selections unless the table is rearranged - then only highlight
+                // all games
                 if (target !== _this2.element) {
-                    _this2.highlight(false);
+                    if (_this2.isRearranged && _this2.games.length !== _this2.map[_this2.current].opponents.length) {
+                        _this2.highlight({ player: _this2.current, rearrange: true });
+                    } else if (!_this2.isRearranged) {
+                        _this2.highlight(null);
+                    }
                 }
             }, false);
         }
@@ -403,7 +423,7 @@ function updateTopPosition(target, previousTop) {
 function fetchInformationAboutTarget(target) {
     var result = {
         player: null,
-        opponent: null,
+        games: null,
         target: null
     };
 
@@ -414,7 +434,7 @@ function fetchInformationAboutTarget(target) {
 
         // game cell?
         if (opponentGridPlacement) {
-            result.opponent = Number(opponentGridPlacement);
+            result.games = Number(opponentGridPlacement);
         }
 
         // player row? no further search is necessary
@@ -805,7 +825,7 @@ exports.toPrefixedClasses = toPrefixedClasses;
 exports.readTableSettingsFromDOM = readTableSettingsFromDOM;
 var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     prefixCls: 'go-results-',
-    showingDetailsCls: 'showing-details',
+    rearrangedCls: 'rearranged',
     tableCls: 'table',
     gameCls: 'game',
     currentCls: 'current',
@@ -827,21 +847,21 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     joinNames: true,
 
     hovering: true,
-    clicking: true
+    rearranging: true
 };
 
-var CLASSES_TO_BE_PREFIXED = ['showingDetailsCls', 'tableCls', 'gameCls', 'currentCls'];
+var CLASSES_TO_BE_PREFIXED = ['rearrangedCls', 'tableCls', 'gameCls', 'currentCls'];
 
 /**
  * Names of attributes used in this plugin
- * @type {{RESULT_TABLE: string, SETTING_STARTING_ROW: string, SETTING_PLACE_COLUMN: string, SETTING_ROUNDS_COLUMNS: string, PLAYER_PLACEMENT: string, OPPONENT_PLACEMENT: string, GAME_RESULT: string}}
+ * @type {{RESULT_TABLE: string, SETTING_STARTING_ROW: string, SETTING_PLACE_COLUMN: string, SETTING_ROUNDS_COLUMNS: string, SETTING_REARRANGING: string, SETTING_HOVERING: string, PLAYER_PLACEMENT: string, OPPONENT_PLACEMENT: string, OPPONENTS: string, GAME_RESULT: string}}
  */
 var DOM_ATTRIBUTES = exports.DOM_ATTRIBUTES = {
     RESULT_TABLE: 'data-go-results',
     SETTING_STARTING_ROW: 'data-go-starting-row',
-    SETTING_PLACE_COLUMN: 'data-go-place-col',
-    SETTING_ROUNDS_COLUMNS: 'data-go-rounds-cols',
-    SETTING_CLICKING: 'data-go-clicking',
+    SETTING_PLACE_COLUMN: 'data-go-place-column',
+    SETTING_ROUNDS_COLUMNS: 'data-go-rounds-columns',
+    SETTING_REARRANGING: 'data-go-rearranging',
     SETTING_HOVERING: 'data-go-hovering',
     PLAYER_PLACEMENT: 'data-go-place',
     OPPONENT_PLACEMENT: 'data-go-opponent',
@@ -906,8 +926,8 @@ function readTableSettingsFromDOM(table) {
         output.roundsColumns = table.getAttribute(DOM_ATTRIBUTES.SETTING_ROUNDS_COLUMNS);
     }
 
-    if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_CLICKING)) {
-        output.clicking = table.getAttribute(DOM_ATTRIBUTES.SETTING_CLICKING) !== 'false';
+    if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_REARRANGING)) {
+        output.rearranging = table.getAttribute(DOM_ATTRIBUTES.SETTING_REARRANGING) !== 'false';
     }
 
     if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_HOVERING)) {
@@ -996,7 +1016,226 @@ function combine() {
     return result;
 }
 
-},{}]},{},[1])
+},{}],7:[function(_dereq_,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _highlighter = _dereq_('./highlighter');
+
+var _highlighter2 = _interopRequireDefault(_highlighter);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
+
+/**
+ * Class wrapper for highlighter
+ * @module wrapper
+ */
+
+/**
+ * Creates new Go Results Highlighter
+ * @param {HTMLElement} element - element where the highlighter should be bound
+ * to, preferably a table or a pre element
+ * @param {object} [settings] - configuration of the highlighter
+ * @constructor
+ */
+function GoResultsHighlighter(element, settings) {
+
+    // force new instance
+    if (!this instanceof GoResultsHighlighter) {
+        return new GoResultsHighlighter(element, settings);
+    }
+
+    var highlighter = new _highlighter2.default(element, settings);
+
+    /**
+     * Highlights player and his/hers opponents
+     * @param {number|object} player - placement of the player or the object with
+     * properties containing player, rearrange and opponent fields
+     * @param {number|Array.<number>|boolean} [games] - opponent with whom the game should be
+     * @param {boolean} [rearrange] - whether to rearrange result rows
+     * highlighted
+     */
+    this.highlight = function (player, games, rearrange) {
+        if ((typeof player === 'undefined' ? 'undefined' : _typeof(player)) === 'object') {
+            highlighter.highlight(player);
+        } else {
+
+            if (typeof games === 'boolean') {
+                rearrange = games;
+                games = null;
+            }
+
+            highlighter.highlight({ player: player, rearrange: rearrange, games: games });
+        }
+    };
+
+    /**
+     * Changes current configuration of the highlighter
+     * @param {object} settings
+     */
+    this.configure = function (settings) {
+        highlighter.configure(settings);
+    };
+
+    /**
+     * Gets opponents for the player on provided place.
+     * @param {number} player - placement of player to get the list of opponents
+     * @returns {Array.<number>}
+     */
+    this.opponents = function (player) {
+        var entry = highlighter.map[player];
+
+        return entry ? entry.opponents.slice() : [];
+    };
+
+    Object.defineProperties(this, /** @lends module:wrapper~GoResultsHighlighter.prototype */{
+
+        /**
+         * Contains reference to element with highlighter
+         * @type {HTMLElement}
+         * @readonly
+         */
+        element: getter(function () {
+            return highlighter.element;
+        }),
+
+        /**
+         * Informs whether the any player is highlighted
+         * @type {boolean}
+         * @readonly
+         */
+        isHighlighting: getter(function () {
+            return highlighter.isHighlighting;
+        }),
+
+        /**
+         * Informs whether the rows are rearranged to display results in compact
+         * mode
+         * @type {boolean}
+         * @readonly
+         */
+        isRearranged: getter(function () {
+            return highlighter.isRearranged;
+        }),
+
+        /**
+         * Contains placement of current highlighted player
+         * @type {number|null}
+         * @readonly
+         */
+        player: getter(function () {
+            return highlighter.current || null;
+        }),
+
+        /**
+         * Contains count of player rows
+         * @type {number}
+         * @readonly
+         */
+        players: getter(function () {
+            return highlighter.players.length;
+        }),
+
+        /**
+         * Contains list of highlighted games (placements of opponents)
+         * @type {Array.<number>}
+         * @readonly
+         */
+        games: getter(function () {
+            return highlighter.games;
+        }),
+
+        /**
+         * Contains current configuration of Go Results Highlighter
+         * @type {object}
+         * @readonly
+         */
+        configuration: getter(function () {
+            var originalResults = highlighter.settings.results;
+            var results = {};
+
+            for (var prop in originalResults) {
+                if (originalResults.hasOwnProperty(prop)) {
+                    results[prop] = originalResults[prop];
+                }
+            }
+
+            return {
+                startingRow: highlighter.settings.startingRow,
+                placeColumn: highlighter.settings.placeColumn,
+                roundsColumns: highlighter.settings.roundsColumns,
+                prefixCls: highlighter.settings.prefixCls,
+                rearrangedCls: highlighter.settings.rearrangedCls,
+                tableCls: highlighter.settings.tableCls,
+                gameCls: highlighter.settings.gameCls,
+                currentCls: highlighter.settings.currentCls,
+                rowTags: highlighter.settings.rowTags,
+                cellTags: highlighter.settings.cellTags,
+                cellSeparator: highlighter.settings.cellSeparator,
+                joinNames: highlighter.settings.joinNames,
+                results: results
+            };
+        }),
+
+        /**
+         * Informs whether the rearranging is enabled.
+         * @type {boolean}
+         */
+        rearranging: {
+            set: function set(value) {
+                if (!value && highlighter.isRearranged) {
+                    highlighter.highlight(null);
+                }
+
+                highlighter.settings.rearranging = !!value;
+            },
+            get: function get() {
+                return highlighter.settings.rearranging;
+            },
+            configurable: false,
+            enumerable: true
+        },
+
+        /**
+         * Informs whether the hovering is enabled.
+         * @type {boolean}
+         */
+        hovering: {
+            set: function set(value) {
+                return highlighter.settings.hovering = !!value;
+            },
+            get: function get() {
+                return highlighter.settings.hovering;
+            },
+            configurable: false,
+            enumerable: true
+        }
+    });
+
+    highlighter.element.goResultsHighlighter = this;
+}
+
+/**
+ * Helper function returning definition of read only getter defined in callback
+ * @param {Function} callback
+ * @returns {object}
+ */
+function getter(callback) {
+    return {
+        get: callback,
+        enumerable: true,
+        configurable: false
+    };
+}
+
+exports.default = GoResultsHighlighter;
+
+},{"./highlighter":2}]},{},[1])
 //# sourceMappingURL=go-results-highlighter.js.map
 (1)
 });

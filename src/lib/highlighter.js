@@ -267,15 +267,26 @@ export default class GoResultsHighlighter {
             let { player, games } = fetchInformationAboutTarget(event.target);
             let rearrange = this.isRearranged;
 
-            if (!player || (this.isRearranged && player !== this.current)) {
+            if (!player) {
                 return;
+            }
+
+            if (this.isRearranged) {
+                if ((!games || player !== this.current) && this.games.length === this.map[this.current].opponents.length) {
+                    return;
+                }
+
+                if (player !== this.current) {
+                    player = this.current;
+                    games = null;
+                }
             }
 
             this.highlight({ player, rearrange, games });
         }, false);
 
         this.element.addEventListener('mouseout', (event) => {
-            if (this.settings.hovering === false || this.isRearranged) {
+            if (this.settings.hovering === false) {
                 return;
             }
 
@@ -286,9 +297,14 @@ export default class GoResultsHighlighter {
             }
 
             // if new hovered element is outside the table then remove all
-            // selections
+            // selections unless the table is rearranged - then only highlight
+            // all games
             if (target !== this.element) {
-                this.highlight(null);
+                if (this.isRearranged && this.games.length !== this.map[this.current].opponents.length) {
+                    this.highlight({ player: this.current, rearrange: true });
+                } else if (!this.isRearranged) {
+                    this.highlight(null);
+                }
             }
         }, false);
     }

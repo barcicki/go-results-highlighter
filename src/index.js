@@ -1,6 +1,6 @@
 'use strict';
 
-import GoResultsHighlighter from './lib/highlighter';
+import GoResultsHighlighter from './lib/wrapper';
 import { DOM_ATTRIBUTES } from './lib/settings';
 import { asArray } from './lib/utils';
 

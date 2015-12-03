@@ -652,7 +652,7 @@ describe('highlighter', () => {
             expect(highlighter.games).toEqual([]);
         });
 
-        it('disable hovering of other players when rows are rearranged', () => {
+        it('don\'t change highlighting when hovering other players when rows are rearranged', () => {
             table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
             table.querySelector('#row3').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
             table.querySelector('#row7').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
@@ -671,6 +671,33 @@ describe('highlighter', () => {
             expect(highlighter.isHighlighting).toBe(true);
             expect(highlighter.current).toBe(3);
             expect(highlighter.games).toEqual([7]);
+        });
+
+        it('restore highlighting of all games when stopped hovering game cell and rows are rearranged', () => {
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+            table.querySelector('#row5').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row6').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+
+            expect(highlighter.isRearranged).toBe(true);
+            expect(highlighter.isHighlighting).toBe(true);
+            expect(highlighter.current).toBe(3);
+            expect(highlighter.games).toEqual([2, 4, 7]);
+
+            table.querySelector('#row5').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row6').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+
+            expect(highlighter.isRearranged).toBe(true);
+            expect(highlighter.isHighlighting).toBe(true);
+            expect(highlighter.current).toBe(3);
+            expect(highlighter.games).toEqual([2, 4, 7]);
+
+            table.querySelector('#row5').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.dispatchEvent(new MouseEvent('mouseout', { bubbles: true }));
+
+            expect(highlighter.isRearranged).toBe(true);
+            expect(highlighter.isHighlighting).toBe(true);
+            expect(highlighter.current).toBe(3);
+            expect(highlighter.games).toEqual([2, 4, 7]);
         });
 
         it('highlight opponent and rearrange the table when clicking opponent', () => {
@@ -723,7 +750,7 @@ describe('highlighter', () => {
 
             expect(highlighter.isHighlighting).toBe(true);
             expect(highlighter.isRearranged).toBe(true);
-            expect(highlighter.games).toEqual([7]);
+            expect(highlighter.games).toEqual([2, 4, 7]);
         });
     });
 
