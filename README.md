@@ -2,7 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/go-results-highlighter.svg)](https://badge.fury.io/js/go-results-highlighter)
 [![Build Status](https://travis-ci.org/barcicki/go-results-highlighter.svg)](https://travis-ci.org/barcicki/go-results-highlighter)
-[![Coverage Status](https://coveralls.io/repos/barcicki/go-results-highlighter/badge.svg?branch=v0.7.3&service=github)](https://coveralls.io/github/barcicki/go-results-highlighter?branch=master)
+[![Coverage Status](https://coveralls.io/repos/barcicki/go-results-highlighter/badge.svg?branch=master&service=github)](https://coveralls.io/github/barcicki/go-results-highlighter?branch=master)
 [![Dependency Status](https://david-dm.org/barcicki/go-results-highlighter.svg)](https://david-dm.org/barcicki/go-results-highlighter)
 [![devDependency Status](https://david-dm.org/barcicki/go-results-highlighter/dev-status.svg)](https://david-dm.org/barcicki/go-results-highlighter#info=devDependencies)
 
