@@ -60,6 +60,15 @@ from `node_modules/go-results-highlighter/dist` directory to your website.
 Include `go-results-highlighter.min.js` and `go-results-highlighter.min.css`
 from `dist` directory to your website.
 
+#### Using Rawgit CDN
+
+Include following lines in your website:
+
+```html
+<link rel="stylesheet" href="//cdn.rawgit.com/barcicki/go-results-highlighter/v1.0.0/dist/go-results-highlighter.min.css">
+<script src="//cdn.rawgit.com/barcicki/go-results-highlighter/v1.0.0/dist/go-results-highlighter.min.js"></script>
+```
+
 ## Basic usage
 
 There're several ways possible.
@@ -117,7 +126,7 @@ $(selectorOfElementWithGoResults).goResultsHighlighter(optionalSettings);
 
 ## Go Results Highlighter API
 
-### `highlight(playerPlace, [games=[], rearranged=false])`
+### `highlight(playerPlace, [games=[], rearrange=false])`
 
 Highlights row with the player and his/hers opponents.
 
