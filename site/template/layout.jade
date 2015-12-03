@@ -16,13 +16,13 @@ html(lang="en")
         meta(charset="utf-8")
         meta(name="viewport", content="width=device-width")
         link(href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic", rel="stylesheet", type="text/css")
-        link(href=base + "go-results-highlighter.css", rel="stylesheet", type="text/css")
+        link(href=base + config.names.css.dest, rel="stylesheet", type="text/css")
         link(href=base + "styles/styles.css", rel="stylesheet", type="text/css")
         link(href=base + "components/octicons/octicons/octicons.css", rel="stylesheet", type="text/css")
         link(href=base + "components/highlightjs/styles/github.css", rel="stylesheet", type="text/css")
         script(src=base + "components/highlightjs/highlight.pack.min.js")
         script(src=base + "components/jquery/dist/jquery.min.js")
-        script(src=base + "go-results-highlighter.js")
+        script(src=base + config.names.js.dest)
         script(src=base + "scripts/main.js")
         block head
     
@@ -30,6 +30,7 @@ html(lang="en")
         header
             .content
                 h1 Go Results Highlighter
+                    small v.#{config.version}
                 h2 by Artur Barcicki
 
         nav

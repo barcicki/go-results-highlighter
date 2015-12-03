@@ -1071,7 +1071,7 @@ function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.const
 function GoResultsHighlighter(element, settings) {
 
     // force new instance
-    if (!this instanceof GoResultsHighlighter) {
+    if (!(this instanceof GoResultsHighlighter)) {
         return new GoResultsHighlighter(element, settings);
     }
 

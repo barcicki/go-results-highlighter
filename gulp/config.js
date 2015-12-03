@@ -4,6 +4,7 @@ const pjson = require('../package.json');
 
 module.exports = {
     package: pjson.name,
+    version: pjson.version,
     name: 'GoResultsHighlighter',
     paths: {
         src: './src',
