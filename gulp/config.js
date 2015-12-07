@@ -47,7 +47,7 @@ module.exports = {
                 dest: './dist/assets'
             },
             resources: {
-                all: ['./site/resources/**/*.*', './README.md']
+                all: ['./site/resources/**/*.*', './docs/**/*.*']
             }
         }
     },
