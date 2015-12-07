@@ -3,6 +3,7 @@ html(lang="en")
 
     - var base = ''
     - var active = 'home'
+    - var description = 'A JavaScript library that makes reading Go results super easy';
     block variables
 
     mixin link(anchor, href, icon, activeName)
@@ -14,7 +15,14 @@ html(lang="en")
     head
         block title
         meta(charset="utf-8")
+
         meta(name="viewport", content="width=device-width")
+        meta(name="description", content=description)
+        meta(name="keywords", content="go,baduk,weici,igo,results,standings,highlighter")
+        meta(name="author", content="Artur Barcicki")
+        meta(property="og:title", content="Go Results Highlighter")
+        meta(property="og:description", content=description)
+
         link(href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic", rel="stylesheet", type="text/css")
         link(href=base + config.names.css.dest, rel="stylesheet", type="text/css")
         link(href=base + "styles/styles.css", rel="stylesheet", type="text/css")
