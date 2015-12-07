@@ -1,20 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><title>Documentation - Go Results Highlighter</title><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css"><link href="../go-results-highlighter.css" rel="stylesheet" type="text/css"><link href="../styles/styles.css" rel="stylesheet" type="text/css"><link href="../components/octicons/octicons/octicons.css" rel="stylesheet" type="text/css"><link href="../components/highlightjs/styles/github.css" rel="stylesheet" type="text/css"><script src="../components/highlightjs/highlight.pack.min.js"></script><script src="../components/jquery/dist/jquery.min.js"></script><script src="../go-results-highlighter.js"></script><script src="../scripts/main.js"></script></head><body><header><div class="content"><h1>Go Results Highlighter<small>v.1.0.0</small></h1><h2>by Artur Barcicki</h2></div></header><nav><div class="content"><ul><li><a href="../"><span class="octicon octicon-home"></span><span>Home</span></a></li><li class="active"><a href="../docs"><span class="octicon octicon-file-text"></span><span>Documentation</span></a></li><li><a href="../examples/binding.html"><span class="octicon octicon-eye"></span><span>Examples</span></a></li></ul><ul class="github"><li><a href="https://github.com/barcicki/go-results-highlighter"><span class="octicon octicon-mark-github"></span><span>View on GitHub</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span class="octicon octicon-cloud-download"></span><span>Download .zip</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span class="octicon octicon-cloud-download"></span><span>Download .tar.gz</span></a></li></ul></div></nav><article class="docs"><div class="content"><h1>Go Results Highlighter</h1>
-<p><a href="https://badge.fury.io/js/go-results-highlighter"><img src="https://badge.fury.io/js/go-results-highlighter.svg" alt="npm version"></a>
-<a href="https://travis-ci.org/barcicki/go-results-highlighter"><img src="https://travis-ci.org/barcicki/go-results-highlighter.svg" alt="Build Status"></a>
-<a href="https://coveralls.io/github/barcicki/go-results-highlighter?branch=master"><img src="https://coveralls.io/repos/barcicki/go-results-highlighter/badge.svg?branch=v0.7.3&amp;service=github" alt="Coverage Status"></a>
-<a href="https://david-dm.org/barcicki/go-results-highlighter"><img src="https://david-dm.org/barcicki/go-results-highlighter.svg" alt="Dependency Status"></a>
-<a href="https://david-dm.org/barcicki/go-results-highlighter#info=devDependencies"><img src="https://david-dm.org/barcicki/go-results-highlighter/dev-status.svg" alt="devDependency Status"></a></p>
-<p>Highlighted results:</p>
-<p><img src="http://barcicki.github.io/go-results-highlighter/assets/results-hover.png" alt="Results with highlight"></p>
-<p>Highlighted results in compact mode:</p>
-<p><img src="http://barcicki.github.io/go-results-highlighter/assets/results-click.png" alt="Results in compact mode"></p>
-<h2>About</h2>
-<p>The goal of this plugin is to improve readability of Go result tables by
-highlighting opponent rows for the selected player.</p>
-<p>This is the rewritten version of <a href="https://github.com/barcicki/jQuery-Table-Result-for-Go">jQuery Table Result for Go</a>.
-It was created to provide jQuery independent version of the plugin and serve it
-using popular package managers such as Bower or NPM.</p>
-<h2>Installation</h2>
+<!DOCTYPE html><html lang="en"><head><title>Documentation - Go Results Highlighter</title><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="description" content="A JavaScript library that makes reading Go results super easy"><meta name="keywords" content="go,baduk,weici,igo,results,standings,highlighter"><meta name="author" content="Artur Barcicki"><meta property="og:title" content="Go Results Highlighter"><meta property="og:description" content="A JavaScript library that makes reading Go results super easy"><link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css"><link href="../go-results-highlighter.css" rel="stylesheet" type="text/css"><link href="../styles/styles.css" rel="stylesheet" type="text/css"><link href="../components/octicons/octicons/octicons.css" rel="stylesheet" type="text/css"><link href="../components/highlightjs/styles/github.css" rel="stylesheet" type="text/css"><script src="../components/highlightjs/highlight.pack.min.js"></script><script src="../components/jquery/dist/jquery.min.js"></script><script src="../go-results-highlighter.js"></script><script src="../scripts/main.js"></script></head><body><header><div class="content"><h1>Go Results Highlighter<small>1.0.1</small></h1><h2>by Artur Barcicki</h2></div></header><nav><div class="content"><ul><li><a href="../"><span class="octicon octicon-home"></span><span>Home</span></a></li><li class="active"><a href="../docs"><span class="octicon octicon-file-text"></span><span>Documentation</span></a></li><li><a href="../examples/binding.html"><span class="octicon octicon-eye"></span><span>Examples</span></a></li></ul><ul class="github"><li><a href="https://github.com/barcicki/go-results-highlighter"><span class="octicon octicon-mark-github"></span><span>View on GitHub</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span class="octicon octicon-cloud-download"></span><span>Download .zip</span></a></li><li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span class="octicon octicon-cloud-download"></span><span>Download .tar.gz</span></a></li></ul></div></nav><article class="docs"><div class="content"><h2>Installation</h2>
 <h4>Using Bower</h4>
 <p>Download Go Results Highlighter using following command:</p>
 <pre><code class="language-bash">bower install go-results-highlighter --save
@@ -33,8 +17,13 @@ from <code>node_modules/go-results-highlighter/dist</code> directory to your web
 <p><a href="https://github.com/barcicki/go-results-highlighter/releases/latest">Download the latest release from GitHub</a></p>
 <p>Include <code>go-results-highlighter.min.js</code> and <code>go-results-highlighter.min.css</code>
 from <code>dist</code> directory to your website.</p>
-<h2>Basic usage</h2>
-<p>There're several ways possible.</p>
+<h4>Using Rawgit CDN</h4>
+<p>Include following lines in your website:</p>
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;//cdn.rawgit.com/barcicki/go-results-highlighter/v1.0.0/dist/go-results-highlighter.min.css&quot;&gt;
+&lt;script src=&quot;//cdn.rawgit.com/barcicki/go-results-highlighter/v1.0.0/dist/go-results-highlighter.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h2>Usage</h2>
+<p>There're several ways possible to use the Highlighter.</p>
 <h4>Let Go Results Highlighter use default settings (no additional JS code)</h4>
 <p>Add <code>data-go-results</code> attribute to <strong>table</strong> or <strong>pre</strong> tags which contain
 Go results.</p>
@@ -51,7 +40,17 @@ globally:</p>
 <p>if it detects globally accessible jQuery object, then it's also possible to call:</p>
 <pre><code class="language-js">$(selectorOfElementWithGoResults).goResultsHighlighter(optionalSettings);
 </code></pre>
+<h4>Access to existing highlighter object</h4>
+<p>It is possible to get a highlighter instance bound to elements using
+<code>goResultsHighlighter</code> property, eg.</p>
+<pre><code class="language-js">var highlighter = document.querySelector('[data-go-results]').goResultsHighlighter;
+</code></pre>
+<p>or in jQuery:</p>
+<pre><code class="language-js">var highlighter = $('[data-go-results]').get().goResultsHighlighter;
+</code></pre>
+
 <h2>Configuration</h2>
+<p>Here's the table of available settings that can be overwritten.</p>
 <table>
 <thead>
 <tr>
@@ -178,21 +177,59 @@ globally:</p>
 </tr>
 </tbody>
 </table>
+<p>If, for any reason, above settings will have to be changed after the
+initialization, please use <code>configure</code> method on the highlighter instance.</p>
 <h2>Go Results Highlighter API</h2>
-<h3><code>highlight(playerPlace, [games=[], rearranged=false])</code></h3>
+<p>Here's the list of available methods and properties to be provided by
+instance of the highlighter.</p>
+<h3>Methods</h3>
+<h3><code>highlight(player, [games=[], rearrange=false])</code></h3>
 <p>Highlights row with the player and his/hers opponents.</p>
+<p>The first argument can be either a number or an object (<code>settings</code>) with properties named as
+the arguments</p>
 <p>Arguments:</p>
 <ul>
-<li><code>playerPlace</code> - or <code>settings.player</code> - either an object with settings or a number with
+<li><code>player</code> - or <code>settings.player</code> - either an object with settings or a number with
 player place. If null or player on this place is not found the table is reset to
 default state and any visual changes are reverted.</li>
-<li><code>games</code> - or <code>settings.games</code> - highlight games with provided opponents, be default no game is
-highlighted or all games if rows are already rearranged. Can be single number
-with opponent's place or a list of opponents</li>
+<li><code>games</code> - or <code>settings.games</code> - highlight games with provided opponents, by default no game is
+highlighted or all games if rows are rearranged (compact mode). Can be single number
+with opponent's place or a list of numbers (opponents)</li>
 <li><code>rearrange</code> - or <code>settings.rearrange</code> - if true it rearranges the rows with players
 so the opponents' rows are close to the the highlighted player</li>
 </ul>
-<h4>Example usages</h4>
+
+<h3><code>opponents(playerPlace)</code></h3>
+<p>Returns the array of opponents - theirs places (to be precise).</p>
+<h3><code>configure(settings)</code></h3>
+<p>Allows to modify the settings with which the highlighter was initialized.</p>
+
+<h3>Properties</h3>
+<h3><code>hovering</code></h3>
+<p>Boolean value. Controls whether the rows should be highlighted when mouse is moving
+above the table. Note that it doesn't stop manual highlighting.</p>
+<h3><code>rearranging</code></h3>
+<p>Boolean value. Controls whether the rows can be rearranged on mouse click.
+Note that it doesn't stop manual rearranging.</p>
+<h3><code>element</code></h3>
+<p>Readonly. Holds the reference to the DOM element with results.</p>
+<h3><code>isHighlighting</code></h3>
+<p>Readonly boolean. Informs whether any player is highlighted.</p>
+<h3><code>isRearranged</code></h3>
+<p>Readonly boolean. Informs whether the rows of the result table are rearranged.</p>
+<h3><code>player</code></h3>
+<p>Readonly. Holds the place of currently highlighted player (or null if no one is
+highlighted).</p>
+<h3><code>games</code></h3>
+<p>Readonly array. Array with places of opponents for whom games against current player
+are highlighted.</p>
+<h3><code>players</code></h3>
+<p>Readonly number. Contains the number of total rows with players.</p>
+<h3><code>configuration</code></h3>
+<p>Readonly object. Holds current configuration of the highlighter.</p>
+<h2>Examples</h2>
+<p>Probably common use cases of the Go Results Highlighter.</p>
+<h4>Setup</h4>
 <pre><code class="language-html">&lt;table id=&quot;go-results&quot; data-go-results&gt;
 &lt;!-- ... results ... --&gt;
 &lt;/table&gt;
@@ -206,84 +243,46 @@ or
 var results = new GoResultsHighlighter(document.getElementById('go-results'));
 
 </code></pre>
-<ol>
-<li>
-<p>Highlight the player on the first place and all opponents:</p>
+<h3>Highlight the player on the first place and all opponents:</h3>
 <pre><code class="language-js">results.highlight(1);
 </code></pre>
 <p>or</p>
 <pre><code class="language-js">results.highlight({ player: 1 });
 </code></pre>
-</li>
-<li>
-<p>Show opponents of player on 3rd place and rearrange the table (dimming other
-rows)</p>
+<h3>Show opponents of player on 3rd place and rearrange the table (dimming other</h3>
+<p>rows)</p>
 <pre><code class="language-js">results.highlight(3, true);
 </code></pre>
 <p>or</p>
 <pre><code class="language-js">results.highlight({ player: 3, rarrange: true });
 </code></pre>
-</li>
-<li>
-<p>Highlight the player on 2nd place and mark his game with player on 3rd place</p>
+<h3>Highlight the player on 2nd place and mark his game with player on 3rd place</h3>
 <pre><code class="language-js">results.highlight(2, 3);
 </code></pre>
 <p>or</p>
 <pre><code class="language-js">results.highlight({ player: 2, games: 3 });
 </code></pre>
-</li>
-<li>
-<p>Highlight the player on 3rd place and mark games with players 4 and 5, also
-rearrange the rows.</p>
+<h3>Highlight the player on 3rd place and mark games with players 4 and 5, also</h3>
+<p>rearrange the rows.</p>
 <pre><code class="language-js">results.highlight(3, [4,5], true);
 </code></pre>
 <p>or</p>
 <pre><code class="language-js">results.highlight({ player: 3, games: [4,5], rearrange: true });
 </code></pre>
-</li>
-<li>
-<p>Remove highlighting</p>
+<h3>Remove highlighting</h3>
 <pre><code class="language-js">results.highlight(null); // or any value that doesn't match any player
 </code></pre>
-</li>
-<li>
-<p>Get current highlighted player</p>
+<h3>Get current highlighted player</h3>
 <pre><code class="language-js">var highlightedPlayer = results.player;
 </code></pre>
-</li>
-<li>
-<p>Get list of highlighted games</p>
+<h3>Get list of highlighted games</h3>
 <pre><code class="language-js">var highlightedGames = results.games;
 </code></pre>
-</li>
-<li>
-<p>Get opponents for player on 3rd place</p>
+<h3>Get opponents for player on 3rd place</h3>
 <pre><code class="language-js">var opponents = results.opponents(3);
 </code></pre>
-</li>
-<li>
-<p>Check if table is rearranged or highlighted</p>
-<pre><code class="language-js">var isHighlighted = results.isHighlighted;
+<h3>Check if table is rearranged or highlighted</h3>
+<pre><code class="language-js">var isHighlighting = results.isHighlighting;
 var isRearranged = results.isRearranged;
 </code></pre>
-</li>
-</ol>
-<h2>License</h2>
-<p>The MIT License (MIT)</p>
-<p>Copyright (c) 2015 Artur Barcicki</p>
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the &quot;Software&quot;), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.</p>
-<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</p>
 </div></article></body></html>

@@ -125,6 +125,12 @@ article .wrapper {
   font-size: 1.2em;
   font-style: italic;
 }
+.features p.badges {
+  margin: 0;
+}
+.features p.badges a {
+  margin-right: 5px;
+}
 .features p span.octicon {
   margin-right: 10px;
 }
