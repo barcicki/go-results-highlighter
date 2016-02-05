@@ -39,7 +39,7 @@ module.exports = _wrapper2.default;
 },{"./lib/settings":5,"./lib/utils":6,"./lib/wrapper":7}],2:[function(_dereq_,module,exports){
 'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -61,7 +61,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var GoResultsHighlighter = (function () {
+var GoResultsHighlighter = function () {
 
     /**
      * Creates new instance of GoResultsHighlighter
@@ -421,7 +421,7 @@ var GoResultsHighlighter = (function () {
     }]);
 
     return GoResultsHighlighter;
-})();
+}();
 
 /**
  * Compare current target's top position with previous value and scroll window
@@ -835,13 +835,13 @@ function convertRawResultsToTable(rawResults, config) {
 }
 
 },{"./settings":5,"./utils":6}],5:[function(_dereq_,module,exports){
-'use strict'
+'use strict';
 
 /**
  * Default settings of the plugin
  * @type {{prefixCls: string, showingDetailsCls: string, tableCls: string, gameCls: string, currentCls: string, results: {won: string, lost: string, jigo: string, unresolved: string}, startingRow: number, placeColumn: number, roundsColumns: null, rowTags: string, cellTags: string, rowSeparator: string, hovering: boolean, clicking: boolean}}
  */
-;
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -963,23 +963,22 @@ function readTableSettingsFromDOM(table) {
 }
 
 },{}],6:[function(_dereq_,module,exports){
-'use strict'
+'use strict';
 
 /**
  * Transforms array-like objects (such as arguments or node lists) into an array
  * @param {*} arrayLike
  * @returns {Array.<T>}
  */
-;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.asArray = asArray;
 exports.defaults = defaults;
 exports.combine = combine;
-
-function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
-
 function asArray(arrayLike) {
     return Array.prototype.slice.call(arrayLike);
 }
@@ -1044,6 +1043,8 @@ function combine() {
 },{}],7:[function(_dereq_,module,exports){
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -1053,8 +1054,6 @@ var _highlighter = _dereq_('./highlighter');
 var _highlighter2 = _interopRequireDefault(_highlighter);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
 /**
  * Class wrapper for highlighter
