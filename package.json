@@ -1,6 +1,6 @@
 {
   "name": "go-results-highlighter",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Improves readability of Go results by highlighting opponents of selected player",
   "scripts": {
     "build": "gulp build",
