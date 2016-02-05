@@ -10,9 +10,6 @@ gulp.task('build-js-dev', () => {
     const replace = require('gulp-replace');
     const browserify = require('gulp-browserify');
     const transform = require('vinyl-transform');
-    const babelify = require('babelify').configure({
-        presets: ['es2015']
-    });
 
     return gulp.src(config.paths.js.entry)
 
@@ -22,24 +19,23 @@ gulp.task('build-js-dev', () => {
         .pipe(replace(`export default ${config.name};`, `module.exports = ${config.name};`))
 
         .pipe(browserify({
-            transform: [babelify],
+            transform: ['babelify'],
             debug: true,
             standalone: config.name
         }))
         .pipe(rename(config.names.js.dest))
+
+        // extract source map to separate file
         .pipe(transform(() => exorcist(path.join(config.paths.js.dest, config.names.js.map), null, config.package, '.')))
         .pipe(gulp.dest(config.paths.js.dest));
 });
 
 gulp.task('build-js-site', () => {
     const browserify = require('gulp-browserify');
-    const babelify = require('babelify').configure({
-        presets: ['es2015']
-    });
 
     return gulp.src(config.paths.site.js.entry)
         .pipe(browserify({
-            transform: [babelify],
+            transform: ['babelify'],
             sourceType: 'module',
             debug: true
         }))
