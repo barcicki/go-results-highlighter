@@ -5,7 +5,8 @@
   "scripts": {
     "build": "gulp build",
     "start": "gulp serve",
-    "test": "karma start --single-run"
+    "test": "karma start --single-run",
+    "prepublish": "babel -d dist/lib/ src/lib/"
   },
   "author": "Artur Barcicki <barcicki@gmail.com>",
   "homepage": "http://barcicki.github.io/go-results-highlighter",
@@ -30,10 +31,12 @@
     "go-results",
     "results-highlighter"
   ],
+  "main": "./dist/lib/highlighter.js",
   "engines": {
     "node": ">=4.0.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.4.5",
     "babel-preset-es2015": "^6.3.13",
     "babelify": "^7.2.0",
     "browser-sync": "^2.11.1",
