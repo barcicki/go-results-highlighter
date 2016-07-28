@@ -1,13 +1,13 @@
-!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.GoResultsHighlighter=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var _wrapper = _dereq_('./lib/wrapper');
+var _wrapper = require('./lib/wrapper');
 
 var _wrapper2 = _interopRequireDefault(_wrapper);
 
-var _settings = _dereq_('./lib/settings');
+var _settings = require('./lib/settings');
 
-var _utils = _dereq_('./lib/utils');
+var _utils = require('./lib/utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36,26 +36,26 @@ if (typeof jQuery !== 'undefined') {
 
 module.exports = _wrapper2.default;
 
-},{"./lib/settings":5,"./lib/utils":6,"./lib/wrapper":7}],2:[function(_dereq_,module,exports){
+},{"./lib/settings":5,"./lib/utils":6,"./lib/wrapper":7}],2:[function(require,module,exports){
 'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _settings = _dereq_('./settings');
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _parser = _dereq_('./parser');
+var _settings = require('./settings');
+
+var _parser = require('./parser');
 
 var _parser2 = _interopRequireDefault(_parser);
 
-var _raw2table = _dereq_('./raw2table');
+var _raw2table = require('./raw2table');
 
 var _raw2table2 = _interopRequireDefault(_raw2table);
 
-var _utils = _dereq_('./utils');
+var _utils = require('./utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -85,7 +85,6 @@ var GoResultsHighlighter = function () {
      * @param {string} [settings.cellTags='td,th'] - querySelection-compatible
      * string with tags holding game results
      */
-
     function GoResultsHighlighter(element, settings) {
         _classCallCheck(this, GoResultsHighlighter);
 
@@ -122,6 +121,7 @@ var GoResultsHighlighter = function () {
     /**
      * Creates players map
      */
+
 
     _createClass(GoResultsHighlighter, [{
         key: 'createPlayersMap',
@@ -301,12 +301,13 @@ var GoResultsHighlighter = function () {
                 var player = _fetchInformationAbou.player;
                 var games = _fetchInformationAbou.games;
 
+
                 if (!player) {
                     return;
                 }
 
                 var rearrange = false;
-                var lastTargetPos = undefined;
+                var lastTargetPos = void 0;
 
                 if (_this2.current === player) {
                     if (!_this2.settings.rearranging || !_this2.settings.hovering) {
@@ -342,7 +343,7 @@ var GoResultsHighlighter = function () {
                 var games = _fetchInformationAbou2.games;
 
                 var rearrange = false;
-                var lastTargetPos = undefined;
+                var lastTargetPos = void 0;
 
                 if (!player) {
                     return;
@@ -430,6 +431,7 @@ var GoResultsHighlighter = function () {
  * @param {number} previousTop
  */
 
+
 exports.default = GoResultsHighlighter;
 function updateTopPosition(target, previousTop) {
     var diff = target.getBoundingClientRect().top - previousTop;
@@ -516,7 +518,7 @@ function rearrangeOrder(player, opponents) {
 
 GoResultsHighlighter.DEFAULT_SETTINGS = _settings.DEFAULT_SETTINGS;
 
-},{"./parser":3,"./raw2table":4,"./settings":5,"./utils":6}],3:[function(_dereq_,module,exports){
+},{"./parser":3,"./raw2table":4,"./settings":5,"./utils":6}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -524,9 +526,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = parse;
 
-var _utils = _dereq_('./utils');
+var _utils = require('./utils');
 
-var _settings = _dereq_('./settings');
+var _settings = require('./settings');
 
 function writeGridPlacement(row, placement) {
     row.setAttribute(_settings.DOM_ATTRIBUTES.PLAYER_PLACEMENT, placement);
@@ -560,8 +562,8 @@ function parse(table, config) {
         }
 
         cells.forEach(function (cell) {
-            var opponentPlace = undefined;
-            var resultCls = undefined;
+            var opponentPlace = void 0;
+            var resultCls = void 0;
 
             if (cell.hasAttribute(_settings.DOM_ATTRIBUTES.GAME_RESULT) && cell.hasAttribute(_settings.DOM_ATTRIBUTES.OPPONENT_PLACEMENT)) {
                 opponentPlace = Number(cell.getAttribute(_settings.DOM_ATTRIBUTES.OPPONENT_PLACEMENT));
@@ -595,8 +597,8 @@ function parse(table, config) {
         });
     }
 
-    var lastTournamentPlacement = undefined;
-    var lastGridPlacement = undefined;
+    var lastTournamentPlacement = void 0;
+    var lastGridPlacement = void 0;
 
     rows.forEach(function (row, index) {
         if (index < settings.startingRow) {
@@ -673,7 +675,7 @@ function parse(table, config) {
     return results;
 }
 
-},{"./settings":5,"./utils":6}],4:[function(_dereq_,module,exports){
+},{"./settings":5,"./utils":6}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -681,9 +683,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = convertRawResultsToTable;
 
-var _settings = _dereq_('./settings');
+var _settings = require('./settings');
 
-var _utils = _dereq_('./utils');
+var _utils = require('./utils');
 
 /**
  * Converts raw results string into table with rows and cells.
@@ -748,7 +750,7 @@ function convertRawResultsToTable(rawResults, config) {
         gamesInColumns = settings.roundsColumns.split(',').map(Number);
     }
 
-    var previousPlace = undefined;
+    var previousPlace = void 0;
 
     rows.forEach(function (cells, index) {
         var row = document.createElement('tr');
@@ -834,7 +836,7 @@ function convertRawResultsToTable(rawResults, config) {
     return output;
 }
 
-},{"./settings":5,"./utils":6}],5:[function(_dereq_,module,exports){
+},{"./settings":5,"./utils":6}],5:[function(require,module,exports){
 'use strict';
 
 /**
@@ -962,7 +964,7 @@ function readTableSettingsFromDOM(table) {
     return output;
 }
 
-},{}],6:[function(_dereq_,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 /**
@@ -971,11 +973,12 @@ function readTableSettingsFromDOM(table) {
  * @returns {Array.<T>}
  */
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 exports.asArray = asArray;
 exports.defaults = defaults;
 exports.combine = combine;
@@ -1040,16 +1043,12 @@ function combine() {
     return result;
 }
 
-},{}],7:[function(_dereq_,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _highlighter = _dereq_('./highlighter');
+var _highlighter = require('./highlighter');
 
 var _highlighter2 = _interopRequireDefault(_highlighter);
 
@@ -1257,9 +1256,7 @@ function getter(callback) {
     };
 }
 
-exports.default = GoResultsHighlighter;
+module.exports = GoResultsHighlighter;
 
 },{"./highlighter":2}]},{},[1])
 //# sourceMappingURL=go-results-highlighter.js.map
-(1)
-});

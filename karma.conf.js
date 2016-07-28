@@ -19,7 +19,11 @@ module.exports = function (config) {
 
         browserify: {
             debug: true,
-            transform: ['babelify', 'browserify-istanbul']
+            transform: ['babelify', ['browserify-istanbul', {
+                instrumenterConfig: {
+                    embedSource: true
+                }
+            }]]
         },
 
         specReporter: {

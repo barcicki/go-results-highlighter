@@ -1,12 +1,14 @@
 {
-  "ecmaFeatures": {
-    "modules": true,
-    "module": true,
-    "forOf": false
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "forOf": false
+    }
   },
   "env": {
     "browser": true,
     "jasmine": true,
+    "jquery": true,
     "node": true,
     "es6": true
   },
@@ -21,7 +23,7 @@
     "no-trailing-spaces": [2, { "skipBlankLines": true }],
     "comma-spacing": [2, {"before": false, "after": true}],
     "array-bracket-spacing": [2, "never"],
-    "space-after-keywords": [2, "always"],
+    "keyword-spacing": [2, {"after": true, "before": true}],
     "space-before-blocks": [2, "always"],
     "space-in-parens": [2, "never"],
     "space-infix-ops": [2, {"int32Hint": false}]
