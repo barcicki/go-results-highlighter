@@ -51,6 +51,7 @@ gulp.task('build-js-bookmark', () => {
     const source = require('vinyl-source-stream');
 
     return browserify(config.paths.js.bookmark)
+        .transform('node-lessify')
         .transform('babelify')
         .bundle()
         .pipe(source(config.names.js.bookmarkDest))

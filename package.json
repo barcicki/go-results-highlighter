@@ -64,6 +64,7 @@
     "karma-jasmine": "^1.0.2",
     "karma-spec-reporter": "^0.0.26",
     "less-plugin-clean-css": "^1.5.1",
+    "node-lessify": "^0.1.4",
     "require-dir": "^0.3.0",
     "through": "^2.3.8",
     "vinyl-source-stream": "^1.1.0",
