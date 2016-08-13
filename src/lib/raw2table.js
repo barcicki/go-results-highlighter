@@ -23,7 +23,10 @@ export default function convertRawResultsToTable(rawResults, config) {
     }
 
     const settings = defaults(DEFAULT_SETTINGS, config);
-    const lines = rawResults.split(/\r\n|\n/);
+    const lines = rawResults
+        .replace(/<br[^>]*>/gi, '\n')
+        .replace(/<\/?code[^>]*>/gi, '')
+        .split(/\r\n|\n/);
 
     if (lines.length <= 2 && !lines[0] && !lines[1]) {
         return output;
