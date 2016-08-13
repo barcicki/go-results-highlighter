@@ -31,7 +31,6 @@ function applyHighlighter(selector, settings, force) {
 
                 for (let i = 0; i < count; i++) {
                     if (CELL_RESULT_REGEXP.test(cells[i].textContent)) {
-                        console.log(element, cells[i], RegExp.$1);
                         return true;
                     }
                 }
