@@ -2,7 +2,7 @@
 
 /**
  * Default settings of the plugin
- * @type {{prefixCls: string, showingDetailsCls: string, tableCls: string, gameCls: string, currentCls: string, results: {won: string, lost: string, jigo: string, unresolved: string}, startingRow: number, placeColumn: number, roundsColumns: null, rowTags: string, cellTags: string, rowSeparator: string, hovering: boolean, clicking: boolean}}
+ * @type {HighlighterSettings}
  */
 export const DEFAULT_SETTINGS = {
     prefixCls:     'go-results-',
@@ -122,3 +122,30 @@ export function readTableSettingsFromDOM(table) {
 
     return output;
 }
+
+
+/**
+ * @typedef {object} ClassToResultMapping
+ * @property {string} [won='([0-9]+)\\+'] - default winning regexp
+ * @property {string} [lost='([0-9]+)\\-'] - default losing regexp
+ * @property {string} [jigo='([0-9]+)='] - default draw regexp
+ * @property {string} [unresolved='([0-9]+)\\?] - default unresolved regexp
+ */
+
+/**
+ * @typedef {object} HighlighterSettings
+ * @property {string} [prefixCls='go-results-'] - css class prefix
+ * @property {string} [rearrangedCls='rearranged'] - class applied when table is rearranged
+ * @property {string} [gameCls='game'] - class applied when to game results
+ * @property {string} [currentCls='current'] - selected row class name
+ * @property {ClassToResultMapping} [results] - contains regexps used to determine game results mapped to css class that is applied to the cell with given result
+ * @property {number} [placeColumn=0] - index of the column where the script should expect to find player's placement
+ * @property {number} [startingRow=0] - row in table from which the search of results should start
+ * @property {string|null} [roundsColumns=null] - coma-separated list of columns which should contain the results, otherwise all columns are scanned
+ * @property {string} [rowTags='tr'] - querySelection-compatible string with tags representing players' rows
+ * @property {string} [cellTags='td,th'] - querySelection-compatible
+ * @property {string} [cellSeparator='[\t ]+'] - regexp used to split single line into columns when parsing unformatted results
+ * @property {boolean} [joinNames=true] - whether 2 columns next to placement should be treated as name and surname and merged into single column when parsing unformatted results
+ * @property {boolean} [hovering=true] - whether hovering should be enabled
+ * @property {boolean} [rearranging=true] - whether row rearrangement on click should be enabled
+ */

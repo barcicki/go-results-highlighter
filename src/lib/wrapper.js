@@ -11,7 +11,7 @@ import Highlighter from './highlighter';
  * Creates new Go Results Highlighter
  * @param {HTMLElement} element - element where the highlighter should be bound
  * to, preferably a table or a pre element
- * @param {object} [settings] - configuration of the highlighter
+ * @param {HighlighterSettings} [settings] - configuration of the highlighter
  * @constructor
  */
 function GoResultsHighlighter(element, settings) {
@@ -48,7 +48,7 @@ function GoResultsHighlighter(element, settings) {
 
     /**
      * Changes current configuration of the highlighter
-     * @param {object} settings
+     * @param {HighlighterSettings} settings
      */
     this.configure = (settings) => {
         highlighter.configure(settings);
@@ -112,7 +112,7 @@ function GoResultsHighlighter(element, settings) {
 
         /**
          * Contains current configuration of Go Results Highlighter
-         * @type {object}
+         * @type {HighlighterSettings}
          * @readonly
          */
         configuration: getter(() => {

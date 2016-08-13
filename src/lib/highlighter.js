@@ -10,24 +10,8 @@ export default class GoResultsHighlighter {
     /**
      * Creates new instance of GoResultsHighlighter
      *
-     * @param {HTMLElement} element - main element containing table with results
-     * @param {object} [settings] - plugin settings
-     * @param {number} [settings.column=0] - index of the column
-     * where the script should expect to find player's placement
-     * @param {number} [settings.row=0] - starting row with players
-     * @param {string} [settings.prefixCls='go-results-'] - css class prefix
-     * @param {string} [settings.gameCls='game'] - game cell class name
-     * @param {string} [settings.currentCls='current'] - selected row class name
-     * @param {object} [settings.results] - map with possible results, by default
-     * supports 4 options. Provide with "className" -> "regexp" pattern.
-     * @param {string} [settings.results.won='([0-9]+)\\+'] - default winning regexp
-     * @param {string} [settings.results.lost='([0-9]+)\\-'] - default losing regexp
-     * @param {string} [settings.results.jigo='([0-9]+)='] - default draw regexp
-     * @param {string} [settings.results.unresolved='([0-9]+)\\?] - default unresolved regexp
-     * @param {string} [settings.rowTags='tr'] - querySelection-compatible string
-     * with tags representing players' rows
-     * @param {string} [settings.cellTags='td,th'] - querySelection-compatible
-     * string with tags holding game results
+     * @param {HTMLElement|Node} element - main element containing table with results
+     * @param {HighlighterSettings} [settings] - plugin settings
      */
     constructor(element, settings) {
         this.settings = defaults(DEFAULT_SETTINGS, readTableSettingsFromDOM(element), settings);
@@ -179,7 +163,7 @@ export default class GoResultsHighlighter {
 
     /**
      * Change settings
-     * @param {object} settings
+     * @param {HighlighterSettings} settings
      */
     configure(settings) {
 
@@ -335,7 +319,7 @@ export default class GoResultsHighlighter {
 /**
  * Compare current target's top position with previous value and scroll window
  * to previous value if it differs
- * @param {HTMLElement} target
+ * @param {HTMLElement|Node} target
  * @param {number} previousTop
  */
 function updateTopPosition(target, previousTop) {
@@ -349,7 +333,7 @@ function updateTopPosition(target, previousTop) {
 /**
  * Retrieves information about player and opponent placement from provided element
  * or its parents. Returns also the row with player placement information.
- * @param {HTMLElement} target - target of the event
+ * @param {HTMLElement|Node} target - target of the event
  * @returns {object}
  */
 function fetchInformationAboutTarget(target) {
