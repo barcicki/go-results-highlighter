@@ -30,9 +30,17 @@ block content
             +feature("Fully customizable")
             +feature("Supports most modern browsers (and doesn't crash in old ones)")
             +feature("Fully tested")
+            +feature("NEW Bookmarklet! Use highlighter before web admins add it to their sites.")
 
     article.home-results
         .content
+            p.bookmark
+                a(href="javascript:" + bookmark, title="Highlight Go Results")
+                    span.octicon.octicon-bookmark
+                    span Highlight Go Results
+
+            p.note Drag the link above to your bookmarks panel and use highlighter on any page!
+
             .wrapper
                 include ../resources/hobby2015.html
             p.note Example results of <strong>Hobby 2015</strong> Go tournament in Poznan.

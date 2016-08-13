@@ -12,26 +12,31 @@ var _utils = require('./lib/utils');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function initialize() {
-    (0, _utils.asArray)(document.querySelectorAll('[' + _settings.DOM_ATTRIBUTES.RESULT_TABLE + ']')).forEach(function (tableEl) {
-        return new _wrapper2.default(tableEl);
-    });
+    var elementsWithResults = document.querySelectorAll('[' + _settings.DOM_ATTRIBUTES.RESULT_TABLE + ']');
+
+    if (typeof jQuery !== 'undefined') {
+
+        jQuery.fn.goResultsHighlighter = function (options) {
+            this.each(function (index, element) {
+                var highlighter = new _wrapper2.default(element, options);
+
+                $(highlighter.element).data('GoResultsHighlighter', highlighter);
+            });
+            return this;
+        };
+
+        jQuery(elementsWithResults).goResultsHighlighter();
+    } else {
+        (0, _utils.asArray)(elementsWithResults).forEach(function (tableEl) {
+            return new _wrapper2.default(tableEl);
+        });
+    }
 }
 
 if (document.readyState === 'complete') {
     initialize();
 } else {
     document.addEventListener('DOMContentLoaded', initialize, false);
-}
-
-if (typeof jQuery !== 'undefined') {
-    jQuery.fn.goResultsHighlighter = function (options) {
-        this.each(function (index, element) {
-            var highlighter = new _wrapper2.default(element, options);
-
-            $(highlighter.element).data('GoResultsHighlighter', highlighter);
-        });
-        return this;
-    };
 }
 
 module.exports = _wrapper2.default;
@@ -66,24 +71,8 @@ var GoResultsHighlighter = function () {
     /**
      * Creates new instance of GoResultsHighlighter
      *
-     * @param {HTMLElement} element - main element containing table with results
-     * @param {object} [settings] - plugin settings
-     * @param {number} [settings.column=0] - index of the column
-     * where the script should expect to find player's placement
-     * @param {number} [settings.row=0] - starting row with players
-     * @param {string} [settings.prefixCls='go-results-'] - css class prefix
-     * @param {string} [settings.gameCls='game'] - game cell class name
-     * @param {string} [settings.currentCls='current'] - selected row class name
-     * @param {object} [settings.results] - map with possible results, by default
-     * supports 4 options. Provide with "className" -> "regexp" pattern.
-     * @param {string} [settings.results.won='([0-9]+)\\+'] - default winning regexp
-     * @param {string} [settings.results.lost='([0-9]+)\\-'] - default losing regexp
-     * @param {string} [settings.results.jigo='([0-9]+)='] - default draw regexp
-     * @param {string} [settings.results.unresolved='([0-9]+)\\?] - default unresolved regexp
-     * @param {string} [settings.rowTags='tr'] - querySelection-compatible string
-     * with tags representing players' rows
-     * @param {string} [settings.cellTags='td,th'] - querySelection-compatible
-     * string with tags holding game results
+     * @param {HTMLElement|Node} element - main element containing table with results
+     * @param {HighlighterSettings} [settings] - plugin settings
      */
     function GoResultsHighlighter(element, settings) {
         _classCallCheck(this, GoResultsHighlighter);
@@ -248,7 +237,7 @@ var GoResultsHighlighter = function () {
 
         /**
          * Change settings
-         * @param {object} settings
+         * @param {HighlighterSettings} settings
          */
 
     }, {
@@ -427,7 +416,7 @@ var GoResultsHighlighter = function () {
 /**
  * Compare current target's top position with previous value and scroll window
  * to previous value if it differs
- * @param {HTMLElement} target
+ * @param {HTMLElement|Node} target
  * @param {number} previousTop
  */
 
@@ -444,7 +433,7 @@ function updateTopPosition(target, previousTop) {
 /**
  * Retrieves information about player and opponent placement from provided element
  * or its parents. Returns also the row with player placement information.
- * @param {HTMLElement} target - target of the event
+ * @param {HTMLElement|Node} target - target of the event
  * @returns {object}
  */
 function fetchInformationAboutTarget(target) {
@@ -707,7 +696,7 @@ function convertRawResultsToTable(rawResults, config) {
     }
 
     var settings = (0, _utils.defaults)(_settings.DEFAULT_SETTINGS, config);
-    var lines = rawResults.split(/\r\n|\n/);
+    var lines = rawResults.replace(/<br[^>]*>/gi, '\n').replace(/<\/?code[^>]*>/gi, '').split(/\r\n|\n/);
 
     if (lines.length <= 2 && !lines[0] && !lines[1]) {
         return output;
@@ -841,7 +830,7 @@ function convertRawResultsToTable(rawResults, config) {
 
 /**
  * Default settings of the plugin
- * @type {{prefixCls: string, showingDetailsCls: string, tableCls: string, gameCls: string, currentCls: string, results: {won: string, lost: string, jigo: string, unresolved: string}, startingRow: number, placeColumn: number, roundsColumns: null, rowTags: string, cellTags: string, rowSeparator: string, hovering: boolean, clicking: boolean}}
+ * @type {HighlighterSettings}
  */
 
 Object.defineProperty(exports, "__esModule", {
@@ -964,6 +953,32 @@ function readTableSettingsFromDOM(table) {
     return output;
 }
 
+/**
+ * @typedef {object} ClassToResultMapping
+ * @property {string} [won='([0-9]+)\\+'] - default winning regexp
+ * @property {string} [lost='([0-9]+)\\-'] - default losing regexp
+ * @property {string} [jigo='([0-9]+)='] - default draw regexp
+ * @property {string} [unresolved='([0-9]+)\\?] - default unresolved regexp
+ */
+
+/**
+ * @typedef {object} HighlighterSettings
+ * @property {string} [prefixCls='go-results-'] - css class prefix
+ * @property {string} [rearrangedCls='rearranged'] - class applied when table is rearranged
+ * @property {string} [gameCls='game'] - class applied when to game results
+ * @property {string} [currentCls='current'] - selected row class name
+ * @property {ClassToResultMapping} [results] - contains regexps used to determine game results mapped to css class that is applied to the cell with given result
+ * @property {number} [placeColumn=0] - index of the column where the script should expect to find player's placement
+ * @property {number} [startingRow=0] - row in table from which the search of results should start
+ * @property {string|null} [roundsColumns=null] - coma-separated list of columns which should contain the results, otherwise all columns are scanned
+ * @property {string} [rowTags='tr'] - querySelection-compatible string with tags representing players' rows
+ * @property {string} [cellTags='td,th'] - querySelection-compatible
+ * @property {string} [cellSeparator='[\t ]+'] - regexp used to split single line into columns when parsing unformatted results
+ * @property {boolean} [joinNames=true] - whether 2 columns next to placement should be treated as name and surname and merged into single column when parsing unformatted results
+ * @property {boolean} [hovering=true] - whether hovering should be enabled
+ * @property {boolean} [rearranging=true] - whether row rearrangement on click should be enabled
+ */
+
 },{}],6:[function(require,module,exports){
 'use strict';
 
@@ -1063,7 +1078,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Creates new Go Results Highlighter
  * @param {HTMLElement} element - element where the highlighter should be bound
  * to, preferably a table or a pre element
- * @param {object} [settings] - configuration of the highlighter
+ * @param {HighlighterSettings} [settings] - configuration of the highlighter
  * @constructor
  */
 function GoResultsHighlighter(element, settings) {
@@ -1099,7 +1114,7 @@ function GoResultsHighlighter(element, settings) {
 
     /**
      * Changes current configuration of the highlighter
-     * @param {object} settings
+     * @param {HighlighterSettings} settings
      */
     this.configure = function (settings) {
         highlighter.configure(settings);
@@ -1175,7 +1190,7 @@ function GoResultsHighlighter(element, settings) {
 
         /**
          * Contains current configuration of Go Results Highlighter
-         * @type {object}
+         * @type {HighlighterSettings}
          * @readonly
          */
         configuration: getter(function () {

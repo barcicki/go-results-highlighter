@@ -49,12 +49,16 @@ gulp.task('build-js-site', () => {
 gulp.task('build-js-bookmark', () => {
     const browserify = require('browserify');
     const source = require('vinyl-source-stream');
+    const buffer = require('vinyl-buffer');
+    const uglify = require('gulp-uglify');
 
     return browserify(config.paths.js.bookmark)
         .transform('node-lessify')
         .transform('babelify')
         .bundle()
         .pipe(source(config.names.js.bookmarkDest))
+        .pipe(buffer())
+        .pipe(uglify())
         .pipe(gulp.dest(config.paths.js.dest));
 });
 
@@ -69,4 +73,4 @@ gulp.task('build-js-prod', ['build-js-dev'], () => {
         .pipe(gulp.dest(config.paths.js.dest));
 });
 
-gulp.task('build-js', ['build-js-dev', 'build-js-prod', 'build-js-site']);
+gulp.task('build-js', ['build-js-dev', 'build-js-prod', 'build-js-bookmark', 'build-js-site']);

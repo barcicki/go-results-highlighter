@@ -1,6 +1,6 @@
 {
   "name": "go-results-highlighter",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Improves readability of Go results by highlighting opponents of selected player",
   "scripts": {
     "build": "gulp build",
@@ -67,6 +67,7 @@
     "node-lessify": "^0.1.4",
     "require-dir": "^0.3.0",
     "through": "^2.3.8",
+    "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
     "watchify": "^3.7.0"

@@ -11,6 +11,7 @@ coverage
 .publish
 dist/*
 !dist/go-results-highlighter.js
+!dist/go-results-highlighter.bookmark.js
 !dist/go-results-highlighter.js.map
 !dist/go-results-highlighter.min.js
 !dist/go-results-highlighter.css

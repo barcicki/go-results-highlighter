@@ -65,10 +65,21 @@ function applyHighlighter(selector, settings, force) {
         return;
     }
 
-    elementsWithGoResults
-        .forEach(element => new GoResultsHighlighter(element, settings));
+    let appliedCount = 0;
+    let skippedCount = 0;
 
-    console.log(`Go Results Highlighter applied to ${elementsWithGoResults.length} DOM elements.`);
+    elementsWithGoResults
+        .forEach(element => {
+            if (element.goResultsHighlighter) {
+                skippedCount += 1;
+                return;
+            }
+
+            new GoResultsHighlighter(element, settings);
+            appliedCount += 1;
+        });
+
+    console.log(`Go Results Highlighter was applied to ${appliedCount} DOM elements. ${skippedCount} had Highlighter before.`);
 }
 
 if (location.hostname.indexOf('europeangodatabase') !== -1) {
