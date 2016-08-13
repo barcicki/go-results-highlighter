@@ -46,6 +46,17 @@ gulp.task('build-js-site', () => {
         .pipe(gulp.dest(config.paths.site.js.dest));
 });
 
+gulp.task('build-js-bookmark', () => {
+    const browserify = require('browserify');
+    const source = require('vinyl-source-stream');
+
+    return browserify(config.paths.js.bookmark)
+        .transform('babelify')
+        .bundle()
+        .pipe(source(config.names.js.bookmarkDest))
+        .pipe(gulp.dest(config.paths.js.dest));
+});
+
 gulp.task('build-js-prod', ['build-js-dev'], () => {
     const path = require('path');
     const uglify = require('gulp-uglify');

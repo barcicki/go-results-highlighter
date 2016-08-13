@@ -21,6 +21,7 @@ module.exports = {
             dest: './dist'
         },
         js: {
+            bookmark: './src/bookmark.js',
             entry: './src/index.js',
             all: './src/**/*.js',
             dest: './dist'
@@ -60,6 +61,7 @@ module.exports = {
         js: {
             entry: 'index.js',
             dest: `${pjson.name}.js`,
+            bookmarkDest: `${pjson.name}.bookmark.js`,
             map: `${pjson.name}.js.map`,
             prod: `${pjson.name}.min.js`
         }
