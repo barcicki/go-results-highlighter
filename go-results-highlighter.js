@@ -1,20 +1,36 @@
-!function(e){if("object"==typeof exports)module.exports=e();else if("function"==typeof define&&define.amd)define(e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.GoResultsHighlighter=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var _wrapper = _dereq_('./lib/wrapper');
+var _wrapper = require('./lib/wrapper');
 
 var _wrapper2 = _interopRequireDefault(_wrapper);
 
-var _settings = _dereq_('./lib/settings');
+var _settings = require('./lib/settings');
 
-var _utils = _dereq_('./lib/utils');
+var _utils = require('./lib/utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function initialize() {
-    (0, _utils.asArray)(document.querySelectorAll('[' + _settings.DOM_ATTRIBUTES.RESULT_TABLE + ']')).forEach(function (tableEl) {
-        return new _wrapper2.default(tableEl);
-    });
+    var elementsWithResults = document.querySelectorAll('[' + _settings.DOM_ATTRIBUTES.RESULT_TABLE + ']');
+
+    if (typeof jQuery !== 'undefined') {
+
+        jQuery.fn.goResultsHighlighter = function (options) {
+            this.each(function (index, element) {
+                var highlighter = new _wrapper2.default(element, options);
+
+                $(highlighter.element).data('GoResultsHighlighter', highlighter);
+            });
+            return this;
+        };
+
+        jQuery(elementsWithResults).goResultsHighlighter();
+    } else {
+        (0, _utils.asArray)(elementsWithResults).forEach(function (tableEl) {
+            return new _wrapper2.default(tableEl);
+        });
+    }
 }
 
 if (document.readyState === 'complete') {
@@ -23,39 +39,28 @@ if (document.readyState === 'complete') {
     document.addEventListener('DOMContentLoaded', initialize, false);
 }
 
-if (typeof jQuery !== 'undefined') {
-    jQuery.fn.goResultsHighlighter = function (options) {
-        this.each(function (index, element) {
-            var highlighter = new _wrapper2.default(element, options);
-
-            $(highlighter.element).data('GoResultsHighlighter', highlighter);
-        });
-        return this;
-    };
-}
-
 module.exports = _wrapper2.default;
 
-},{"./lib/settings":5,"./lib/utils":6,"./lib/wrapper":7}],2:[function(_dereq_,module,exports){
+},{"./lib/settings":5,"./lib/utils":6,"./lib/wrapper":7}],2:[function(require,module,exports){
 'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _settings = _dereq_('./settings');
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _parser = _dereq_('./parser');
+var _settings = require('./settings');
+
+var _parser = require('./parser');
 
 var _parser2 = _interopRequireDefault(_parser);
 
-var _raw2table = _dereq_('./raw2table');
+var _raw2table = require('./raw2table');
 
 var _raw2table2 = _interopRequireDefault(_raw2table);
 
-var _utils = _dereq_('./utils');
+var _utils = require('./utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -66,26 +71,9 @@ var GoResultsHighlighter = function () {
     /**
      * Creates new instance of GoResultsHighlighter
      *
-     * @param {HTMLElement} element - main element containing table with results
-     * @param {object} [settings] - plugin settings
-     * @param {number} [settings.column=0] - index of the column
-     * where the script should expect to find player's placement
-     * @param {number} [settings.row=0] - starting row with players
-     * @param {string} [settings.prefixCls='go-results-'] - css class prefix
-     * @param {string} [settings.gameCls='game'] - game cell class name
-     * @param {string} [settings.currentCls='current'] - selected row class name
-     * @param {object} [settings.results] - map with possible results, by default
-     * supports 4 options. Provide with "className" -> "regexp" pattern.
-     * @param {string} [settings.results.won='([0-9]+)\\+'] - default winning regexp
-     * @param {string} [settings.results.lost='([0-9]+)\\-'] - default losing regexp
-     * @param {string} [settings.results.jigo='([0-9]+)='] - default draw regexp
-     * @param {string} [settings.results.unresolved='([0-9]+)\\?] - default unresolved regexp
-     * @param {string} [settings.rowTags='tr'] - querySelection-compatible string
-     * with tags representing players' rows
-     * @param {string} [settings.cellTags='td,th'] - querySelection-compatible
-     * string with tags holding game results
+     * @param {HTMLElement|Node} element - main element containing table with results
+     * @param {HighlighterSettings} [settings] - plugin settings
      */
-
     function GoResultsHighlighter(element, settings) {
         _classCallCheck(this, GoResultsHighlighter);
 
@@ -122,6 +110,7 @@ var GoResultsHighlighter = function () {
     /**
      * Creates players map
      */
+
 
     _createClass(GoResultsHighlighter, [{
         key: 'createPlayersMap',
@@ -248,7 +237,7 @@ var GoResultsHighlighter = function () {
 
         /**
          * Change settings
-         * @param {object} settings
+         * @param {HighlighterSettings} settings
          */
 
     }, {
@@ -301,12 +290,13 @@ var GoResultsHighlighter = function () {
                 var player = _fetchInformationAbou.player;
                 var games = _fetchInformationAbou.games;
 
+
                 if (!player) {
                     return;
                 }
 
                 var rearrange = false;
-                var lastTargetPos = undefined;
+                var lastTargetPos = void 0;
 
                 if (_this2.current === player) {
                     if (!_this2.settings.rearranging || !_this2.settings.hovering) {
@@ -342,7 +332,7 @@ var GoResultsHighlighter = function () {
                 var games = _fetchInformationAbou2.games;
 
                 var rearrange = false;
-                var lastTargetPos = undefined;
+                var lastTargetPos = void 0;
 
                 if (!player) {
                     return;
@@ -426,9 +416,10 @@ var GoResultsHighlighter = function () {
 /**
  * Compare current target's top position with previous value and scroll window
  * to previous value if it differs
- * @param {HTMLElement} target
+ * @param {HTMLElement|Node} target
  * @param {number} previousTop
  */
+
 
 exports.default = GoResultsHighlighter;
 function updateTopPosition(target, previousTop) {
@@ -442,7 +433,7 @@ function updateTopPosition(target, previousTop) {
 /**
  * Retrieves information about player and opponent placement from provided element
  * or its parents. Returns also the row with player placement information.
- * @param {HTMLElement} target - target of the event
+ * @param {HTMLElement|Node} target - target of the event
  * @returns {object}
  */
 function fetchInformationAboutTarget(target) {
@@ -516,7 +507,7 @@ function rearrangeOrder(player, opponents) {
 
 GoResultsHighlighter.DEFAULT_SETTINGS = _settings.DEFAULT_SETTINGS;
 
-},{"./parser":3,"./raw2table":4,"./settings":5,"./utils":6}],3:[function(_dereq_,module,exports){
+},{"./parser":3,"./raw2table":4,"./settings":5,"./utils":6}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -524,9 +515,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = parse;
 
-var _utils = _dereq_('./utils');
+var _utils = require('./utils');
 
-var _settings = _dereq_('./settings');
+var _settings = require('./settings');
 
 function writeGridPlacement(row, placement) {
     row.setAttribute(_settings.DOM_ATTRIBUTES.PLAYER_PLACEMENT, placement);
@@ -560,8 +551,8 @@ function parse(table, config) {
         }
 
         cells.forEach(function (cell) {
-            var opponentPlace = undefined;
-            var resultCls = undefined;
+            var opponentPlace = void 0;
+            var resultCls = void 0;
 
             if (cell.hasAttribute(_settings.DOM_ATTRIBUTES.GAME_RESULT) && cell.hasAttribute(_settings.DOM_ATTRIBUTES.OPPONENT_PLACEMENT)) {
                 opponentPlace = Number(cell.getAttribute(_settings.DOM_ATTRIBUTES.OPPONENT_PLACEMENT));
@@ -595,8 +586,8 @@ function parse(table, config) {
         });
     }
 
-    var lastTournamentPlacement = undefined;
-    var lastGridPlacement = undefined;
+    var lastTournamentPlacement = void 0;
+    var lastGridPlacement = void 0;
 
     rows.forEach(function (row, index) {
         if (index < settings.startingRow) {
@@ -673,7 +664,7 @@ function parse(table, config) {
     return results;
 }
 
-},{"./settings":5,"./utils":6}],4:[function(_dereq_,module,exports){
+},{"./settings":5,"./utils":6}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -681,9 +672,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = convertRawResultsToTable;
 
-var _settings = _dereq_('./settings');
+var _settings = require('./settings');
 
-var _utils = _dereq_('./utils');
+var _utils = require('./utils');
 
 /**
  * Converts raw results string into table with rows and cells.
@@ -705,7 +696,7 @@ function convertRawResultsToTable(rawResults, config) {
     }
 
     var settings = (0, _utils.defaults)(_settings.DEFAULT_SETTINGS, config);
-    var lines = rawResults.split(/\r\n|\n/);
+    var lines = rawResults.replace(/<br[^>]*>/gi, '\n').replace(/<\/?code[^>]*>/gi, '').split(/\r\n|\n/);
 
     if (lines.length <= 2 && !lines[0] && !lines[1]) {
         return output;
@@ -748,7 +739,7 @@ function convertRawResultsToTable(rawResults, config) {
         gamesInColumns = settings.roundsColumns.split(',').map(Number);
     }
 
-    var previousPlace = undefined;
+    var previousPlace = void 0;
 
     rows.forEach(function (cells, index) {
         var row = document.createElement('tr');
@@ -834,12 +825,12 @@ function convertRawResultsToTable(rawResults, config) {
     return output;
 }
 
-},{"./settings":5,"./utils":6}],5:[function(_dereq_,module,exports){
+},{"./settings":5,"./utils":6}],5:[function(require,module,exports){
 'use strict';
 
 /**
  * Default settings of the plugin
- * @type {{prefixCls: string, showingDetailsCls: string, tableCls: string, gameCls: string, currentCls: string, results: {won: string, lost: string, jigo: string, unresolved: string}, startingRow: number, placeColumn: number, roundsColumns: null, rowTags: string, cellTags: string, rowSeparator: string, hovering: boolean, clicking: boolean}}
+ * @type {HighlighterSettings}
  */
 
 Object.defineProperty(exports, "__esModule", {
@@ -962,7 +953,33 @@ function readTableSettingsFromDOM(table) {
     return output;
 }
 
-},{}],6:[function(_dereq_,module,exports){
+/**
+ * @typedef {object} ClassToResultMapping
+ * @property {string} [won='([0-9]+)\\+'] - default winning regexp
+ * @property {string} [lost='([0-9]+)\\-'] - default losing regexp
+ * @property {string} [jigo='([0-9]+)='] - default draw regexp
+ * @property {string} [unresolved='([0-9]+)\\?] - default unresolved regexp
+ */
+
+/**
+ * @typedef {object} HighlighterSettings
+ * @property {string} [prefixCls='go-results-'] - css class prefix
+ * @property {string} [rearrangedCls='rearranged'] - class applied when table is rearranged
+ * @property {string} [gameCls='game'] - class applied when to game results
+ * @property {string} [currentCls='current'] - selected row class name
+ * @property {ClassToResultMapping} [results] - contains regexps used to determine game results mapped to css class that is applied to the cell with given result
+ * @property {number} [placeColumn=0] - index of the column where the script should expect to find player's placement
+ * @property {number} [startingRow=0] - row in table from which the search of results should start
+ * @property {string|null} [roundsColumns=null] - coma-separated list of columns which should contain the results, otherwise all columns are scanned
+ * @property {string} [rowTags='tr'] - querySelection-compatible string with tags representing players' rows
+ * @property {string} [cellTags='td,th'] - querySelection-compatible
+ * @property {string} [cellSeparator='[\t ]+'] - regexp used to split single line into columns when parsing unformatted results
+ * @property {boolean} [joinNames=true] - whether 2 columns next to placement should be treated as name and surname and merged into single column when parsing unformatted results
+ * @property {boolean} [hovering=true] - whether hovering should be enabled
+ * @property {boolean} [rearranging=true] - whether row rearrangement on click should be enabled
+ */
+
+},{}],6:[function(require,module,exports){
 'use strict';
 
 /**
@@ -971,11 +988,12 @@ function readTableSettingsFromDOM(table) {
  * @returns {Array.<T>}
  */
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 exports.asArray = asArray;
 exports.defaults = defaults;
 exports.combine = combine;
@@ -1040,16 +1058,12 @@ function combine() {
     return result;
 }
 
-},{}],7:[function(_dereq_,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _highlighter = _dereq_('./highlighter');
+var _highlighter = require('./highlighter');
 
 var _highlighter2 = _interopRequireDefault(_highlighter);
 
@@ -1064,7 +1078,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Creates new Go Results Highlighter
  * @param {HTMLElement} element - element where the highlighter should be bound
  * to, preferably a table or a pre element
- * @param {object} [settings] - configuration of the highlighter
+ * @param {HighlighterSettings} [settings] - configuration of the highlighter
  * @constructor
  */
 function GoResultsHighlighter(element, settings) {
@@ -1100,7 +1114,7 @@ function GoResultsHighlighter(element, settings) {
 
     /**
      * Changes current configuration of the highlighter
-     * @param {object} settings
+     * @param {HighlighterSettings} settings
      */
     this.configure = function (settings) {
         highlighter.configure(settings);
@@ -1176,7 +1190,7 @@ function GoResultsHighlighter(element, settings) {
 
         /**
          * Contains current configuration of Go Results Highlighter
-         * @type {object}
+         * @type {HighlighterSettings}
          * @readonly
          */
         configuration: getter(function () {
@@ -1257,9 +1271,7 @@ function getter(callback) {
     };
 }
 
-exports.default = GoResultsHighlighter;
+module.exports = GoResultsHighlighter;
 
 },{"./highlighter":2}]},{},[1])
 //# sourceMappingURL=go-results-highlighter.js.map
-(1)
-});
