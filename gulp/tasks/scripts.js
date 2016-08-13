@@ -24,6 +24,7 @@ gulp.task('build-js-dev', () => {
 
     return browserify(config.paths.js.entry, {
             debug: true,
+            standalone: config.name
         })
         .transform(removeDefaultPropertyTransform)
         .transform('babelify')
