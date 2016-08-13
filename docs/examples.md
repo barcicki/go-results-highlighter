@@ -33,8 +33,7 @@ or
 results.highlight({ player: 1 });
 ```
 
-### Show opponents of player on 3rd place and rearrange the table (dimming other
-rows)
+### Show opponents of player on 3rd place and rearrange the table (dimming other rows)
 
 ```js
 results.highlight(3, true);
@@ -58,8 +57,7 @@ or
 results.highlight({ player: 2, games: 3 });
 ```
 
-### Highlight the player on 3rd place and mark games with players 4 and 5, also
-rearrange the rows.
+### Highlight the player on 3rd place and mark games with players 4 and 5, also rearrange the rows.
 
 ```js
 results.highlight(3, [4,5], true);
