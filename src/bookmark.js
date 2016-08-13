@@ -11,9 +11,10 @@ const RESULT_REGEXP = /[0-9]+[-+?]/g;
  * Applies highlighter to all elements matching given selector if they look like Go results.
  *
  * @param {string} selector - CSS-like selector
+ * @param {HighlighterSettings} settings - highlighter settings
  * @param {boolean} [force=false] - whether the check for results should be ignored
  */
-function applyHighlighter(selector, force) {
+function applyHighlighter(selector, settings, force) {
     const elementsWithGoResults = asArray(document.querySelectorAll(selector))
         .filter(/** Element */ element => {
 
@@ -55,7 +56,7 @@ function applyHighlighter(selector, force) {
         }
 
         if (newSelector) {
-            applyHighlighter(newSelector, true);
+            applyHighlighter(newSelector, settings, true);
         } else {
             console.log('Could not find any elements with Go results.');
         }
@@ -64,9 +65,13 @@ function applyHighlighter(selector, force) {
     }
 
     elementsWithGoResults
-        .forEach(element => new GoResultsHighlighter(element));
+        .forEach(element => new GoResultsHighlighter(element, settings));
 
     console.log(`Go Results Highlighter applied to ${elementsWithGoResults.length} DOM elements.`);
 }
 
-applyHighlighter('table, pre');
+if (location.hostname.indexOf('europeangodatabase') !== -1) {
+    applyHighlighter('#tab_wallist', { placeColumn: 1 });
+} else {
+    applyHighlighter('table, pre');
+}
