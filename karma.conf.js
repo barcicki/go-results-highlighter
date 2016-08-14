@@ -10,7 +10,9 @@ module.exports = function (config) {
             { pattern: 'tests/**/*.*', included: false },
             { pattern: 'tests/**/*.js', included: true }
         ],
-        exclude: [],
+        exclude: [
+            './src/bookmark.js'
+        ],
 
         preprocessors: {
             'src/**/*.js': ['browserify', 'coverage'],
