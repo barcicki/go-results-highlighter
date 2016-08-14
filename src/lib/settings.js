@@ -5,12 +5,15 @@
  * @type {HighlighterSettings}
  */
 export const DEFAULT_SETTINGS = {
+
+    // css class names
     prefixCls:     'go-results-',
     rearrangedCls: 'rearranged',
     tableCls:      'table',
     gameCls:       'game',
     currentCls:    'current',
 
+    // results map
     results: {
         won: '([0-9]+)\\+',
         lost: '([0-9]+)\\-',
@@ -18,15 +21,19 @@ export const DEFAULT_SETTINGS = {
         unresolved: '([0-9]+)\\?'
     },
 
+    // parser settings
     startingRow: 0,
     placeColumn: 0,
     roundsColumns: null,
-
     rowTags: 'tr',
     cellTags: 'td,th',
+    ignoreOutOfBoundsRows: false,
+
+    // converter settings
     cellSeparator: '[\t ]+',
     joinNames: true,
 
+    // behavior settings
     hovering:    true,
     rearranging: true
 };
@@ -58,8 +65,8 @@ export const DOM_ATTRIBUTES = {
 /**
  * Transforms map of possible results into array of objects with regexp string
  * converted into RegExp objects.
- * @param {object} results
- * @returns {Array.<{cls: string, regexp: RegExp}>}
+ * @param {ClassToResultMapping} results
+ * @returns {Array.<ResultMapping>}
  */
 export function toResultsWithRegExp(results) {
     const map = [];
@@ -133,6 +140,12 @@ export function readTableSettingsFromDOM(table) {
  */
 
 /**
+ * @typedef {object} ResultMapping
+ * @property {string} cls - CSS class name to be added to row which matches the regexp
+ * @property {RegExp} regexp - Regexp for result determination
+ */
+
+/**
  * @typedef {object} HighlighterSettings
  * @property {string} [prefixCls='go-results-'] - css class prefix
  * @property {string} [rearrangedCls='rearranged'] - class applied when table is rearranged
@@ -144,6 +157,7 @@ export function readTableSettingsFromDOM(table) {
  * @property {string|null} [roundsColumns=null] - coma-separated list of columns which should contain the results, otherwise all columns are scanned
  * @property {string} [rowTags='tr'] - querySelection-compatible string with tags representing players' rows
  * @property {string} [cellTags='td,th'] - querySelection-compatible
+ * @property {boolean} [ignoreOutOfBoundsRows=false] - whether it is allowed to have games with player that are not visible on the list (e.g. when table is paginated)
  * @property {string} [cellSeparator='[\t ]+'] - regexp used to split single line into columns when parsing unformatted results
  * @property {boolean} [joinNames=true] - whether 2 columns next to placement should be treated as name and surname and merged into single column when parsing unformatted results
  * @property {boolean} [hovering=true] - whether hovering should be enabled

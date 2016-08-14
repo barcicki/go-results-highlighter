@@ -99,45 +99,71 @@ describe('parser', () => {
         it('handle different types of games', function () {
             const result = testMap(
                 `<table>
-                    <tr>
-                        <td>1</td>
-                        <td>Player 1</td>
-                        <td>2+</td>
-                        <td>3+</td>
-                        <td>4+</td>
-                        <td>324?</td>
-                        <td>18-</td>
-                        <td>19=</td>
-                        <td>score</td>
-                        <td>10</td>
-                    </tr>
+                    <tr><td>1</td><td>Player 1</td><td>2+</td><td>3=</td><td>PL</td><td>10</td></tr>
+                    <tr><td>2</td><td>Player 2</td><td>1-</td><td>4?</td><td>PL</td><td>10</td></tr>
+                    <tr><td>3</td><td>Player 3</td><td>3+</td><td>1=</td><td>PL</td><td>10</td></tr>
+                    <tr><td>4</td><td>Player 4</td><td>4-</td><td>2?</td><td>PL</td><td>10</td></tr>
                 </table>`
             );
 
-            const player = result[1];
+            const player1 = result[1];
+            const player2 = result[2];
 
-            expect(player.opponents.length).toBe(6);
+            expect(player1.opponents.length).toBe(2);
+            expect(player2.opponents.length).toBe(2);
 
-            expect(player.games[2]).toBeDefined();
-            expect(player.games[2].cls).toBe('won');
-            expect(player.games[2].cell instanceof HTMLTableCellElement).toBeTruthy();
+            expect(player1.games[2]).toBeDefined();
+            expect(player1.games[2].cls).toBe('won');
+            expect(player1.games[2].cell instanceof HTMLTableCellElement).toBeTruthy();
 
-            expect(player.games[3]).toBeDefined();
-            expect(player.games[3].cls).toBe('won');
+            expect(player1.games[3]).toBeDefined();
+            expect(player1.games[3].cls).toBe('jigo');
 
-            expect(player.games[4]).toBeDefined();
+            expect(player2.games[1]).toBeDefined();
+            expect(player2.games[1].cls).toBe('lost');
 
-            expect(player.games[324]).toBeDefined();
-            expect(player.games[324].cls).toBe('unresolved');
+            expect(player2.games[4]).toBeDefined();
+            expect(player2.games[4].cls).toBe('unresolved');
 
-            expect(player.games[18]).toBeDefined();
-            expect(player.games[18].cls).toBe('lost');
+            expect(player1.games['PL']).not.toBeDefined();
+            expect(player1.games[10]).not.toBeDefined();
+        });
 
-            expect(player.games[19]).toBeDefined();
-            expect(player.games[19].cls).toBe('jigo');
+        it('disallow games with non-existing players', function () {
+            const result = testMap(
+                `<table>
+                    <tr><td>1</td><td>Player 1</td><td>2+</td><td>0+</td><td>PL</td><td>10</td></tr>
+                    <tr><td>2</td><td>Player 2</td><td>1-</td><td>123?</td><td>PL</td><td>10</td></tr>
+                </table>`
+            );
 
-            expect(player.games['score']).not.toBeDefined();
-            expect(player.games[10]).not.toBeDefined();
+            const player1 = result[1];
+            const player2 = result[2];
+
+            expect(player1.opponents.length).toBe(1);
+            expect(player2.opponents.length).toBe(1);
+
+            expect(player1.games[0]).not.toBeDefined();
+            expect(player2.games[123]).not.toBeDefined();
+        });
+
+        it('allow games with non-existing players when proper flag is set (0 is never allowed)', function () {
+            const result = testMap(
+                `<table>
+                    <tr><td>1</td><td>Player 1</td><td>2+</td><td>0+</td><td>PL</td><td>10</td></tr>
+                    <tr><td>2</td><td>Player 2</td><td>1-</td><td>123?</td><td>PL</td><td>10</td></tr>
+                </table>`, {
+                    ignoreOutOfBoundsRows: true
+                });
+
+            const player1 = result[1];
+            const player2 = result[2];
+
+            expect(player1.opponents.length).toBe(1);
+            expect(player2.opponents.length).toBe(2);
+
+            expect(player1.games[0]).not.toBeDefined();
+            expect(player2.games[123]).toBeDefined();
         });
 
         it('handle selected game columns', function () {
@@ -156,7 +182,8 @@ describe('parser', () => {
                         <td>10</td>
                     </tr>
                 </table>`, {
-                    roundsColumns: '2, 3, 4, 6'
+                    roundsColumns: '2, 3, 4, 6',
+                    ignoreOutOfBoundsRows: true
                 });
 
             const player = result[1];
