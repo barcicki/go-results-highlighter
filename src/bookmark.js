@@ -5,7 +5,7 @@ import { asArray } from './lib/utils';
 import './styles/bookmark.less';
 
 // exactly one result per row is allowed
-const CELL_RESULT_REGEXP = /^[^0-9]*([0-9]+[-+?])[^0-9]*$/;
+const CELL_RESULT_REGEXP = /^[^0-9]*([0-9]+[-+=?])[^-+?]*$/;
 const RESULT_REGEXP = /[0-9]+[-+?]/g;
 
 /**
