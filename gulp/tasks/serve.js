@@ -29,6 +29,6 @@ gulp.task('watch', ['build'], () => {
     gulp.watch(config.paths.js.all, ['build-js']);
     gulp.watch(config.paths.site.css.all, ['build-css']);
     gulp.watch(config.paths.site.js.all, ['build-js']);
-    gulp.watch(config.paths.site.jades.all, ['build-pages']);
+    gulp.watch([config.paths.site.jades.all, config.paths.js.bookmark], ['build-pages']);
     gulp.watch(config.paths.site.resources.all, ['build-pages']);
 });
