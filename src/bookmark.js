@@ -32,7 +32,6 @@ function applyHighlighter(selector, settings, force) {
                     const cellsCount = element.rows[i].cells.length;
 
                     for (let j = 0; j < cellsCount; j++) {
-                        console.log(element.rows[i].cells[j].textContent, CELL_RESULT_REGEXP.test(element.rows[i].cells[j].textContent));
                         if (CELL_RESULT_REGEXP.test(element.rows[i].cells[j].textContent)) {
                             return true;
                         }
