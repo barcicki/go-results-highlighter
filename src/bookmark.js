@@ -26,12 +26,16 @@ function applyHighlighter(selector, settings, force) {
             // table element will be treated as results if any of its cells contain SINGLE result
             // string.
             if (element.nodeName === 'TABLE') {
-                const cells = asArray(element.querySelectorAll('td'));
-                const count = cells.length;
+                const rowsCount = element.rows.length;
 
-                for (let i = 0; i < count; i++) {
-                    if (CELL_RESULT_REGEXP.test(cells[i].textContent)) {
-                        return true;
+                for (let i = 0; i < rowsCount; i++) {
+                    const cellsCount = element.rows[i].cells.length;
+
+                    for (let j = 0; j < cellsCount; j++) {
+                        console.log(element.rows[i].cells[j].textContent, CELL_RESULT_REGEXP.test(element.rows[i].cells[j].textContent));
+                        if (CELL_RESULT_REGEXP.test(element.rows[i].cells[j].textContent)) {
+                            return true;
+                        }
                     }
                 }
 
