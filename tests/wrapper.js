@@ -81,9 +81,11 @@ describe('GoResultsHighlighter', () => {
                 startingRow: 0,
                 placeColumn: 0,
                 roundsColumns: null,
+                ignoreOutOfBoundsRows: false,
+                checkColumnsForResults: true,
 
                 rowTags: 'tr',
-                cellTags: 'td,th',
+                cellTags: 'td',
                 cellSeparator: '[\t ]+',
                 joinNames: true
             });
@@ -121,9 +123,11 @@ describe('GoResultsHighlighter', () => {
                 startingRow: 0,
                 placeColumn: 0,
                 roundsColumns: '2,3',
+                ignoreOutOfBoundsRows: false,
+                checkColumnsForResults: true,
 
                 rowTags: 'tr',
-                cellTags: 'td,th',
+                cellTags: 'td',
                 cellSeparator: '[\t ]+',
                 joinNames: true
             });
@@ -162,9 +166,11 @@ describe('GoResultsHighlighter', () => {
                 startingRow: 1,
                 placeColumn: 0,
                 roundsColumns: null,
+                ignoreOutOfBoundsRows: false,
+                checkColumnsForResults: true,
 
                 rowTags: 'div',
-                cellTags: 'td,th',
+                cellTags: 'td',
                 cellSeparator: '[\t ]+',
                 joinNames: true
             });
