@@ -1363,6 +1363,8 @@ function GoResultsHighlighter(element, settings) {
                 cellTags: highlighter.settings.cellTags,
                 cellSeparator: highlighter.settings.cellSeparator,
                 joinNames: highlighter.settings.joinNames,
+                ignoreOutOfBoundsRows: highlighter.settings.ignoreOutOfBoundsRows,
+                checkColumnsForResults: highlighter.settings.checkColumnsForResults,
                 results: results
             };
         }),
