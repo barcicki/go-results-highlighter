@@ -408,6 +408,21 @@ var GoResultsHighlighter = function () {
                 }
             }, false);
         }
+
+        /**
+         * Removes inline styles from player rows and their children.
+         */
+
+    }, {
+        key: 'clearInlineStyles',
+        value: function clearInlineStyles() {
+            this.players.forEach(function (player) {
+                // player.row.removeAttribute('style');
+                (0, _utils.asArray)(player.row.childNodes).forEach(function (child) {
+                    return child.removeAttribute('style');
+                });
+            });
+        }
     }]);
 
     return GoResultsHighlighter;
@@ -524,15 +539,124 @@ function writeGridPlacement(row, placement) {
 }
 
 /**
- * Traverse provided table and create results map
- * @param {HTMLElement} table - table results container
- * @param {object} [config] - settings for parser
- * @param {string} [config.rowTags]
- * @param {string} [config.cellTags]
- * @param {object} [config.results]
- * @param {object} [config.placeColumn]
- * @param {object} [config.roundsColumns]
- * @param {object} [config.startingRow]
+ * Returns array of columns (array of cell values in the column) from given list of rows.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {string} cellSelector
+ * @returns {Array.<Array.<string>>}
+ */
+function getColumnsFromRows(rows, cellSelector) {
+    return rows.reduce(function (columns, row) {
+        (0, _utils.asArray)(row.querySelectorAll(cellSelector)).forEach(function (cell, index) {
+            var column = columns[index];
+
+            if (!column) {
+                column = [];
+                columns[index] = column;
+            }
+
+            column.push(cell.textContent);
+        });
+
+        return columns;
+    }, []);
+}
+
+/**
+ * From given set of strings it returns the ones that look like Go results.
+ *
+ * @param {Array.<string>} items
+ * @param {Array.<ResultMapping>} resultsMap
+ * @returns {Array.<string>}
+ */
+function getItemsWithGoResults(items, resultsMap) {
+    return items.filter(function (cell) {
+        return resultsMap.some(function (result) {
+            return cell.match(result.regexp);
+        });
+    });
+}
+
+/**
+ * Checks if at least 40% of strings from given set look like Go results.
+ * Why 40%? This value allowed to eliminate some sneaky columns from OpenGotha results where "=" is
+ * used to show halves and is interpreted as jigo result by Highlighter. If the value is too high
+ * then it is likely that large tournament results (like congress) will be not parsed correctly
+ * as many people drop/skip rounds.
+ *
+ * @param {Array.<string>} items
+ * @param {Array.<ResultMapping>} resultsMap
+ * @returns {boolean}
+ */
+function checkItemsForResults(items, resultsMap) {
+    var count = items.length;
+    var itemsWithResultsCount = getItemsWithGoResults(items, resultsMap).length;
+
+    return itemsWithResultsCount / count >= 0.4;
+}
+
+/**
+ * Returns the array of indexes of columns that look like keeping Go results.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {string} cellSelector
+ * @param {Array.<ResultMapping>} resultsMap
+ * @returns {Array.<number>}
+ */
+function getIndexesOfColumnsWithResultsFromRows(rows, cellSelector, resultsMap) {
+    return getColumnsFromRows(rows, cellSelector).reduce(function (indexes, column, index) {
+        if (checkItemsForResults(column, resultsMap)) {
+            indexes.push(index);
+        }
+
+        return indexes;
+    }, []);
+}
+
+/**
+ * Creates filter function which returns items from provided list of indexes.
+ *
+ * @param {Array.<number>} columnsIndexes
+ * @returns {function(*, *=): boolean}
+ */
+function createCellFromColumnsFilter(columnsIndexes) {
+    return function (cell, index) {
+        return columnsIndexes.indexOf(index) !== -1;
+    };
+}
+
+/**
+ * Returns the array of indexes of columns with Go results based on settings.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @param {Array.<ResultMapping>} resultsMap
+ * @returns {function(*, *=): boolean}
+ */
+function getFilterForColumnsWithResults(rows, settings, resultsMap) {
+    if (typeof settings.roundsColumns === 'string') {
+        var _indexes = settings.roundsColumns.split(',').map(Number);
+
+        return createCellFromColumnsFilter(_indexes);
+    }
+
+    // check is disabled - return all columns
+    if (!settings.checkColumnsForResults) {
+        return function () {
+            return true;
+        };
+    }
+
+    var indexes = getIndexesOfColumnsWithResultsFromRows(rows, settings.cellTags, resultsMap);
+
+    return createCellFromColumnsFilter(indexes);
+}
+
+/**
+ * Traverses provided table and creates results map.
+ *
+ * @param {Element|HTMLElement} table - table results container
+ * @param {HighlighterSettings} [config] - settings for parser
  * @returns {object}
  */
 function parse(table, config) {
@@ -540,16 +664,10 @@ function parse(table, config) {
     var rows = (0, _utils.asArray)(table.querySelectorAll(settings.rowTags));
     var resultsMap = (0, _settings.toResultsWithRegExp)(settings.results);
     var resultsMapCount = resultsMap.length;
+    var columnsWithResultsFilter = getFilterForColumnsWithResults(rows, settings, resultsMap);
     var results = {};
 
     function parseGames(player, cells) {
-        // if columns rounds are provided then parse only them
-        if (typeof settings.roundsColumns === 'string') {
-            cells = settings.roundsColumns.split(',').map(function (round) {
-                return cells[Number(round)];
-            });
-        }
-
         cells.forEach(function (cell) {
             var opponentPlace = void 0;
             var resultCls = void 0;
@@ -567,6 +685,11 @@ function parse(table, config) {
 
                     opponentPlace = Number(match[1]);
                     resultCls = resultsMap[i].cls;
+
+                    // opponent row doesn't exist
+                    if (opponentPlace <= 0 || !settings.ignoreOutOfBoundsRows && opponentPlace > rows.length) {
+                        return;
+                    }
 
                     cell.setAttribute(_settings.DOM_ATTRIBUTES.OPPONENT_PLACEMENT, opponentPlace);
                     cell.setAttribute(_settings.DOM_ATTRIBUTES.GAME_RESULT, resultsMap[i].cls);
@@ -595,6 +718,7 @@ function parse(table, config) {
         }
 
         var cells = (0, _utils.asArray)(row.querySelectorAll(settings.cellTags));
+        var cellsWithResults = cells.filter(columnsWithResultsFilter);
 
         // assign default place
         var gridPlacement = -1;
@@ -648,7 +772,7 @@ function parse(table, config) {
             return;
         }
 
-        parseGames(player, cells);
+        parseGames(player, cellsWithResults);
 
         player.tournamentPlace = tournamentPlacement;
         player.opponents.sort(function (a, b) {
@@ -840,12 +964,15 @@ exports.toResultsWithRegExp = toResultsWithRegExp;
 exports.toPrefixedClasses = toPrefixedClasses;
 exports.readTableSettingsFromDOM = readTableSettingsFromDOM;
 var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
+
+    // css class names
     prefixCls: 'go-results-',
     rearrangedCls: 'rearranged',
     tableCls: 'table',
     gameCls: 'game',
     currentCls: 'current',
 
+    // results map
     results: {
         won: '([0-9]+)\\+',
         lost: '([0-9]+)\\-',
@@ -853,15 +980,20 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
         unresolved: '([0-9]+)\\?'
     },
 
+    // parser settings
     startingRow: 0,
     placeColumn: 0,
     roundsColumns: null,
-
     rowTags: 'tr',
-    cellTags: 'td,th',
+    cellTags: 'td',
+    ignoreOutOfBoundsRows: false,
+    checkColumnsForResults: true,
+
+    // converter settings
     cellSeparator: '[\t ]+',
     joinNames: true,
 
+    // behavior settings
     hovering: true,
     rearranging: true
 };
@@ -888,8 +1020,8 @@ var DOM_ATTRIBUTES = exports.DOM_ATTRIBUTES = {
 /**
  * Transforms map of possible results into array of objects with regexp string
  * converted into RegExp objects.
- * @param {object} results
- * @returns {Array.<{cls: string, regexp: RegExp}>}
+ * @param {ClassToResultMapping} results
+ * @returns {Array.<ResultMapping>}
  */
 function toResultsWithRegExp(results) {
     var map = [];
@@ -922,7 +1054,7 @@ function toPrefixedClasses(settings) {
 }
 
 /**
- * Checks the element for 3 attributes and returns object with set appropriate
+ * Checks the element for attributes and returns object with set appropriate
  * values
  * @param {HTMLElement} table
  * @returns {object}
@@ -962,6 +1094,12 @@ function readTableSettingsFromDOM(table) {
  */
 
 /**
+ * @typedef {object} ResultMapping
+ * @property {string} cls - CSS class name to be added to row which matches the regexp
+ * @property {RegExp} regexp - Regexp for result determination
+ */
+
+/**
  * @typedef {object} HighlighterSettings
  * @property {string} [prefixCls='go-results-'] - css class prefix
  * @property {string} [rearrangedCls='rearranged'] - class applied when table is rearranged
@@ -973,6 +1111,8 @@ function readTableSettingsFromDOM(table) {
  * @property {string|null} [roundsColumns=null] - coma-separated list of columns which should contain the results, otherwise all columns are scanned
  * @property {string} [rowTags='tr'] - querySelection-compatible string with tags representing players' rows
  * @property {string} [cellTags='td,th'] - querySelection-compatible
+ * @property {boolean} [checkColumnsForResults=true] - whether the highlighter should first try to find columns with Go results before parsing every row
+ * @property {boolean} [ignoreOutOfBoundsRows=false] - whether it is allowed to have games with player that are not visible on the list (e.g. when table is paginated)
  * @property {string} [cellSeparator='[\t ]+'] - regexp used to split single line into columns when parsing unformatted results
  * @property {boolean} [joinNames=true] - whether 2 columns next to placement should be treated as name and surname and merged into single column when parsing unformatted results
  * @property {boolean} [hovering=true] - whether hovering should be enabled
@@ -1129,6 +1269,13 @@ function GoResultsHighlighter(element, settings) {
         var entry = highlighter.map[player];
 
         return entry ? entry.opponents.slice() : [];
+    };
+
+    /**
+     * Removes inline styles from player rows and their children.
+     */
+    this.clearInlineStyles = function () {
+        highlighter.clearInlineStyles();
     };
 
     Object.defineProperties(this, /** @lends module:wrapper~GoResultsHighlighter.prototype */{

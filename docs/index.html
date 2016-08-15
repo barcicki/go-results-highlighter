@@ -46,7 +46,7 @@ globally:</p>
 <pre><code class="language-js">var highlighter = document.querySelector('[data-go-results]').goResultsHighlighter;
 </code></pre>
 <p>or in jQuery:</p>
-<pre><code class="language-js">var highlighter = $('[data-go-results]').get().goResultsHighlighter;
+<pre><code class="language-js">var highlighter = $('[data-go-results]').data('GoResultsHighlighter'); // or $('[data-go-results]').get().goResultsHighlighter;
 </code></pre>
 
 <h2>Configuration</h2>
@@ -114,6 +114,18 @@ globally:</p>
 <td style="text-align:center">-</td>
 <td style="text-align:center"><code>true</code></td>
 <td>Whether to join to consecutive cells after place column index into single cell when building table from raw results. The goals is to join Last name and First name columns into one column</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>checkColumnsForResults</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>true</code></td>
+<td>Whether the highlighter should first try to find columns with Go results before parsing every row</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ignoreOutOfBoundsRows</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>false</code></td>
+<td>Whether it is allowed to have games with player that are not visible on the list (e.g. when table is paginated)</td>
 </tr>
 <tr>
 <td style="text-align:center"><code>results</code></td>
@@ -203,6 +215,8 @@ so the opponents' rows are close to the the highlighted player</li>
 <p>Returns the array of opponents - theirs places (to be precise).</p>
 <h3><code>configure(settings)</code></h3>
 <p>Allows to modify the settings with which the highlighter was initialized.</p>
+<h3><code>clearInlineStyles()</code></h3>
+<p>Removes inline styles from player rows and theirs children. This method is called when using bookmarklet only.</p>
 
 <h3>Properties</h3>
 <h3><code>hovering</code></h3>
