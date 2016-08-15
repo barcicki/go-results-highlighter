@@ -314,6 +314,16 @@ export default class GoResultsHighlighter {
             }
         }, false);
     }
+
+    /**
+     * Removes inline styles from player rows and their children.
+     */
+    clearInlineStyles() {
+        this.players.forEach(player => {
+            // player.row.removeAttribute('style');
+            asArray(player.row.childNodes).forEach(child => child.removeAttribute('style'));
+        });
+    };
 }
 
 /**

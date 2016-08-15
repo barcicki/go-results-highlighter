@@ -77,7 +77,9 @@ function applyHighlighter(selector, settings, force) {
                 return;
             }
 
-            new GoResultsHighlighter(element, settings);
+            const highlighter = new GoResultsHighlighter(element, settings);
+
+            highlighter.clearInlineStyles();
             appliedCount += 1;
         });
 

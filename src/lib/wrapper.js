@@ -65,6 +65,13 @@ function GoResultsHighlighter(element, settings) {
         return entry ? entry.opponents.slice() : [];
     };
 
+    /**
+     * Removes inline styles from player rows and their children.
+     */
+    this.clearInlineStyles = () => {
+        highlighter.clearInlineStyles();
+    };
+
     Object.defineProperties(this, /** @lends module:wrapper~GoResultsHighlighter.prototype */ {
 
         /**
