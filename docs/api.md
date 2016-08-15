@@ -32,6 +32,10 @@ Returns the array of opponents - theirs places (to be precise).
 
 Allows to modify the settings with which the highlighter was initialized.
 
+### `clearInlineStyles()`
+
+Removes inline styles from player rows and theirs children. This method is called when using bookmarklet only.
+
 [See usage for details](./usage.md)
 
 ### Properties

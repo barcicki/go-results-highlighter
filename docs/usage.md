@@ -41,7 +41,7 @@ var highlighter = document.querySelector('[data-go-results]').goResultsHighlight
 or in jQuery:
 
 ```js
-var highlighter = $('[data-go-results]').get().goResultsHighlighter;
+var highlighter = $('[data-go-results]').data('GoResultsHighlighter'); // or $('[data-go-results]').get().goResultsHighlighter;
 ```
 
 [Learn more about highlighter's interface](./api.md)
@@ -61,6 +61,8 @@ Here's the table of available settings that can be overwritten.
 |`cellTags`|-|`"td,th"`|Selector used by highlighter as a single cell which `textContent` should be analyzed|
 |`cellSeparator`|-|`"[\t ]+"`|Used to divide raw line into columns when building table from raw results|
 |`joinNames`|-|`true`|Whether to join to consecutive cells after place column index into single cell when building table from raw results. The goals is to join Last name and First name columns into one column|
+|`checkColumnsForResults`|-|`true`|Whether the highlighter should first try to find columns with Go results before parsing every row|
+|`ignoreOutOfBoundsRows`|-|`false`|Whether it is allowed to have games with player that are not visible on the list (e.g. when table is paginated)|
 |`results`|-|_see below_|Results map - `key` is a className and `value` is an RegExp string matching the result. The className is added to the row when highlighting|
 |`results.won`|-|`"([0-9]+)\\+"`|className and RegExp for winning result|
 |`results.lost`|-|`"([0-9]+)\\-"`|className and RegExp for losing result|
