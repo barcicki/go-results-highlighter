@@ -26,8 +26,9 @@ export const DEFAULT_SETTINGS = {
     placeColumn: 0,
     roundsColumns: null,
     rowTags: 'tr',
-    cellTags: 'td,th',
+    cellTags: 'td',
     ignoreOutOfBoundsRows: false,
+    checkColumnsForResults: true,
 
     // converter settings
     cellSeparator: '[\t ]+',
@@ -99,7 +100,7 @@ export function toPrefixedClasses(settings) {
 }
 
 /**
- * Checks the element for 3 attributes and returns object with set appropriate
+ * Checks the element for attributes and returns object with set appropriate
  * values
  * @param {HTMLElement} table
  * @returns {object}
@@ -157,6 +158,7 @@ export function readTableSettingsFromDOM(table) {
  * @property {string|null} [roundsColumns=null] - coma-separated list of columns which should contain the results, otherwise all columns are scanned
  * @property {string} [rowTags='tr'] - querySelection-compatible string with tags representing players' rows
  * @property {string} [cellTags='td,th'] - querySelection-compatible
+ * @property {boolean} [checkColumnsForResults=true] - whether the highlighter should first try to find columns with Go results before parsing every row
  * @property {boolean} [ignoreOutOfBoundsRows=false] - whether it is allowed to have games with player that are not visible on the list (e.g. when table is paginated)
  * @property {string} [cellSeparator='[\t ]+'] - regexp used to split single line into columns when parsing unformatted results
  * @property {boolean} [joinNames=true] - whether 2 columns next to placement should be treated as name and surname and merged into single column when parsing unformatted results

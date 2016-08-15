@@ -81,19 +81,38 @@ function getIndexesOfColumnsWithResultsFromRows(rows, cellSelector, resultsMap) 
 }
 
 /**
+ * Creates filter function which returns items from provided list of indexes.
+ *
+ * @param {Array.<number>} columnsIndexes
+ * @returns {function(*, *=): boolean}
+ */
+function createCellFromColumnsFilter(columnsIndexes) {
+    return (cell, index) => columnsIndexes.indexOf(index) !== -1;
+}
+
+/**
  * Returns the array of indexes of columns with Go results based on settings.
  *
  * @param {Array.<Element|HTMLElement>} rows
  * @param {HighlighterSettings} settings
  * @param {Array.<ResultMapping>} resultsMap
- * @returns {*}
+ * @returns {function(*, *=): boolean}
  */
-function getIndexesOfColumnsWithResults(rows, settings, resultsMap) {
+function getFilterForColumnsWithResults(rows, settings, resultsMap) {
     if (typeof settings.roundsColumns === 'string') {
-        return settings.roundsColumns.split(',').map(Number);
+        const  indexes = settings.roundsColumns.split(',').map(Number);
+
+        return createCellFromColumnsFilter(indexes);
     }
 
-    return getIndexesOfColumnsWithResultsFromRows(rows, settings.cellTags, resultsMap);
+    // check is disabled - return all columns
+    if (!settings.checkColumnsForResults) {
+        return () => true;
+    }
+
+    const  indexes = getIndexesOfColumnsWithResultsFromRows(rows, settings.cellTags, resultsMap);
+
+    return createCellFromColumnsFilter(indexes);
 }
 
 /**
@@ -108,7 +127,7 @@ export default function parse(table, config) {
     const rows = asArray(table.querySelectorAll(settings.rowTags));
     const resultsMap = toResultsWithRegExp(settings.results);
     const resultsMapCount = resultsMap.length;
-    const columnsWithResults = getIndexesOfColumnsWithResults(rows, settings, resultsMap);
+    const columnsWithResultsFilter = getFilterForColumnsWithResults(rows, settings, resultsMap);
     const results = {};
 
     function parseGames(player, cells) {
@@ -163,7 +182,7 @@ export default function parse(table, config) {
         }
 
         const cells = asArray(row.querySelectorAll(settings.cellTags));
-        const cellsWithResults = cells.filter((cell, index) => columnsWithResults.indexOf(index) !== -1);
+        const cellsWithResults = cells.filter(columnsWithResultsFilter);
 
         // assign default place
         let gridPlacement = -1;
