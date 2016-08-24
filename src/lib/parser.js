@@ -1,7 +1,7 @@
 'use strict';
 
-import { asArray, defaults } from './utils';
-import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toResultsWithRegExp } from './settings';
+import { asArray, defaults, isNumber } from './utils';
+import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toResultsWithRegExp, nameHeadersToRegExp } from './settings';
 
 function writeGridPlacement(row, placement) {
     row.setAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT, placement);
@@ -116,6 +116,95 @@ function getFilterForColumnsWithResults(rows, settings, resultsMap) {
 }
 
 /**
+ * Returns the array of indexes of columns that look like keeping player names
+ * by searching for certain header names.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {Array.<number>}
+ */
+function getIndexesOfColumnsWithNamesByHeaderNames(rows, settings){
+    const regexps = nameHeadersToRegExp(settings.nameColumnHeaders);
+
+    let indexes = [];
+    const columns = getColumnsFromRows(rows, settings.headerTags);
+    columns.forEach((cells, index) => {
+        if (cells.some(cell => regexps.some(rx => cell.match(rx)))) {
+            indexes.push(index);
+        }
+    });
+
+    return indexes;
+}
+
+/**
+ * Checks if at least threshold level of strings from given set look like player names.
+ *
+ * @param {Array.<string>} items
+ * @param {function(string): boolean} filter
+ * @param {number} threshold
+ * @returns {boolean}
+ */
+function checkItems(items, filter, threshold) {
+    threshold = threshold || 0.4;
+    const count = items.length;
+    const itemsWithResultsCount = items.filter(cell => filter(cell)).length;
+
+    return itemsWithResultsCount / count >= threshold;
+}
+
+/**
+ * Returns the array of indexes of columns that look like keeping player names
+ * by inspecting cell values
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {Array.<number>}
+ */
+function getIndexesOfColumnsWithNamesByCellValues(rows, settings){
+    if (!settings.nameCellExpression) {
+        return [];
+    }
+
+    const regExp = new RegExp(settings.nameCellExpression);
+
+    const nameFilter = cell => cell.match(regExp);
+    return getColumnsFromRows(rows, settings.cellTags)
+            .reduce((indexes, column, index) => {
+                if (checkItems(column, nameFilter)) {
+                    indexes.push(index);
+                }
+
+                return indexes;
+            }, []);
+}
+
+/**
+ * Returns a filter that allows to select columns containing player name.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {function(*, *=): boolean}
+ */
+function getFilterForColumnsWithName(rows, settings){
+    let indexes = [];
+    if (typeof settings.nameColumns === 'string') {
+        indexes = settings.nameColumns.split(',').map(Number);
+
+    } else if (isNumber(settings.nameColumns)) {
+        indexes.push(parseInt(settings.nameColumns))
+
+    } else if (settings.checkColumnsForPlayerNames) {
+        indexes = getIndexesOfColumnsWithNamesByHeaderNames(rows, settings);
+        if (!indexes || indexes.length == 0) {
+            indexes = getIndexesOfColumnsWithNamesByCellValues(rows, settings);
+        }
+    }
+
+    return createCellFromColumnsFilter(indexes);
+}
+
+/**
  * Traverses provided table and creates results map.
  *
  * @param {Element|HTMLElement} table - table results container
@@ -128,6 +217,7 @@ export default function parse(table, config) {
     const resultsMap = toResultsWithRegExp(settings.results);
     const resultsMapCount = resultsMap.length;
     const columnsWithResultsFilter = getFilterForColumnsWithResults(rows, settings, resultsMap);
+    const columnsForNameFilter = getFilterForColumnsWithName(rows, settings);
     const results = {};
 
     function parseGames(player, cells) {
@@ -183,6 +273,8 @@ export default function parse(table, config) {
 
         const cells = asArray(row.querySelectorAll(settings.cellTags));
         const cellsWithResults = cells.filter(columnsWithResultsFilter);
+        const cellsWithName = cells.filter(columnsForNameFilter);
+        const name = cellsWithName.map(cell => cell.textContent).join(' ');
 
         // assign default place
         let gridPlacement = -1;
@@ -199,8 +291,10 @@ export default function parse(table, config) {
             tournamentPlace: -1,
             row,
             games: {},
-            opponents: []
+            opponents: [],
+            name: name
         };
+        row.setAttribute('PLAYER_NAME', name);
 
         if (row.hasAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT)) {
             gridPlacement = Number(row.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT));

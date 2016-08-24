@@ -653,6 +653,100 @@ function getFilterForColumnsWithResults(rows, settings, resultsMap) {
 }
 
 /**
+ * Returns the array of indexes of columns that look like keeping player names
+ * by searching for certain header names.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {Array.<number>}
+ */
+function getIndexesOfColumnsWithNamesByHeaderNames(rows, settings) {
+    var regexps = (0, _settings.nameHeadersToRegExp)(settings.nameColumnHeaders);
+
+    var indexes = [];
+    var columns = getColumnsFromRows(rows, settings.headerTags);
+    columns.forEach(function (cells, index) {
+        if (cells.some(function (cell) {
+            return regexps.some(function (rx) {
+                return cell.match(rx);
+            });
+        })) {
+            indexes.push(index);
+        }
+    });
+
+    return indexes;
+}
+
+/**
+ * Checks if at least threshold level of strings from given set look like player names.
+ *
+ * @param {Array.<string>} items
+ * @param {function(string): boolean} filter
+ * @param {number} threshold
+ * @returns {boolean}
+ */
+function checkItems(items, filter, threshold) {
+    threshold = threshold || 0.4;
+    var count = items.length;
+    var itemsWithResultsCount = items.filter(function (cell) {
+        return filter(cell);
+    }).length;
+
+    return itemsWithResultsCount / count >= threshold;
+}
+
+/**
+ * Returns the array of indexes of columns that look like keeping player names
+ * by inspecting cell values
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {Array.<number>}
+ */
+function getIndexesOfColumnsWithNamesByCellValues(rows, settings) {
+    if (!settings.nameCellExpression) {
+        return [];
+    }
+
+    var regExp = new RegExp(settings.nameCellExpression);
+
+    var nameFilter = function nameFilter(cell) {
+        return cell.match(regExp);
+    };
+    return getColumnsFromRows(rows, settings.cellTags).reduce(function (indexes, column, index) {
+        if (checkItems(column, nameFilter)) {
+            indexes.push(index);
+        }
+
+        return indexes;
+    }, []);
+}
+
+/**
+ * Returns a filter that allows to select columns containing player name.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {function(*, *=): boolean}
+ */
+function getFilterForColumnsWithName(rows, settings) {
+    var indexes = [];
+    if (typeof settings.nameColumns === 'string') {
+        indexes = settings.nameColumns.split(',').map(Number);
+    } else if ((0, _utils.isNumber)(settings.nameColumns)) {
+        indexes.push(parseInt(settings.nameColumns));
+    } else if (settings.checkColumnsForPlayerNames) {
+        indexes = getIndexesOfColumnsWithNamesByHeaderNames(rows, settings);
+        if (!indexes || indexes.length == 0) {
+            indexes = getIndexesOfColumnsWithNamesByCellValues(rows, settings);
+        }
+    }
+
+    return createCellFromColumnsFilter(indexes);
+}
+
+/**
  * Traverses provided table and creates results map.
  *
  * @param {Element|HTMLElement} table - table results container
@@ -665,6 +759,7 @@ function parse(table, config) {
     var resultsMap = (0, _settings.toResultsWithRegExp)(settings.results);
     var resultsMapCount = resultsMap.length;
     var columnsWithResultsFilter = getFilterForColumnsWithResults(rows, settings, resultsMap);
+    var columnsForNameFilter = getFilterForColumnsWithName(rows, settings);
     var results = {};
 
     function parseGames(player, cells) {
@@ -719,6 +814,10 @@ function parse(table, config) {
 
         var cells = (0, _utils.asArray)(row.querySelectorAll(settings.cellTags));
         var cellsWithResults = cells.filter(columnsWithResultsFilter);
+        var cellsWithName = cells.filter(columnsForNameFilter);
+        var name = cellsWithName.map(function (cell) {
+            return cell.textContent;
+        }).join(' ');
 
         // assign default place
         var gridPlacement = -1;
@@ -735,8 +834,10 @@ function parse(table, config) {
             tournamentPlace: -1,
             row: row,
             games: {},
-            opponents: []
+            opponents: [],
+            name: name
         };
+        row.setAttribute('PLAYER_NAME', name);
 
         if (row.hasAttribute(_settings.DOM_ATTRIBUTES.PLAYER_PLACEMENT)) {
             gridPlacement = Number(row.getAttribute(_settings.DOM_ATTRIBUTES.PLAYER_PLACEMENT));
@@ -961,6 +1062,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.toResultsWithRegExp = toResultsWithRegExp;
+exports.nameHeadersToRegExp = nameHeadersToRegExp;
 exports.toPrefixedClasses = toPrefixedClasses;
 exports.readTableSettingsFromDOM = readTableSettingsFromDOM;
 var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
@@ -984,10 +1086,15 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     startingRow: 0,
     placeColumn: 0,
     roundsColumns: null,
+    nameColumns: null,
+    nameColumnHeaders: [], //['name', 'player', 'gracz', 'imię'],
+    nameCellExpression: '(?=^.*[A-Z][a-z]{3,})(?!.*([Kk][yy][uu]|[Dd][Aa][Nn]))',
     rowTags: 'tr',
     cellTags: 'td',
+    headerTags: 'th',
     ignoreOutOfBoundsRows: false,
     checkColumnsForResults: true,
+    checkColumnsForPlayerNames: true,
 
     // converter settings
     cellSeparator: '[\t ]+',
@@ -1013,6 +1120,7 @@ var DOM_ATTRIBUTES = exports.DOM_ATTRIBUTES = {
     SETTING_HOVERING: 'data-go-hovering',
     PLAYER_PLACEMENT: 'data-go-place',
     OPPONENT_PLACEMENT: 'data-go-opponent',
+    OPPONENT_NAME: 'data-go-name',
     OPPONENTS: 'data-go-opponents',
     GAME_RESULT: 'data-go-result'
 };
@@ -1036,6 +1144,21 @@ function toResultsWithRegExp(results) {
     }
 
     return map;
+}
+
+/**
+ * Transforms array of possible column with player name headers to RegExp
+ * @param {Array.<string>} columnHeaders
+ * @returns {Array.<RegExp>}
+ */
+function nameHeadersToRegExp(columnHeaders) {
+    if (!columnHeaders || columnHeaders.length == 0) {
+        return [];
+    }
+
+    return columnHeaders.map(function (header) {
+        return new RegExp(header, 'i');
+    });
 }
 
 /**
@@ -1137,6 +1260,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports.asArray = asArray;
 exports.defaults = defaults;
 exports.combine = combine;
+exports.isNumber = isNumber;
 function asArray(arrayLike) {
     return Array.prototype.slice.call(arrayLike);
 }
@@ -1196,6 +1320,16 @@ function combine() {
     });
 
     return result;
+}
+
+/**
+ * Check whether given object is a number.
+ * 
+ * @param {object} numberToTest 
+ * @returns {boolean}
+ */
+function isNumber(numberToTest) {
+    return !isNaN(parseFloat(numberToTest)) && isFinite(numberToTest);
 }
 
 },{}],7:[function(require,module,exports){

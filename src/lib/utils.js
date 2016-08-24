@@ -57,3 +57,13 @@ export function combine(...objects) {
 
     return result;
 }
+
+/**
+ * Check whether given object is a number.
+ * 
+ * @param {object} numberToTest 
+ * @returns {boolean}
+ */
+export function isNumber(numberToTest){
+    return !isNaN(parseFloat(numberToTest)) && isFinite(numberToTest);
+}
