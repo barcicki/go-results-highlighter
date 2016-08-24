@@ -33,6 +33,7 @@ export const DEFAULT_SETTINGS = {
     headerTags: 'th',
     ignoreOutOfBoundsRows: false,
     checkColumnsForResults: true,
+    displayOpponentNameHint : true,
     checkColumnsForPlayerNames: true,
 
     // converter settings

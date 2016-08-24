@@ -759,8 +759,10 @@ function parse(table, config) {
     var resultsMap = (0, _settings.toResultsWithRegExp)(settings.results);
     var resultsMapCount = resultsMap.length;
     var columnsWithResultsFilter = getFilterForColumnsWithResults(rows, settings, resultsMap);
-    var columnsForNameFilter = getFilterForColumnsWithName(rows, settings);
-    var results = {};
+    var columnsForNameFilter = settings.displayOpponentNameHint ? getFilterForColumnsWithName(rows, settings) : function (cell, index) {
+        return false;
+    };
+    var results = [];
 
     function parseGames(player, cells) {
         cells.forEach(function (cell) {
@@ -813,7 +815,6 @@ function parse(table, config) {
         }
 
         var cells = (0, _utils.asArray)(row.querySelectorAll(settings.cellTags));
-        var cellsWithResults = cells.filter(columnsWithResultsFilter);
         var cellsWithName = cells.filter(columnsForNameFilter);
         var name = cellsWithName.map(function (cell) {
             return cell.textContent;
@@ -837,7 +838,6 @@ function parse(table, config) {
             opponents: [],
             name: name
         };
-        row.setAttribute('PLAYER_NAME', name);
 
         if (row.hasAttribute(_settings.DOM_ATTRIBUTES.PLAYER_PLACEMENT)) {
             gridPlacement = Number(row.getAttribute(_settings.DOM_ATTRIBUTES.PLAYER_PLACEMENT));
@@ -873,20 +873,25 @@ function parse(table, config) {
             return;
         }
 
-        parseGames(player, cellsWithResults);
-
         player.tournamentPlace = tournamentPlacement;
-        player.opponents.sort(function (a, b) {
-            return a > b ? 1 : -1;
-        });
-
         results[gridPlacement] = player;
 
         lastTournamentPlacement = tournamentPlacement;
         lastGridPlacement = gridPlacement;
     });
 
-    return results;
+    results.forEach(function (player) {
+        var cells = (0, _utils.asArray)(player.row.querySelectorAll(settings.cellTags));
+        var cellsWithResults = cells.filter(columnsWithResultsFilter);
+
+        parseGames(player, cellsWithResults);
+
+        player.opponents.sort(function (a, b) {
+            return a > b ? 1 : -1;
+        });
+    });
+
+    return (0, _utils.arrayToObject)(results);
 }
 
 },{"./settings":5,"./utils":6}],4:[function(require,module,exports){
@@ -1094,6 +1099,7 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     headerTags: 'th',
     ignoreOutOfBoundsRows: false,
     checkColumnsForResults: true,
+    displayOpponentNameHint: true,
     checkColumnsForPlayerNames: true,
 
     // converter settings
@@ -1261,6 +1267,7 @@ exports.asArray = asArray;
 exports.defaults = defaults;
 exports.combine = combine;
 exports.isNumber = isNumber;
+exports.arrayToObject = arrayToObject;
 function asArray(arrayLike) {
     return Array.prototype.slice.call(arrayLike);
 }
@@ -1330,6 +1337,19 @@ function combine() {
  */
 function isNumber(numberToTest) {
     return !isNaN(parseFloat(numberToTest)) && isFinite(numberToTest);
+}
+
+/**
+ * Converts array to object
+ * @param {Array.<object>} array
+ * @returns {object}
+ */
+function arrayToObject(array) {
+    var result = {};
+    for (var i = 0; i < array.length; i++) {
+        result[i] = array[i];
+    }
+    return result;
 }
 
 },{}],7:[function(require,module,exports){

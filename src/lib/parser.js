@@ -1,6 +1,6 @@
 'use strict';
 
-import { asArray, defaults, isNumber } from './utils';
+import { asArray, defaults, isNumber, arrayToObject } from './utils';
 import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toResultsWithRegExp, nameHeadersToRegExp } from './settings';
 
 function writeGridPlacement(row, placement) {
@@ -217,8 +217,8 @@ export default function parse(table, config) {
     const resultsMap = toResultsWithRegExp(settings.results);
     const resultsMapCount = resultsMap.length;
     const columnsWithResultsFilter = getFilterForColumnsWithResults(rows, settings, resultsMap);
-    const columnsForNameFilter = getFilterForColumnsWithName(rows, settings);
-    const results = {};
+    const columnsForNameFilter = settings.displayOpponentNameHint ? getFilterForColumnsWithName(rows, settings) : (cell, index) => false;
+    const results = [];
 
     function parseGames(player, cells) {
         cells.forEach((cell) => {
@@ -272,7 +272,6 @@ export default function parse(table, config) {
         }
 
         const cells = asArray(row.querySelectorAll(settings.cellTags));
-        const cellsWithResults = cells.filter(columnsWithResultsFilter);
         const cellsWithName = cells.filter(columnsForNameFilter);
         const name = cellsWithName.map(cell => cell.textContent).join(' ');
 
@@ -292,9 +291,8 @@ export default function parse(table, config) {
             row,
             games: {},
             opponents: [],
-            name: name
+            name
         };
-        row.setAttribute('PLAYER_NAME', name);
 
         if (row.hasAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT)) {
             gridPlacement = Number(row.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT));
@@ -332,16 +330,22 @@ export default function parse(table, config) {
             return;
         }
 
-        parseGames(player, cellsWithResults);
-
         player.tournamentPlace = tournamentPlacement;
-        player.opponents.sort((a, b) => a > b ? 1 : -1);
-
         results[gridPlacement] = player;
 
         lastTournamentPlacement = tournamentPlacement;
         lastGridPlacement = gridPlacement;
     });
 
-    return results;
+    results.forEach(player => {
+        const cells = asArray(player.row.querySelectorAll(settings.cellTags));
+        const cellsWithResults = cells.filter(columnsWithResultsFilter);
+        
+        parseGames(player, cellsWithResults);
+
+        player.opponents.sort((a, b) => a > b ? 1 : -1);
+    });
+
+
+    return arrayToObject(results);
 }
