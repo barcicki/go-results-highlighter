@@ -26,7 +26,7 @@ export const DEFAULT_SETTINGS = {
     placeColumn: 0,
     roundsColumns: null,
     nameColumns: null,
-    nameColumnHeaders: [],//['name', 'player', 'gracz', 'imię'],
+    nameColumnHeaders: ['name', 'player', 'gracz', 'imię'],
     nameCellExpression : '(?=^.*[A-Z][a-z]{3,})(?!.*([Kk][yy][uu]|[Dd][Aa][Nn]))',
     rowTags: 'tr',
     cellTags: 'td',

@@ -76,7 +76,9 @@ export function isNumber(numberToTest){
 export function arrayToObject(array){
     let result = {};
     for (var i = 0; i < array.length; i++) {
-        result[i] = array[i];
+        if (array[i]!== undefined) {
+            result[i] = array[i];
+        }
     }
     return result;
 }

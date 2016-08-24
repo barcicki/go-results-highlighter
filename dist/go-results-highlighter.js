@@ -764,7 +764,7 @@ function parse(table, config) {
     };
     var results = [];
 
-    function parseGames(player, cells) {
+    function parseGames(player, cells, players, displayOpponentNameHint) {
         cells.forEach(function (cell) {
             var opponentPlace = void 0;
             var resultCls = void 0;
@@ -803,6 +803,13 @@ function parse(table, config) {
             };
 
             player.opponents.push(opponentPlace);
+
+            if (displayOpponentNameHint) {
+                var opponentName = players[opponentPlace] ? players[opponentPlace].name : '';
+                if (opponentName) {
+                    cell.setAttribute('title', opponentName);
+                }
+            }
         });
     }
 
@@ -884,7 +891,7 @@ function parse(table, config) {
         var cells = (0, _utils.asArray)(player.row.querySelectorAll(settings.cellTags));
         var cellsWithResults = cells.filter(columnsWithResultsFilter);
 
-        parseGames(player, cellsWithResults);
+        parseGames(player, cellsWithResults, results, settings.displayOpponentNameHint);
 
         player.opponents.sort(function (a, b) {
             return a > b ? 1 : -1;
@@ -1092,7 +1099,7 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     placeColumn: 0,
     roundsColumns: null,
     nameColumns: null,
-    nameColumnHeaders: [], //['name', 'player', 'gracz', 'imię'],
+    nameColumnHeaders: ['name', 'player', 'gracz', 'imię'],
     nameCellExpression: '(?=^.*[A-Z][a-z]{3,})(?!.*([Kk][yy][uu]|[Dd][Aa][Nn]))',
     rowTags: 'tr',
     cellTags: 'td',
@@ -1347,7 +1354,9 @@ function isNumber(numberToTest) {
 function arrayToObject(array) {
     var result = {};
     for (var i = 0; i < array.length; i++) {
-        result[i] = array[i];
+        if (array[i] !== undefined) {
+            result[i] = array[i];
+        }
     }
     return result;
 }

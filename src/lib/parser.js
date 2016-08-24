@@ -220,7 +220,7 @@ export default function parse(table, config) {
     const columnsForNameFilter = settings.displayOpponentNameHint ? getFilterForColumnsWithName(rows, settings) : (cell, index) => false;
     const results = [];
 
-    function parseGames(player, cells) {
+    function parseGames(player, cells, players, displayOpponentNameHint) {
         cells.forEach((cell) => {
             let opponentPlace;
             let resultCls;
@@ -260,6 +260,13 @@ export default function parse(table, config) {
             };
 
             player.opponents.push(opponentPlace);
+
+            if (displayOpponentNameHint){
+                const opponentName = players[opponentPlace] ? players[opponentPlace].name : '';
+                if (opponentName) {
+                    cell.setAttribute('title', opponentName);
+                }
+            }
         });
     }
 
@@ -341,7 +348,7 @@ export default function parse(table, config) {
         const cells = asArray(player.row.querySelectorAll(settings.cellTags));
         const cellsWithResults = cells.filter(columnsWithResultsFilter);
         
-        parseGames(player, cellsWithResults);
+        parseGames(player, cellsWithResults, results, settings.displayOpponentNameHint);
 
         player.opponents.sort((a, b) => a > b ? 1 : -1);
     });
