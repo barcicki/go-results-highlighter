@@ -747,6 +747,28 @@ function getFilterForColumnsWithName(rows, settings) {
 }
 
 /**
+ * Sets opponent name hint to cell
+ *
+ * @param {Element|HTMLElement} cell - table cell with match result
+ * @param {string} opponentName
+ * @param {string} resultCls - css class for match outcome
+ * @param {{}} cssClasses
+ * @returns {void}
+ */
+function setOpponentNameHint(cell, opponentName, resultCls, cssClasses) {
+    //cell.setAttribute('title', opponentName);
+    cell.classList.add(cssClasses.tooltipCointainerCls);
+    if (cell.children && !Array.from(cell.children).some(function (child) {
+        return child.classList && child.classList.contains(cssClasses.tooltiptextCls);
+    })) {
+        var div = document.createElement("div");
+        div.innerHTML = opponentName;
+        div.classList.add(cssClasses.tooltiptextCls, resultCls);
+        cell.appendChild(div);
+    }
+}
+
+/**
  * Traverses provided table and creates results map.
  *
  * @param {Element|HTMLElement} table - table results container
@@ -764,7 +786,9 @@ function parse(table, config) {
     };
     var results = [];
 
-    function parseGames(player, cells, players, displayOpponentNameHint) {
+    function parseGames(player, cells, players, settings) {
+        var displayOpponentNameHint = settings.displayOpponentNameHint;
+        var classes = (0, _settings.toPrefixedClasses)(settings);
         cells.forEach(function (cell) {
             var opponentPlace = void 0;
             var resultCls = void 0;
@@ -807,7 +831,7 @@ function parse(table, config) {
             if (displayOpponentNameHint) {
                 var opponentName = players[opponentPlace] ? players[opponentPlace].name : '';
                 if (opponentName) {
-                    cell.setAttribute('title', opponentName);
+                    setOpponentNameHint(cell, opponentName, settings.prefixCls + resultCls, classes);
                 }
             }
         });
@@ -891,7 +915,7 @@ function parse(table, config) {
         var cells = (0, _utils.asArray)(player.row.querySelectorAll(settings.cellTags));
         var cellsWithResults = cells.filter(columnsWithResultsFilter);
 
-        parseGames(player, cellsWithResults, results, settings.displayOpponentNameHint);
+        parseGames(player, cellsWithResults, results, settings);
 
         player.opponents.sort(function (a, b) {
             return a > b ? 1 : -1;
@@ -1085,6 +1109,8 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     tableCls: 'table',
     gameCls: 'game',
     currentCls: 'current',
+    tooltipCointainerCls: 'tooltip',
+    tooltiptextCls: 'tooltiptext',
 
     // results map
     results: {
@@ -1118,7 +1144,7 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     rearranging: true
 };
 
-var CLASSES_TO_BE_PREFIXED = ['rearrangedCls', 'tableCls', 'gameCls', 'currentCls'];
+var CLASSES_TO_BE_PREFIXED = ['rearrangedCls', 'tableCls', 'gameCls', 'currentCls', 'tooltipCointainerCls', 'tooltiptextCls'];
 
 /**
  * Names of attributes used in this plugin

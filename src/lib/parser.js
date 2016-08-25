@@ -1,7 +1,7 @@
 'use strict';
 
 import { asArray, defaults, isNumber, arrayToObject } from './utils';
-import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toResultsWithRegExp, nameHeadersToRegExp } from './settings';
+import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toResultsWithRegExp, nameHeadersToRegExp, toPrefixedClasses} from './settings';
 
 function writeGridPlacement(row, placement) {
     row.setAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT, placement);
@@ -205,6 +205,26 @@ function getFilterForColumnsWithName(rows, settings){
 }
 
 /**
+ * Sets opponent name hint to cell
+ *
+ * @param {Element|HTMLElement} cell - table cell with match result
+ * @param {string} opponentName
+ * @param {string} resultCls - css class for match outcome
+ * @param {{}} cssClasses
+ * @returns {void}
+ */
+function setOpponentNameHint(cell, opponentName, resultCls, cssClasses){
+    //cell.setAttribute('title', opponentName);
+    cell.classList.add(cssClasses.tooltipCointainerCls);
+    if (cell.children && !Array.from(cell.children).some(child => child.classList && child.classList.contains(cssClasses.tooltiptextCls))) {
+        let div = document.createElement("div");
+        div.innerHTML = opponentName;
+        div.classList.add(cssClasses.tooltiptextCls, resultCls);
+        cell.appendChild(div);
+    }
+}
+
+/**
  * Traverses provided table and creates results map.
  *
  * @param {Element|HTMLElement} table - table results container
@@ -220,7 +240,9 @@ export default function parse(table, config) {
     const columnsForNameFilter = settings.displayOpponentNameHint ? getFilterForColumnsWithName(rows, settings) : (cell, index) => false;
     const results = [];
 
-    function parseGames(player, cells, players, displayOpponentNameHint) {
+    function parseGames(player, cells, players, settings) {
+        const displayOpponentNameHint = settings.displayOpponentNameHint;
+        const classes = toPrefixedClasses(settings);
         cells.forEach((cell) => {
             let opponentPlace;
             let resultCls;
@@ -264,7 +286,7 @@ export default function parse(table, config) {
             if (displayOpponentNameHint){
                 const opponentName = players[opponentPlace] ? players[opponentPlace].name : '';
                 if (opponentName) {
-                    cell.setAttribute('title', opponentName);
+                    setOpponentNameHint(cell, opponentName, settings.prefixCls + resultCls, classes);
                 }
             }
         });
@@ -348,7 +370,7 @@ export default function parse(table, config) {
         const cells = asArray(player.row.querySelectorAll(settings.cellTags));
         const cellsWithResults = cells.filter(columnsWithResultsFilter);
         
-        parseGames(player, cellsWithResults, results, settings.displayOpponentNameHint);
+        parseGames(player, cellsWithResults, results, settings);
 
         player.opponents.sort((a, b) => a > b ? 1 : -1);
     });

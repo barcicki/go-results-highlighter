@@ -7,11 +7,13 @@
 export const DEFAULT_SETTINGS = {
 
     // css class names
-    prefixCls:     'go-results-',
-    rearrangedCls: 'rearranged',
-    tableCls:      'table',
-    gameCls:       'game',
-    currentCls:    'current',
+    prefixCls:              'go-results-',
+    rearrangedCls:          'rearranged',
+    tableCls:               'table',
+    gameCls:                'game',
+    currentCls:             'current',
+    tooltipCointainerCls:   'tooltip',
+    tooltiptextCls:         'tooltiptext',
 
     // results map
     results: {
@@ -49,7 +51,9 @@ const CLASSES_TO_BE_PREFIXED = [
     'rearrangedCls',
     'tableCls',
     'gameCls',
-    'currentCls'
+    'currentCls',
+    'tooltipCointainerCls',
+    'tooltiptextCls'
 ];
 
 /**
