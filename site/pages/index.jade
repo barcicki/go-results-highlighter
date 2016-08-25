@@ -1,0 +1,46 @@
+extends ../template/layout.jade
+
+mixin feature(desc)
+    p
+        span.octicon.octicon-check
+        span= desc
+
+block title
+    title Go Results Highlighter
+
+block content
+    article.features
+        .content
+            p.badges
+                a(href="https://badge.fury.io/js/go-results-highlighter")
+                    img(src="https://badge.fury.io/js/go-results-highlighter.svg", alt="npm version")
+                a(href="https://travis-ci.org/barcicki/go-results-highlighter")
+                    img(src="https://travis-ci.org/barcicki/go-results-highlighter.svg", alt="Build Status")
+                a(href="https://coveralls.io/github/barcicki/go-results-highlighter?branch=master")
+                    img(src="https://coveralls.io/repos/barcicki/go-results-highlighter/badge.svg?branch=master&service=github", alt="Coverage Status")
+                a(href="https://david-dm.org/barcicki/go-results-highlighter")
+                    img(src="https://david-dm.org/barcicki/go-results-highlighter.svg", alt="Dependency Status")
+                a(href="https://david-dm.org/barcicki/go-results-highlighter#info=devDependencies")
+                    img(src="https://david-dm.org/barcicki/go-results-highlighter/dev-status.svg", alt="devDependency Status")
+
+            +feature("Makes reading Go results super easy - just move the mouse over the player to see the opponents")
+            +feature("Click on the player to see compacted results")
+            +feature("Supports HTML and raw outputs from Macmahon and OpenGotha")
+            +feature("Mobile friendly")
+            +feature("Fully customizable")
+            +feature("Supports most modern browsers (and doesn't crash in old ones)")
+            +feature("Fully tested")
+            +feature("NEW Bookmarklet! Use highlighter before web admins add it to their sites.")
+
+    article.home-results
+        .content
+            p.bookmark
+                a(href="javascript:" + bookmark, title="Highlight Go Results")
+                    span.octicon.octicon-bookmark
+                    span Highlight Go Results
+
+            p.note Drag the link above to your bookmarks panel and use highlighter on any page!
+
+            .wrapper
+                include ../resources/hobby2015.html
+            p.note Example results of <strong>Hobby 2015</strong> Go tournament in Poznan.

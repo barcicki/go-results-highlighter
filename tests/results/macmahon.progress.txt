@@ -1,0 +1,26 @@
+Hobby 2015 - Before Round 3
+Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
+1	Yeroshkin, Oleksandr	Rivn	3 Dan	8	5+	4+	2?	2	14	28
+2	Grabowski, Kamil	Opol	1 Dan	8	8+	3+	1?	2	13	29
+3	Wałaszewski, Maksym	Bydg	1 Dan	7	6+	2-	4?	1	15	26
+4	Frejlak, Stanisław	Wars	5 Dan	7	7+	1-	3?	1	14	28
+(5)	Maćkowiak, Dariusz	Pozn	1 Kyu	7	1-	7+	6?	1	14	28
+6	Jurkiewicz, Dawid	Szcz	1 Dan	7	3-	9+	5?	1	13	27
+7	Dyszczyk, Przemek	Lubl	1 Kyu	6	4-	5-	11?	0	14	28
+8	Fraczak, Jan	Mimu	1 Kyu	6	2-	11-	13?	0	14	21
+9	Wałaszewski, Bruno	Bydg	2 Kyu	6	12+	6-	10?	1	12	25
+10	Bednarczyk, Dariusz	Hont	3 Kyu	6	13+	12+	9?	2	10	21½
+11	Dyszczyk, Piotr	Lubl	3 Kyu	6	17+	8+	7?	2	8	24
+12	Oczkowski, Robert	Toru	2 Kyu	5	9-	10-	14?	0	12	22
+13	Macieszczak, Tom	Wars	3 Kyu	5	10-	15+	8?	1	9½	18
+14	Domański, Filip	Stas	5 Kyu	4	16+	17+	12?	2	5	16
+15	Sobański, Grzegorz	Hont	4 Kyu	3½	-	13-	16?	0	8	15½
+16	Gogosz, Dorota	Krak	5 Kyu	3	14-	18+	15?	1	6	9
+17	Białożyt, Adam	Krak	5 Kyu	2	11-	14-	18?	0	10	13
+18	Dawid, Marcin	Pozn	6 Kyu	2	21+	16-	17?	1	4	9½
+19	Kwietniewska, Daria	Wroc	8 Kyu	2	22+	23+	20?	2	2	4
+20	Cieślak, Wojciech	Kosz	8 Kyu	1½	-	21+	19?	1	1	3½
+21	Kaśków, Wojciech	Porf	6 Kyu	1	18-	20-	24?	0	3½	5
+22	Kunek, Marek	Sośn	8 Kyu	1	19-	24+	23?	1	2	4
+(23)	Cichorski, Andrzej	Porf	12 Kyu	1	24+	19-	22?	1	2	4
+24	Struss, Katarzyna	Wroc	18 Kyu	0	23-	22-	21?	0	2	4

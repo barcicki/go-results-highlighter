@@ -1,0 +1,25 @@
+; EV[Hobby 2015]
+1	Grabowski Kamil	1d	pl	Opol	10	4	45	214	5+/w	4+/w	3+/b	2-/b	6+/b
+2	Frejlak Stanis?aw	5d	pl	Wars	10	4	44	212	8+/w	3-/w	4+/b	1+/w	7+/b
+3	Yeroshkin Oleksandr	3d	pl	Rivn	9	3	44	212	6+/w	2+/b	1-/w	10+/b	5-/b
+4	Wa?aszewski Maksym	1d	pl	Bydg	9	3	41	205	7+/w	1-/b	2-/w	11+/w	10+/b
+5	Fraczak Jan	1k	pl	Mimu	9	3	41	195=	1-/b	9-/w	13+/b	6+/b	3+/w
+6	Ma?kowiak Dariusz	1k	pl	Pozn	8	2	44	212	3-/b	8+/w	7+/b	5-/w	1-/w
+7	Jurkiewicz Dawid	1d	pl	Szcz	8	2	42	207	4-/b	10+/b	6-/w	8+/b	2-/w
+8	Dyszczyk Przemek	1k	pl	Lubl	8	2	40	198	2-/b	6-/b	9+/b	7-/w	12+/w
+9	Dyszczyk Piotr	3k	pl	Lubl	8	4	33	180=	16+/b	5+/b	8-/w	12+/w	11+/b
+10	Wa?aszewski Bruno	2k	pl	Bydg	7	2	38	198	11+/b	7-/w	12+/b	3-/w	4-/w
+11	Oczkowski Robert	2k	pl	Toru	6	1	36	171=	10-/w	12-/w	14+/b	4-/b	9-/w
+12	Bednarczyk Dariusz	3k	pl	Hont	6	2	35	176=	13+/w	11+/b	10-/w	9-/b	8-/b
+13	Macieszczak Tom	3k	pl	Wars	6	2	29=	152	12-/b	15+/w	5-/w	14-/w	16+/b
+14	Doma?ski Filip	5k	pl	Stas	6	4	24=	135=	17+/w	16+/b	11-/w	13+/b	15+/w
+15	Soba?ski Grzegorz	4k	pl	Hont	4=	1	23	116	0=	13-/b	17+/w	16-/w	14-/b
+16	Bia?o?yt Adam	5k	pl	Krak	4	2	28=	125	9-/w	14-/w	18+/b	15+/b	13-/w
+17	Gogosz Dorota	5k	pl	Krak	4	1	18=	82=	14-/b	18+/w	15-/b	0=	0=
+18	Dawid Marcin	6k	pl	Pozn	4	3	15	89=	19+/w	17-/b	16-/w	23+/b	22+/b
+19	Ka?ków Wojciech	6k	pl	Porf	4	3	13=	60	18-/b	20-/w	24+/b	22+/w	21+/b
+20	Cie?lak Wojciech	8k	pl	Kosz	3=	3	10	54	0=	19+/b	22+/w	21-/b	23+/w
+21	Kunek Marek	8k	pl	So?n	3	3	11=	60=	22-/w	24+/b	23+/b	20+/w	19-/w
+22	Kwietniewska Daria	8k	pl	Wroc	2	2	15=	63=	21+/b	23+/w	20-/b	19-/b	18-/w
+23	Cichorski Andrzej	12k	pl	Porf	1	1	13=	60	24+/w	22-/b	21-/w	18-/w	20-/b
+24	Struss Katarzyna	18k	pl	Wroc	1	0	8	38=	23-/b	21-/w	19-/w	0=	0=

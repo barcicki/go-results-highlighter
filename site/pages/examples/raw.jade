@@ -1,0 +1,46 @@
+extends ../../template/layout.jade
+
+block variables
+    - base = "../"
+    - active = "examples"
+
+block title
+    title Raw results parsing - Go Results Highlighter
+
+block content
+    .content
+        include ../../template/examples.nav.jade
+
+    article
+        .content.docs
+            h1 Raw results from <a href="http://www.cgerlach.de/go/macmahon.html">MacMahon</a>
+
+            h3 Input:
+            p Saved tournament walllist using MacMahon 3.4
+            pre
+                code.language-html
+                    = "<pre data-go-results>\n"
+                    include ../../resources/macmahon.raw.txt
+                    = "</pre>"
+
+            h3 Output:
+            .wrapper
+                pre(data-go-results)
+                    include ../../resources/macmahon.raw.txt
+
+
+
+            h1 Raw results from <a href="http://vannier.info/jeux/gotournaments/opengotha.htm">OpenGotha</a>
+
+            h3 Input:
+            p Exported to EGD format using OpenGotha 3.42. Spaces between columns
+            pre
+                code.language-html
+                    = "<pre data-go-results>\n"
+                    include ../../resources/opengotha.egd.h9
+                    = "</pre>"
+
+            h3 Output:
+            .wrapper
+                pre(data-go-results)
+                    include ../../resources/opengotha.egd.h9

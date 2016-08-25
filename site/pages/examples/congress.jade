@@ -1,0 +1,18 @@
+extends ../../template/layout.jade
+
+block variables
+    - base = "../"
+    - active = "examples"
+
+block title
+    title Go Congress Results Example - Go Results Highlighter
+
+block content
+    .content
+        include ../../template/examples.nav.jade
+
+    article.examples
+        .content
+            .wrapper
+                include ../../resources/egc2014.html
+            p.note Example long results of <a href="http://egc2014.com/results/"><strong>European Go Congress 2014</strong></a> in Sibiu, Romania.

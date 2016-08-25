@@ -1,0 +1,26 @@
+Hobby 2015 - After Round 5
+Place	Name	Club	Level	Score	1	2	3	4	5	Points	SOS	SOSOS
+1	Grabowski, Kamil	Opol	1 Dan	10	5+	4+	3+	2-	6+	4	45	214
+2	Frejlak, Stanisław	Wars	5 Dan	10	8+	3-	4+	1+	7+	4	44	212
+3	Yeroshkin, Oleksandr	Rivn	3 Dan	9	6+	2+	1-	10+	5-	3	44	212
+4	Wałaszewski, Maksym	Bydg	1 Dan	9	7+	1-	2-	11+	10+	3	41	205
+5	Fraczak, Jan	Mimu	1 Kyu	9	1-	9-	13+	6+	3+	3	41	195½
+6	Maćkowiak, Dariusz	Pozn	1 Kyu	8	3-	8+	7+	5-	1-	2	44	212
+7	Jurkiewicz, Dawid	Szcz	1 Dan	8	4-	10+	6-	8+	2-	2	42	207
+8	Dyszczyk, Przemek	Lubl	1 Kyu	8	2-	6-	9+	7-	12+	2	40	198
+9	Dyszczyk, Piotr	Lubl	3 Kyu	8	16+	5+	8-	12+	11+	4	33	180½
+10	Wałaszewski, Bruno	Bydg	2 Kyu	7	11+	7-	12+	3-	4-	2	38	198
+11	Oczkowski, Robert	Toru	2 Kyu	6	10-	12-	14+	4-	9-	1	36	171½
+12	Bednarczyk, Dariusz	Hont	3 Kyu	6	13+	11+	10-	9-	8-	2	35	176½
+13	Macieszczak, Tom	Wars	3 Kyu	6	12-	15+	5-	14-	16+	2	29½	152
+14	Domański, Filip	Stas	5 Kyu	6	17+	16+	11-	13+	15+	4	24½	135½
+15	Sobański, Grzegorz	Hont	4 Kyu	4½	-	13-	17+	16-	14-	1	23	116
+16	Białożyt, Adam	Krak	5 Kyu	4	9-	14-	18+	15+	13-	2	28½	125
+17	Gogosz, Dorota	Krak	5 Kyu	4	14-	18+	15-	-	-	1	18½	82½
+18	Dawid, Marcin	Pozn	6 Kyu	4	19+	17-	16-	23+	22+	3	15	89½
+19	Kaśków, Wojciech	Porf	6 Kyu	4	18-	20-	24+	22+	21+	3	13½	60
+20	Cieślak, Wojciech	Kosz	8 Kyu	3½	-	19+	22+	21-	23+	3	10	54
+21	Kunek, Marek	Sośn	8 Kyu	3	22-	24+	23+	20+	19-	3	11½	60½
+22	Kwietniewska, Daria	Wroc	8 Kyu	2	21+	23+	20-	19-	18-	2	15½	63½
+23	Cichorski, Andrzej	Porf	12 Kyu	1	24+	22-	21-	18-	20-	1	13½	60
+24	Struss, Katarzyna	Wroc	18 Kyu	1	23-	21-	19-	-	-	0	8	38½

@@ -1,0 +1,10 @@
+Example Tournament - After Round 3
+Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
+1	Player 8	AAA	2 Kyu	28	6+	5+	2+	3	79	241
+2	Player 4	BBB	4 Kyu	27	8+	3+	1-	2	80	238
+3	Player 6	BBB	3 Kyu	27	4+	2-	7+	2	80	237
+4	Player 2	CCC	3 Kyu	27	3-	6+	5+	2	79	241
+5	Player 3	CCC	5 Kyu	26	7+	1-	4-	1	81	236
+6	Player 7	AAA	5 Kyu	26	1-	4-	8+	1	80	237
+7	Player 1	AAA	6 Kyu	26	5-	8+	3-	1	78	240
+8	Player 5	BBB	8 Kyu	25	2-	7-	6-	0	79	238

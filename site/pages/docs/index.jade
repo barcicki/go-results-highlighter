@@ -1,0 +1,16 @@
+extends ../../template/layout.jade
+
+block variables
+    - base = "../"
+    - active = "docs"
+
+block title
+    title Documentation - Go Results Highlighter
+
+block content
+    article.docs
+        .content
+            include:markdown-it ../../../docs/install.md
+            include:markdown-it ../../../docs/usage.md
+            include:markdown-it ../../../docs/api.md
+            include:markdown-it ../../../docs/examples.md
