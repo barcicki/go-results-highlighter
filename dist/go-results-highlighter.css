@@ -57,6 +57,22 @@
   position: absolute;
   z-index: 1;
 }
+.go-results-tooltiptext-won {
+  background-color: #799B29;
+  color: #000000;
+}
+.go-results-tooltiptext-lost {
+  background-color: #D97962;
+  color: #000000;
+}
+.go-results-tooltiptext-jigo {
+  background-color: #D7C3D1;
+  color: #000000;
+}
+.go-results-tooltiptext-unresolved {
+  background-color: #CBDCE5;
+  color: #000000;
+}
 .go-results-tooltip:hover .go-results-tooltiptext {
   visibility: visible;
 }

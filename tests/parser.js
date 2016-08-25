@@ -341,5 +341,114 @@ describe('parser', () => {
             expect(result[3].tournamentPlace).toBe(3);
             expect(result[4].tournamentPlace).toBe(4);
         });
+
+        describe('(when parsing player names)', function () {
+            it('find player name by provided column number', function () {{
+                const result = testMap(
+                    `<table>
+                        <tr><th>Place</th><th>Name</th></tr>
+                        <tr><td>1</td><td>Player 1</td></tr>
+                        <tr><td>2</td><td>Player 2</td></tr>
+                        <tr><td>3</td><td>Player 3</td></tr>
+                        <tr><td>4</td><td>Player 4</td></tr>
+                    </table>`, {
+                        nameColumns : 1
+                    });
+                expect(result[1].name).toBe("Player 1");
+                expect(result[2].name).toBe("Player 2");
+                expect(result[3].name).toBe("Player 3");
+                expect(result[4].name).toBe("Player 4");
+            }});
+
+            it('find player name by provided multiple column number', function () {{
+                const result = testMap(
+                    `<table>
+                        <tr><th>Place</th><th>Name</th><th>surname</th></tr>
+                        <tr><td>1</td><td>Granny</td><td>Weatherwax</td></tr>
+                        <tr><td>2</td><td>Nanny</td><td>Ogg</td></tr>
+                        <tr><td>3</td><td>Agness</td><td>Nitt</td></tr>
+                        <tr><td>4</td><td>Magrat</td><td>Garlick</td></tr>
+                        <tr><td>5</td><td>Tiffany</td><td>Aching</td></tr>
+                    </table>`, {
+                        nameColumns : "1,2"
+                    });
+                expect(result[1].name).toBe("Granny Weatherwax");
+                expect(result[2].name).toBe("Nanny Ogg");
+                expect(result[3].name).toBe("Agness Nitt");
+                expect(result[4].name).toBe("Magrat Garlick");
+                expect(result[5].name).toBe("Tiffany Aching");
+            }});
+
+            it('find player name by headers if no column numbers provided', function () {{
+                const result = testMap(
+                    `<table>
+                        <tr><th>Place</th><th>alias</th><th>xxx</th><th>pickmepls</th></tr>
+                        <tr><td>1</td><td>IronMan</td><td>Tony</td><td>Stark</td></tr>
+                        <tr><td>2</td><td>Captain America</td><td>Steve</td><td>Rogers</td></tr>
+                        <tr><td>3</td><td>Hulk</td><td>Bruce</td><td>Banner</td></tr>
+                        <tr><td>4</td><td>Thor</td><td>Thor</td><td>Odinson</td></tr>
+                    </table>`, {
+                        nameColumnHeaders: ['xxx','pick'],
+                    });
+                expect(result[1].name).toBe("Tony Stark");
+                expect(result[2].name).toBe("Steve Rogers");
+                expect(result[3].name).toBe("Bruce Banner");
+                expect(result[4].name).toBe("Thor Odinson");
+            }});
+
+            it('find player name by cell content if none of headers match specified names', function () {{
+                const result = testMap(
+                    `<table>
+                        <tr><th>Place</th><th>Strength</th><th>column1</th><th>column2</th></tr>
+                        <tr><td>1</td><td>1 Dan</td><td>Sheldon</td><td>Cooper</td></tr>
+                        <tr><td>2</td><td>17 Kyu</td><td>Leonard</td><td>Hofstadter</td></tr>
+                        <tr><td>3</td><td>1 kyu</td><td></td><td>Wolowitz</td></tr>
+                        <tr><td>4</td><td>3 dan</td><td>Raj</td><td></td></tr>
+                    </table>`, {});
+                expect(result[1].name).toBe("Sheldon Cooper");
+                expect(result[2].name).toBe("Leonard Hofstadter");
+                expect(result[3].name).toBe("Wolowitz");
+                expect(result[4].name).toBe("Raj");
+            }});
+
+            it('add tooltip containing opponent name to game result cells', function () {{
+                const result = testMap(
+                    `<table>
+                        <tr><th>Place</th><th>Name</th><th>1</th></tr>
+                        <tr><td>1</td><td>Luke Skywalker</td><td>2+</td><td>3+</td></tr>
+                        <tr><td>2</td><td>Darth Vader</td><td>1-</td><td>4+</td></tr>
+                        <tr><td>2</td><td>Han Solo</td><td>4+</td><td>1-</td></tr>
+                        <tr><td>2</td><td>Yoda</td><td>3-</td><td>2-</td></tr>
+                    </table>`, {});
+                let cell = result[1].row.querySelectorAll('td')[2];
+                expect(cell.classList.contains("go-results-tooltip")).toBeTruthy();
+                let tooltip = cell.querySelector('div');
+                expect(tooltip.classList.contains("go-results-tooltiptext")).toBeTruthy();
+                expect(tooltip.classList.contains("go-results-tooltiptext-won")).toBeTruthy();
+                expect(tooltip.innerHTML).toBe("Darth Vader");
+
+                cell = result[1].row.querySelectorAll('td')[3];
+                expect(cell.classList.contains("go-results-tooltip")).toBeTruthy();
+                tooltip = cell.querySelector('div');
+                expect(tooltip.classList.contains("go-results-tooltiptext")).toBeTruthy();
+                expect(tooltip.classList.contains("go-results-tooltiptext-won")).toBeTruthy();
+                expect(tooltip.innerHTML).toBe("Han Solo");
+
+
+                cell = result[2].row.querySelectorAll('td')[2];
+                expect(cell.classList.contains("go-results-tooltip")).toBeTruthy();
+                tooltip = cell.querySelector('div');
+                expect(tooltip.classList.contains("go-results-tooltiptext")).toBeTruthy();
+                expect(tooltip.classList.contains("go-results-tooltiptext-lost")).toBeTruthy();
+                expect(tooltip.innerHTML).toBe("Luke Skywalker");
+
+                cell = result[2].row.querySelectorAll('td')[3];
+                expect(cell.classList.contains("go-results-tooltip")).toBeTruthy();
+                tooltip = cell.querySelector('div');
+                expect(tooltip.classList.contains("go-results-tooltiptext")).toBeTruthy();
+                expect(tooltip.classList.contains("go-results-tooltiptext-won")).toBeTruthy();
+                expect(tooltip.innerHTML).toBe("Yoda");
+            }});
+        });
     });
 });

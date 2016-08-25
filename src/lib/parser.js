@@ -209,17 +209,17 @@ function getFilterForColumnsWithName(rows, settings){
  *
  * @param {Element|HTMLElement} cell - table cell with match result
  * @param {string} opponentName
- * @param {string} resultCls - css class for match outcome
+ * @param {string} result - result of match
  * @param {{}} cssClasses
  * @returns {void}
  */
-function setOpponentNameHint(cell, opponentName, resultCls, cssClasses){
+function setOpponentNameHint(cell, opponentName, result, cssClasses){
     //cell.setAttribute('title', opponentName);
     cell.classList.add(cssClasses.tooltipCointainerCls);
     if (cell.children && !Array.from(cell.children).some(child => child.classList && child.classList.contains(cssClasses.tooltiptextCls))) {
         let div = document.createElement("div");
         div.innerHTML = opponentName;
-        div.classList.add(cssClasses.tooltiptextCls, resultCls);
+        div.classList.add(cssClasses.tooltiptextCls, cssClasses.tooltiptextCls + "-" + result);
         cell.appendChild(div);
     }
 }
@@ -286,7 +286,7 @@ export default function parse(table, config) {
             if (displayOpponentNameHint){
                 const opponentName = players[opponentPlace] ? players[opponentPlace].name : '';
                 if (opponentName) {
-                    setOpponentNameHint(cell, opponentName, settings.prefixCls + resultCls, classes);
+                    setOpponentNameHint(cell, opponentName, resultCls, classes);
                 }
             }
         });
@@ -302,7 +302,7 @@ export default function parse(table, config) {
 
         const cells = asArray(row.querySelectorAll(settings.cellTags));
         const cellsWithName = cells.filter(columnsForNameFilter);
-        const name = cellsWithName.map(cell => cell.textContent).join(' ');
+        const name = cellsWithName.map(cell => cell.textContent).filter(content => content).join(' ');
 
         // assign default place
         let gridPlacement = -1;
