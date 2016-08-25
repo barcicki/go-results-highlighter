@@ -1,7 +1,7 @@
 'use strict';
 
-import { asArray, defaults } from './utils';
-import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toResultsWithRegExp } from './settings';
+import { asArray, defaults, isNumber, arrayToObject } from './utils';
+import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toResultsWithRegExp, nameHeadersToRegExp, toPrefixedClasses} from './settings';
 
 function writeGridPlacement(row, placement) {
     row.setAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT, placement);
@@ -116,6 +116,115 @@ function getFilterForColumnsWithResults(rows, settings, resultsMap) {
 }
 
 /**
+ * Returns the array of indexes of columns that look like keeping player names
+ * by searching for certain header names.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {Array.<number>}
+ */
+function getIndexesOfColumnsWithNamesByHeaderNames(rows, settings){
+    const regexps = nameHeadersToRegExp(settings.nameColumnHeaders);
+
+    let indexes = [];
+    const columns = getColumnsFromRows(rows, settings.headerTags);
+    columns.forEach((cells, index) => {
+        if (cells.some(cell => regexps.some(rx => cell.match(rx)))) {
+            indexes.push(index);
+        }
+    });
+
+    return indexes;
+}
+
+/**
+ * Checks if at least threshold level of strings from given set look like player names.
+ *
+ * @param {Array.<string>} items
+ * @param {function(string): boolean} filter
+ * @param {number} threshold
+ * @returns {boolean}
+ */
+function checkItems(items, filter, threshold) {
+    threshold = threshold || 0.4;
+    const count = items.length;
+    const itemsWithResultsCount = items.filter(cell => filter(cell)).length;
+
+    return itemsWithResultsCount / count >= threshold;
+}
+
+/**
+ * Returns the array of indexes of columns that look like keeping player names
+ * by inspecting cell values
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {Array.<number>}
+ */
+function getIndexesOfColumnsWithNamesByCellValues(rows, settings){
+    if (!settings.nameCellExpression) {
+        return [];
+    }
+
+    const regExp = new RegExp(settings.nameCellExpression);
+
+    const nameFilter = cell => cell.match(regExp);
+    return getColumnsFromRows(rows, settings.cellTags)
+            .reduce((indexes, column, index) => {
+                if (checkItems(column, nameFilter)) {
+                    indexes.push(index);
+                }
+
+                return indexes;
+            }, []);
+}
+
+/**
+ * Returns a filter that allows to select columns containing player name.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {function(*, *=): boolean}
+ */
+function getFilterForColumnsWithName(rows, settings){
+    let indexes = [];
+    if (typeof settings.nameColumns === 'string') {
+        indexes = settings.nameColumns.split(',').map(Number);
+
+    } else if (isNumber(settings.nameColumns)) {
+        indexes.push(parseInt(settings.nameColumns))
+
+    } else if (settings.checkColumnsForPlayerNames) {
+        indexes = getIndexesOfColumnsWithNamesByHeaderNames(rows, settings);
+        if (!indexes || indexes.length == 0) {
+            indexes = getIndexesOfColumnsWithNamesByCellValues(rows, settings);
+        }
+    }
+
+    return createCellFromColumnsFilter(indexes);
+}
+
+/**
+ * Sets opponent name hint to cell
+ *
+ * @param {Element|HTMLElement} cell - table cell with match result
+ * @param {string} opponentName
+ * @param {string} resultCls - css class for match outcome
+ * @param {{}} cssClasses
+ * @returns {void}
+ */
+function setOpponentNameHint(cell, opponentName, resultCls, cssClasses){
+    //cell.setAttribute('title', opponentName);
+    cell.classList.add(cssClasses.tooltipCointainerCls);
+    if (cell.children && !Array.from(cell.children).some(child => child.classList && child.classList.contains(cssClasses.tooltiptextCls))) {
+        let div = document.createElement("div");
+        div.innerHTML = opponentName;
+        div.classList.add(cssClasses.tooltiptextCls, resultCls);
+        cell.appendChild(div);
+    }
+}
+
+/**
  * Traverses provided table and creates results map.
  *
  * @param {Element|HTMLElement} table - table results container
@@ -128,9 +237,12 @@ export default function parse(table, config) {
     const resultsMap = toResultsWithRegExp(settings.results);
     const resultsMapCount = resultsMap.length;
     const columnsWithResultsFilter = getFilterForColumnsWithResults(rows, settings, resultsMap);
-    const results = {};
+    const columnsForNameFilter = settings.displayOpponentNameHint ? getFilterForColumnsWithName(rows, settings) : (cell, index) => false;
+    const results = [];
 
-    function parseGames(player, cells) {
+    function parseGames(player, cells, players, settings) {
+        const displayOpponentNameHint = settings.displayOpponentNameHint;
+        const classes = toPrefixedClasses(settings);
         cells.forEach((cell) => {
             let opponentPlace;
             let resultCls;
@@ -170,6 +282,13 @@ export default function parse(table, config) {
             };
 
             player.opponents.push(opponentPlace);
+
+            if (displayOpponentNameHint){
+                const opponentName = players[opponentPlace] ? players[opponentPlace].name : '';
+                if (opponentName) {
+                    setOpponentNameHint(cell, opponentName, settings.prefixCls + resultCls, classes);
+                }
+            }
         });
     }
 
@@ -182,7 +301,8 @@ export default function parse(table, config) {
         }
 
         const cells = asArray(row.querySelectorAll(settings.cellTags));
-        const cellsWithResults = cells.filter(columnsWithResultsFilter);
+        const cellsWithName = cells.filter(columnsForNameFilter);
+        const name = cellsWithName.map(cell => cell.textContent).join(' ');
 
         // assign default place
         let gridPlacement = -1;
@@ -199,7 +319,8 @@ export default function parse(table, config) {
             tournamentPlace: -1,
             row,
             games: {},
-            opponents: []
+            opponents: [],
+            name
         };
 
         if (row.hasAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT)) {
@@ -238,16 +359,22 @@ export default function parse(table, config) {
             return;
         }
 
-        parseGames(player, cellsWithResults);
-
         player.tournamentPlace = tournamentPlacement;
-        player.opponents.sort((a, b) => a > b ? 1 : -1);
-
         results[gridPlacement] = player;
 
         lastTournamentPlacement = tournamentPlacement;
         lastGridPlacement = gridPlacement;
     });
 
-    return results;
+    results.forEach(player => {
+        const cells = asArray(player.row.querySelectorAll(settings.cellTags));
+        const cellsWithResults = cells.filter(columnsWithResultsFilter);
+        
+        parseGames(player, cellsWithResults, results, settings);
+
+        player.opponents.sort((a, b) => a > b ? 1 : -1);
+    });
+
+
+    return arrayToObject(results);
 }

@@ -1,3 +1,6 @@
+.go-results- {
+  /* Show the tooltip text when you mouse over the tooltip container */
+}
 .go-results-rearranged {
   color: #dddddd;
   cursor: pointer;
@@ -39,4 +42,21 @@
 }
 .go-results-unresolved .go-results-game {
   background-color: #7D9CAD;
+}
+.go-results-tooltip {
+  position: relative;
+}
+.go-results-tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  border: 2px solid #000000;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+.go-results-tooltip:hover .go-results-tooltiptext {
+  visibility: visible;
 }

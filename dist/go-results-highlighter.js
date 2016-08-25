@@ -653,6 +653,122 @@ function getFilterForColumnsWithResults(rows, settings, resultsMap) {
 }
 
 /**
+ * Returns the array of indexes of columns that look like keeping player names
+ * by searching for certain header names.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {Array.<number>}
+ */
+function getIndexesOfColumnsWithNamesByHeaderNames(rows, settings) {
+    var regexps = (0, _settings.nameHeadersToRegExp)(settings.nameColumnHeaders);
+
+    var indexes = [];
+    var columns = getColumnsFromRows(rows, settings.headerTags);
+    columns.forEach(function (cells, index) {
+        if (cells.some(function (cell) {
+            return regexps.some(function (rx) {
+                return cell.match(rx);
+            });
+        })) {
+            indexes.push(index);
+        }
+    });
+
+    return indexes;
+}
+
+/**
+ * Checks if at least threshold level of strings from given set look like player names.
+ *
+ * @param {Array.<string>} items
+ * @param {function(string): boolean} filter
+ * @param {number} threshold
+ * @returns {boolean}
+ */
+function checkItems(items, filter, threshold) {
+    threshold = threshold || 0.4;
+    var count = items.length;
+    var itemsWithResultsCount = items.filter(function (cell) {
+        return filter(cell);
+    }).length;
+
+    return itemsWithResultsCount / count >= threshold;
+}
+
+/**
+ * Returns the array of indexes of columns that look like keeping player names
+ * by inspecting cell values
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {Array.<number>}
+ */
+function getIndexesOfColumnsWithNamesByCellValues(rows, settings) {
+    if (!settings.nameCellExpression) {
+        return [];
+    }
+
+    var regExp = new RegExp(settings.nameCellExpression);
+
+    var nameFilter = function nameFilter(cell) {
+        return cell.match(regExp);
+    };
+    return getColumnsFromRows(rows, settings.cellTags).reduce(function (indexes, column, index) {
+        if (checkItems(column, nameFilter)) {
+            indexes.push(index);
+        }
+
+        return indexes;
+    }, []);
+}
+
+/**
+ * Returns a filter that allows to select columns containing player name.
+ *
+ * @param {Array.<Element|HTMLElement>} rows
+ * @param {HighlighterSettings} settings
+ * @returns {function(*, *=): boolean}
+ */
+function getFilterForColumnsWithName(rows, settings) {
+    var indexes = [];
+    if (typeof settings.nameColumns === 'string') {
+        indexes = settings.nameColumns.split(',').map(Number);
+    } else if ((0, _utils.isNumber)(settings.nameColumns)) {
+        indexes.push(parseInt(settings.nameColumns));
+    } else if (settings.checkColumnsForPlayerNames) {
+        indexes = getIndexesOfColumnsWithNamesByHeaderNames(rows, settings);
+        if (!indexes || indexes.length == 0) {
+            indexes = getIndexesOfColumnsWithNamesByCellValues(rows, settings);
+        }
+    }
+
+    return createCellFromColumnsFilter(indexes);
+}
+
+/**
+ * Sets opponent name hint to cell
+ *
+ * @param {Element|HTMLElement} cell - table cell with match result
+ * @param {string} opponentName
+ * @param {string} resultCls - css class for match outcome
+ * @param {{}} cssClasses
+ * @returns {void}
+ */
+function setOpponentNameHint(cell, opponentName, resultCls, cssClasses) {
+    //cell.setAttribute('title', opponentName);
+    cell.classList.add(cssClasses.tooltipCointainerCls);
+    if (cell.children && !Array.from(cell.children).some(function (child) {
+        return child.classList && child.classList.contains(cssClasses.tooltiptextCls);
+    })) {
+        var div = document.createElement("div");
+        div.innerHTML = opponentName;
+        div.classList.add(cssClasses.tooltiptextCls, resultCls);
+        cell.appendChild(div);
+    }
+}
+
+/**
  * Traverses provided table and creates results map.
  *
  * @param {Element|HTMLElement} table - table results container
@@ -665,9 +781,14 @@ function parse(table, config) {
     var resultsMap = (0, _settings.toResultsWithRegExp)(settings.results);
     var resultsMapCount = resultsMap.length;
     var columnsWithResultsFilter = getFilterForColumnsWithResults(rows, settings, resultsMap);
-    var results = {};
+    var columnsForNameFilter = settings.displayOpponentNameHint ? getFilterForColumnsWithName(rows, settings) : function (cell, index) {
+        return false;
+    };
+    var results = [];
 
-    function parseGames(player, cells) {
+    function parseGames(player, cells, players, settings) {
+        var displayOpponentNameHint = settings.displayOpponentNameHint;
+        var classes = (0, _settings.toPrefixedClasses)(settings);
         cells.forEach(function (cell) {
             var opponentPlace = void 0;
             var resultCls = void 0;
@@ -706,6 +827,13 @@ function parse(table, config) {
             };
 
             player.opponents.push(opponentPlace);
+
+            if (displayOpponentNameHint) {
+                var opponentName = players[opponentPlace] ? players[opponentPlace].name : '';
+                if (opponentName) {
+                    setOpponentNameHint(cell, opponentName, settings.prefixCls + resultCls, classes);
+                }
+            }
         });
     }
 
@@ -718,7 +846,10 @@ function parse(table, config) {
         }
 
         var cells = (0, _utils.asArray)(row.querySelectorAll(settings.cellTags));
-        var cellsWithResults = cells.filter(columnsWithResultsFilter);
+        var cellsWithName = cells.filter(columnsForNameFilter);
+        var name = cellsWithName.map(function (cell) {
+            return cell.textContent;
+        }).join(' ');
 
         // assign default place
         var gridPlacement = -1;
@@ -735,7 +866,8 @@ function parse(table, config) {
             tournamentPlace: -1,
             row: row,
             games: {},
-            opponents: []
+            opponents: [],
+            name: name
         };
 
         if (row.hasAttribute(_settings.DOM_ATTRIBUTES.PLAYER_PLACEMENT)) {
@@ -772,20 +904,25 @@ function parse(table, config) {
             return;
         }
 
-        parseGames(player, cellsWithResults);
-
         player.tournamentPlace = tournamentPlacement;
-        player.opponents.sort(function (a, b) {
-            return a > b ? 1 : -1;
-        });
-
         results[gridPlacement] = player;
 
         lastTournamentPlacement = tournamentPlacement;
         lastGridPlacement = gridPlacement;
     });
 
-    return results;
+    results.forEach(function (player) {
+        var cells = (0, _utils.asArray)(player.row.querySelectorAll(settings.cellTags));
+        var cellsWithResults = cells.filter(columnsWithResultsFilter);
+
+        parseGames(player, cellsWithResults, results, settings);
+
+        player.opponents.sort(function (a, b) {
+            return a > b ? 1 : -1;
+        });
+    });
+
+    return (0, _utils.arrayToObject)(results);
 }
 
 },{"./settings":5,"./utils":6}],4:[function(require,module,exports){
@@ -961,6 +1098,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.toResultsWithRegExp = toResultsWithRegExp;
+exports.nameHeadersToRegExp = nameHeadersToRegExp;
 exports.toPrefixedClasses = toPrefixedClasses;
 exports.readTableSettingsFromDOM = readTableSettingsFromDOM;
 var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
@@ -971,6 +1109,8 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     tableCls: 'table',
     gameCls: 'game',
     currentCls: 'current',
+    tooltipCointainerCls: 'tooltip',
+    tooltiptextCls: 'tooltiptext',
 
     // results map
     results: {
@@ -984,10 +1124,16 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     startingRow: 0,
     placeColumn: 0,
     roundsColumns: null,
+    nameColumns: null,
+    nameColumnHeaders: ['name', 'player', 'gracz', 'imię'],
+    nameCellExpression: '(?=^.*[A-Z][a-z]{3,})(?!.*([Kk][yy][uu]|[Dd][Aa][Nn]))',
     rowTags: 'tr',
     cellTags: 'td',
+    headerTags: 'th',
     ignoreOutOfBoundsRows: false,
     checkColumnsForResults: true,
+    displayOpponentNameHint: true,
+    checkColumnsForPlayerNames: true,
 
     // converter settings
     cellSeparator: '[\t ]+',
@@ -998,7 +1144,7 @@ var DEFAULT_SETTINGS = exports.DEFAULT_SETTINGS = {
     rearranging: true
 };
 
-var CLASSES_TO_BE_PREFIXED = ['rearrangedCls', 'tableCls', 'gameCls', 'currentCls'];
+var CLASSES_TO_BE_PREFIXED = ['rearrangedCls', 'tableCls', 'gameCls', 'currentCls', 'tooltipCointainerCls', 'tooltiptextCls'];
 
 /**
  * Names of attributes used in this plugin
@@ -1013,6 +1159,7 @@ var DOM_ATTRIBUTES = exports.DOM_ATTRIBUTES = {
     SETTING_HOVERING: 'data-go-hovering',
     PLAYER_PLACEMENT: 'data-go-place',
     OPPONENT_PLACEMENT: 'data-go-opponent',
+    OPPONENT_NAME: 'data-go-name',
     OPPONENTS: 'data-go-opponents',
     GAME_RESULT: 'data-go-result'
 };
@@ -1036,6 +1183,21 @@ function toResultsWithRegExp(results) {
     }
 
     return map;
+}
+
+/**
+ * Transforms array of possible column with player name headers to RegExp
+ * @param {Array.<string>} columnHeaders
+ * @returns {Array.<RegExp>}
+ */
+function nameHeadersToRegExp(columnHeaders) {
+    if (!columnHeaders || columnHeaders.length == 0) {
+        return [];
+    }
+
+    return columnHeaders.map(function (header) {
+        return new RegExp(header, 'i');
+    });
 }
 
 /**
@@ -1137,6 +1299,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports.asArray = asArray;
 exports.defaults = defaults;
 exports.combine = combine;
+exports.isNumber = isNumber;
+exports.arrayToObject = arrayToObject;
 function asArray(arrayLike) {
     return Array.prototype.slice.call(arrayLike);
 }
@@ -1195,6 +1359,31 @@ function combine() {
         }
     });
 
+    return result;
+}
+
+/**
+ * Check whether given object is a number.
+ * 
+ * @param {object} numberToTest 
+ * @returns {boolean}
+ */
+function isNumber(numberToTest) {
+    return !isNaN(parseFloat(numberToTest)) && isFinite(numberToTest);
+}
+
+/**
+ * Converts array to object
+ * @param {Array.<object>} array
+ * @returns {object}
+ */
+function arrayToObject(array) {
+    var result = {};
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] !== undefined) {
+            result[i] = array[i];
+        }
+    }
     return result;
 }
 
