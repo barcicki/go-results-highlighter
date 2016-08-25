@@ -216,7 +216,7 @@ function getFilterForColumnsWithName(rows, settings){
 function setOpponentNameHint(cell, opponentName, result, cssClasses){
     //cell.setAttribute('title', opponentName);
     cell.classList.add(cssClasses.tooltipCointainerCls);
-    if (cell.children && !Array.from(cell.children).some(child => child.classList && child.classList.contains(cssClasses.tooltiptextCls))) {
+    if (cell.children && !Array.prototype.slice.call(cell.children).some(child => child.classList && child.classList.contains(cssClasses.tooltiptextCls))) {
         let div = document.createElement("div");
         div.innerHTML = opponentName;
         div.classList.add(cssClasses.tooltiptextCls, cssClasses.tooltiptextCls + "-" + result);
