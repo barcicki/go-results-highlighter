@@ -7,11 +7,13 @@
 export const DEFAULT_SETTINGS = {
 
     // css class names
-    prefixCls:     'go-results-',
-    rearrangedCls: 'rearranged',
-    tableCls:      'table',
-    gameCls:       'game',
-    currentCls:    'current',
+    prefixCls:              'go-results-',
+    rearrangedCls:          'rearranged',
+    tableCls:               'table',
+    gameCls:                'game',
+    currentCls:             'current',
+    tooltipCointainerCls:   'tooltip',
+    tooltiptextCls:         'tooltiptext',
 
     // results map
     results: {
@@ -25,10 +27,16 @@ export const DEFAULT_SETTINGS = {
     startingRow: 0,
     placeColumn: 0,
     roundsColumns: null,
+    nameColumns: null,
+    nameColumnHeaders: ['name', 'player', 'gracz', 'imię'],
+    nameCellExpression : '(?=^.*[A-Z][a-z]{3,})(?!.*([Kk][yy][uu]|[Dd][Aa][Nn]))',
     rowTags: 'tr',
     cellTags: 'td',
+    headerTags: 'th',
     ignoreOutOfBoundsRows: false,
     checkColumnsForResults: true,
+    displayOpponentNameHint : true,
+    checkColumnsForPlayerNames: true,
 
     // converter settings
     cellSeparator: '[\t ]+',
@@ -43,7 +51,9 @@ const CLASSES_TO_BE_PREFIXED = [
     'rearrangedCls',
     'tableCls',
     'gameCls',
-    'currentCls'
+    'currentCls',
+    'tooltipCointainerCls',
+    'tooltiptextCls'
 ];
 
 /**
@@ -59,6 +69,7 @@ export const DOM_ATTRIBUTES = {
     SETTING_HOVERING:       'data-go-hovering',
     PLAYER_PLACEMENT:       'data-go-place',
     OPPONENT_PLACEMENT:     'data-go-opponent',
+    OPPONENT_NAME:          'data-go-name',
     OPPONENTS:              'data-go-opponents',
     GAME_RESULT:            'data-go-result'
 };
@@ -82,6 +93,19 @@ export function toResultsWithRegExp(results) {
     }
 
     return map;
+}
+
+/**
+ * Transforms array of possible column with player name headers to RegExp
+ * @param {Array.<string>} columnHeaders
+ * @returns {Array.<RegExp>}
+ */
+export function nameHeadersToRegExp(columnHeaders) {
+    if (!columnHeaders || columnHeaders.length == 0) {
+        return [];
+    }
+
+    return columnHeaders.map(header => new RegExp(header, 'i')); 
 }
 
 /**

@@ -57,3 +57,28 @@ export function combine(...objects) {
 
     return result;
 }
+
+/**
+ * Check whether given object is a number.
+ * 
+ * @param {object} numberToTest 
+ * @returns {boolean}
+ */
+export function isNumber(numberToTest){
+    return !isNaN(parseFloat(numberToTest)) && isFinite(numberToTest);
+}
+
+/**
+ * Converts array to object
+ * @param {Array.<object>} array
+ * @returns {object}
+ */
+export function arrayToObject(array){
+    let result = {};
+    for (var i = 0; i < array.length; i++) {
+        if (array[i]!== undefined) {
+            result[i] = array[i];
+        }
+    }
+    return result;
+}
