@@ -758,7 +758,7 @@ function getFilterForColumnsWithName(rows, settings) {
 function setOpponentNameHint(cell, opponentName, result, cssClasses) {
     //cell.setAttribute('title', opponentName);
     cell.classList.add(cssClasses.tooltipCointainerCls);
-    if (cell.children && !Array.from(cell.children).some(function (child) {
+    if (cell.children && !Array.prototype.slice.call(cell.children).some(function (child) {
         return child.classList && child.classList.contains(cssClasses.tooltiptextCls);
     })) {
         var div = document.createElement("div");
@@ -849,6 +849,8 @@ function parse(table, config) {
         var cellsWithName = cells.filter(columnsForNameFilter);
         var name = cellsWithName.map(function (cell) {
             return cell.textContent;
+        }).filter(function (content) {
+            return content;
         }).join(' ');
 
         // assign default place

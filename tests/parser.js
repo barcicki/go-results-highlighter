@@ -449,6 +449,27 @@ describe('parser', () => {
                 expect(tooltip.classList.contains("go-results-tooltiptext-won")).toBeTruthy();
                 expect(tooltip.innerHTML).toBe("Yoda");
             }});
+
+             it('refrain from adding a tooltip when a flag is set', function () {{
+                 const result = testMap(
+                    `<table>
+                        <tr><th>Place</th><th>Name</th><th>1</th></tr>
+                        <tr><td>1</td><td>Luke Skywalker</td><td>2+</td><td>3+</td></tr>
+                        <tr><td>2</td><td>Darth Vader</td><td>1-</td><td>4+</td></tr>
+                        <tr><td>2</td><td>Han Solo</td><td>4+</td><td>1-</td></tr>
+                        <tr><td>2</td><td>Yoda</td><td>3-</td><td>2-</td></tr>
+                    </table>`, {
+                        displayOpponentNameHint : false
+                    });
+                for(var i = 1; i <= 4; i++)
+                    for(var j = 2; j <=3; j++){
+                        let cell = result[i].row.querySelectorAll('td')[j];
+                        expect(cell.classList.contains("go-results-tooltip")).toBeFalsy();
+                        let tooltip = cell.querySelector('div');
+                        expect(tooltip).toBe(null);
+                        expect(cell.querySelectorAll('.go-results-tooltiptext').length).toBe(0);
+                    }
+            }});
         });
     });
 });
