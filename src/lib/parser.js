@@ -1,5 +1,3 @@
-'use strict';
-
 import { asArray, defaults } from './utils';
 import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toResultsWithRegExp } from './settings';
 

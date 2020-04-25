@@ -2,7 +2,7 @@ extends ../template/layout.jade
 
 mixin feature(desc)
     p
-        span.octicon.octicon-check
+        span!= octicons.check.toSVG({ height: 18 })
         span= desc
 
 block title

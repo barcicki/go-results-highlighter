@@ -1,65 +1,71 @@
-'use strict';
+const WEBPACK_CONFIGURATION = require('./webpack/test');
 
 module.exports = function (config) {
-    var configuration = {
-        basePath:   '',
-        frameworks: ['jasmine', 'browserify'],
+  const configuration = {
+    basePath: '',
+    frameworks: ['jasmine'],
 
-        files: [
-            { pattern: 'src/**/*.js', included: false },
-            { pattern: 'tests/**/*.*', included: false },
-            { pattern: 'tests/**/*.js', included: true }
-        ],
-        exclude: [
-            './src/bookmark.js'
-        ],
+    files: [
+      'tests/**/*.js',
+      { pattern: 'src/**/*.js', included: true },
+      { pattern: 'tests/**/*.*', included: false }
+    ],
 
-        preprocessors: {
-            'src/**/*.js': ['browserify', 'coverage'],
-            'tests/**/*.js': ['browserify']
-        },
+    exclude: [
+      './src/bookmark.js'
+    ],
 
-        browserify: {
-            debug: true,
-            transform: ['babelify', ['browserify-istanbul', {
-                instrumenterConfig: {
-                    embedSource: true
-                }
-            }]]
-        },
+    preprocessors: {
+      'src/**/*.js': ['webpack'], // coverage is collected via babel-plugin-istanbul
+      'tests/**/*.js': ['webpack']
+    },
 
-        specReporter: {
-            maxLogLines: 5,
-            suppressErrorSummary: true,
-            suppressFailed: false,
-            suppressPassed: false,
-            suppressSkipped: true
-        },
+    specReporter: {
+      maxLogLines: 5,
+      suppressErrorSummary: true,
+      suppressFailed: false,
+      suppressPassed: false,
+      suppressSkipped: true
+    },
 
-        reporters: ['spec', 'coverage'],
+    reporters: ['spec', 'coverage'],
 
-        coverageReporter: {
-            dir: 'coverage',
-            reporters: [
-                { type: 'html', subdir: '.' },
-                { type: 'lcovonly', subdir: '.', file: 'lcov.info' },
-                { type: 'text-summary', subdir: '.', file: 'summary.txt' }
-            ]
-        },
+    coverageReporter: {
+      dir: 'coverage',
+      reporters: [
+        { type: 'html', subdir: '.' },
+        { type: 'lcovonly', subdir: '.', file: 'lcov.info' },
+        { type: 'text-summary', subdir: '.', file: 'summary.txt' },
+        { type: 'in-memory' }
+      ]
+    },
 
-        port: 9876,
-        colors: true,
-        logLevel: config.LOG_INFO,
-        autoWatch: true,
-        browsers: ['Chrome'],
-        singleRun: false,
-        concurrency: Infinity
-    };
+    remapCoverageReporter: {
+      'text-summary': './coverage/summary2.txt',
+      json: './coverage/coverage.json',
+      html: './coverage/html'
+    },
 
-    if (process.env.TRAVIS) {
-        configuration.browsers = ['Firefox'];
-        configuration.reporters.push('coveralls');
-    }
+    webpack: {
+      ...WEBPACK_CONFIGURATION,
+      mode: 'none'
+    },
 
-    config.set(configuration);
+    webpackMiddleware: {
+      stats: 'errors-only'
+    },
+
+    colors: true,
+    logLevel: config.LOG_INFO,
+    autoWatch: true,
+    browsers: ['ChromeHeadless'],
+    singleRun: false,
+    concurrency: Infinity
+  };
+
+  if (process.env.TRAVIS) {
+    configuration.reporters.push('coveralls');
+  }
+
+  config.set(configuration);
 };

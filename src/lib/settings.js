@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Default settings of the plugin
  * @type {HighlighterSettings}

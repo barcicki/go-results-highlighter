@@ -1,57 +1,53 @@
 doctype html
 html(lang="en")
+  - var base = ''
+  - var active = 'home'
+  - var description = 'A JavaScript library that makes reading Go results super easy';
 
-    - var base = ''
-    - var active = 'home'
-    - var description = 'A JavaScript library that makes reading Go results super easy';
-    block variables
+  block variables
 
-    mixin link(anchor, href, icon, activeName)
-        li(class = active === activeName ? 'active' : '')
-            a(href=href)
-                span.octicon(class = 'octicon-' + icon)
-                span= anchor
-    
-    head
-        block title
-        meta(charset="utf-8")
+  mixin link(anchor, href, icon, activeName)
+    li(class = active === activeName ? 'active' : '')
+      a(href=href)
+        span!= octicons[icon].toSVG()
+        span= anchor
 
-        meta(name="viewport", content="width=device-width")
-        meta(name="description", content=description)
-        meta(name="keywords", content="go,baduk,weici,igo,results,standings,highlighter")
-        meta(name="author", content="Artur Barcicki")
-        meta(property="og:title", content="Go Results Highlighter")
-        meta(property="og:description", content=description)
+  head
+    block title
+    meta(charset="utf-8")
 
-        link(href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic", rel="stylesheet", type="text/css")
-        link(href=base + config.names.css.dest, rel="stylesheet", type="text/css")
-        link(href=base + "styles/styles.css", rel="stylesheet", type="text/css")
-        link(href=base + "components/octicons/build/font/octicons.css", rel="stylesheet", type="text/css")
-        link(href=base + "components/highlightjs/styles/github.css", rel="stylesheet", type="text/css")
-        script(src=base + "components/highlightjs/highlight.pack.min.js")
-        script(src=base + "components/jquery/dist/jquery.min.js")
-        script(src=base + config.names.js.dest)
-        script(src=base + "scripts/main.js")
-        block head
-    
-    body
-        header
-            .content
-                h1 Go Results Highlighter
-                    small #{config.version}
-                h2 by Artur Barcicki
+    meta(name="viewport", content="width=device-width")
+    meta(name="description", content=description)
+    meta(name="keywords", content="go,baduk,weici,igo,results,standings,highlighter")
+    meta(name="author", content="Artur Barcicki")
+    meta(property="og:title", content="Go Results Highlighter")
+    meta(property="og:description", content=description)
 
-        nav
-            .content
-                ul
-                    +link("Home", base + "", "home", "home")
-                    +link("Documentation", base + "docs", "file-text", "docs")
-                    +link("Examples", base + "examples/binding.html", "eye", "examples")
+    link(href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic", rel="stylesheet", type="text/css")
+    script(src="https://code.jquery.com/jquery-3.5.0.min.js")
+    link(href=base + siteCss, rel="stylesheet", type="text/css")
+    link(href=base + libCss, rel="stylesheet", type="text/css")
+    script(src=base + siteJs)
+    script(src=base + libJs)
+    block head
 
-                ul.github
-                    +link("View on GitHub", "https://github.com/barcicki/go-results-highlighter", "mark-github")
-                    +link("Download .zip", "https://github.com/barcicki/go-results-highlighter/zipball/master", "cloud-download")
-                    +link("Download .tar.gz", "https://github.com/barcicki/go-results-highlighter/tarball/master", "cloud-download")
+  body
+    header
+      .content
+        h1 Go Results Highlighter
+          small #{pkg.version}
+        h2 by Artur Barcicki
 
+    nav
+      .content
+        ul
+          +link("Home", base + "", "home", "home")
+          +link("Documentation", base + "docs", "file", "docs")
+          +link("Examples", base + "examples/binding.html", "eye", "examples")
 
-        block content
+        ul.github
+          +link("View on GitHub", "https://github.com/barcicki/go-results-highlighter", "mark-github")
+          +link("Download .zip", "https://github.com/barcicki/go-results-highlighter/zipball/master", "cloud-download")
+          +link("Download .tar.gz", "https://github.com/barcicki/go-results-highlighter/tarball/master", "cloud-download")
+
+    block content

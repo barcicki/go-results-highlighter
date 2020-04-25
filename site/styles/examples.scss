@@ -1,0 +1,23 @@
+@import 'media';
+
+.examples {
+  margin-top: 10px;
+
+  li {
+    display: inline-block;
+    @include when-small {
+      display: block;
+    }
+
+    a {
+      display: block;
+      padding: 5px 10px;
+      color: #282C1B;
+
+      &:hover {
+        background-color: #879759;
+        color: #ffffff;
+      }
+    }
+  }
+}

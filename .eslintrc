@@ -1,6 +1,7 @@
 {
   "parserOptions": {
     "sourceType": "module",
+    "ecmaVersion": 10,
     "ecmaFeatures": {
       "forOf": false
     }
@@ -9,8 +10,7 @@
     "browser": true,
     "jasmine": true,
     "jquery": true,
-    "node": true,
-    "es6": true
+    "node": true
   },
   "rules": {
     "quotes": [2, "single"],

@@ -1,0 +1,11 @@
+@mixin when-small {
+  @media screen and (max-width: 500px) {
+    @content;
+  }
+}
+
+@mixin when-medium {
+  @media screen and (max-width: 850px) {
+    @content;
+  }
+}

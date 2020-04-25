@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Transforms array-like objects (such as arguments or node lists) into an array
  * @param {*} arrayLike
@@ -13,7 +11,7 @@ export function asArray(arrayLike) {
  * Returns new object containing keys only from defaultObj but values are taken
  * from if exist (starting from the last object provided)
  * @param {object} defaultObj
- * @param {Array.<object>} ...objects
+ * @param {Array.<object>} objects
  * @returns {object}
  */
 export function defaults(defaultObj, ...objects) {

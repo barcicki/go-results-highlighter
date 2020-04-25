@@ -1,5 +1,3 @@
-'use strict';
-
 import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toPrefixedClasses, readTableSettingsFromDOM } from './settings';
 import parse from './parser';
 import convert from './raw2table';

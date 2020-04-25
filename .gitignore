@@ -7,12 +7,5 @@ node_modules/
 # coverage report
 coverage
 
-# build dir except for library builts
-.publish
-dist/*
-!dist/go-results-highlighter.js
-!dist/go-results-highlighter.bookmark.js
-!dist/go-results-highlighter.js.map
-!dist/go-results-highlighter.min.js
-!dist/go-results-highlighter.css
-!dist/go-results-highlighter.min.css
+# build dir
+dist
