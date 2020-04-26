@@ -222,6 +222,7 @@ export default function parse(table, config) {
         });
 
         player.tournamentPlace = tournamentPlacement;
+        player.index = index;
         player.opponents.sort((a, b) => a > b ? 1 : -1);
 
         results[gridPlacement] = player;

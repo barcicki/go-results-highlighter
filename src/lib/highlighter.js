@@ -245,16 +245,14 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            if (!this.isRearranged || target.properNextSibling) {
+            if (!this.isRearranged || (this.map[player] && this.map[player].rearranged)) {
                 rearrange = true;
 
             } else if (!this.settings.hovering) {
                 player = null;
             }
 
-            if (rearrange) {
-                lastTargetPos = target.getBoundingClientRect().top;
-            }
+            lastTargetPos = target.getBoundingClientRect().top;
 
             this.highlight({ player, games, rearrange });
 
@@ -380,17 +378,15 @@ function fetchInformationAboutTarget(target) {
  * @param {Array.<object>} players - list of mapping data for all rows
  */
 function restoreNaturalOrder(players) {
-    players
-        .filter((player) => player.row.properNextSibling)
-        .reverse()
-        .forEach((player) => {
-            if (player.row.properNextSibling === -1) {
-                player.row.parentNode.appendChild(player.row);
-            } else {
-                player.row.parentNode.insertBefore(player.row, player.row.properNextSibling);
-            }
-            player.row.properNextSibling = null;
-        });
+    players.forEach((player) => {
+        const nodeAtIndex = player.row.parentNode.children[player.index];
+
+        if (nodeAtIndex !== player.row) {
+            player.row.parentNode.insertBefore(player.row, nodeAtIndex);
+        }
+
+        player.rearranged = false;
+    });
 }
 
 /**
@@ -402,16 +398,18 @@ function rearrangeOrder(player, opponents) {
     const parent = player.row.parentNode;
     let after = player.row.nextElementSibling;
 
-    opponents.forEach((opponent) => {
-        opponent.row.properNextSibling = opponent.row.nextElementSibling || -1;
+    for (let i = 0; i < opponents.length; i++) {
+        const opponent = opponents[i];
 
-        if (opponent.tournamentPlace < player.tournamentPlace) {
+        if (opponent.index < player.index) {
             parent.insertBefore(opponent.row, player.row);
         } else {
             parent.insertBefore(opponent.row, after);
             after = opponent.row.nextElementSibling;
         }
-    });
+
+        opponent.rearranged = true;
+    }
 }
 
 GoResultsHighlighter.DEFAULT_SETTINGS = DEFAULT_SETTINGS;
