@@ -8,26 +8,23 @@ function writeGridPlacement(row, placement) {
 /**
  * Returns array of columns (array of cell values in the column) from given list of rows.
  *
- * @param {Array.<Element|HTMLElement>} rows
- * @param {string} cellSelector
+ * @param {Array.<CachedRow>} cachedTable
  * @returns {Array.<Array.<string>>}
  */
-function getColumnsFromRows(rows, cellSelector) {
-    return rows.reduce((columns, row) => {
-        asArray(row.querySelectorAll(cellSelector))
-            .forEach((cell, index) => {
-                let column = columns[index];
+function getColumnsFromRows(cachedTable) {
+    const columns = [];
 
-                if (!column) {
-                    column = [];
-                    columns[index] = column;
-                }
+    for (let i = 0; i < cachedTable.length; i++) {
+        for (let j = 0; j < cachedTable[i].cells.length; j++) {
+            if (!columns[j]) {
+                columns[j] = [];
+            }
 
-                column.push(cell.textContent);
-            });
+            columns[j][i] = cachedTable[i].cells[j].textContent;
+        }
+    }
 
-        return columns;
-    }, []);
+    return columns;
 }
 
 /**
@@ -62,13 +59,12 @@ function checkItemsForResults(items, resultsMap) {
 /**
  * Returns the array of indexes of columns that look like keeping Go results.
  *
- * @param {Array.<Element|HTMLElement>} rows
- * @param {string} cellSelector
+ * @param {Array.<CachedRow>} cachedTable
  * @param {Array.<ResultMapping>} resultsMap
  * @returns {Array.<number>}
  */
-function getIndexesOfColumnsWithResultsFromRows(rows, cellSelector, resultsMap) {
-    return getColumnsFromRows(rows, cellSelector)
+function getIndexesOfColumnsWithResultsFromRows(cachedTable, resultsMap) {
+    return getColumnsFromRows(cachedTable)
         .reduce((indexes, column, index) => {
             if (checkItemsForResults(column, resultsMap)) {
                 indexes.push(index);
@@ -91,12 +87,12 @@ function createCellFromColumnsFilter(columnsIndexes) {
 /**
  * Returns the array of indexes of columns with Go results based on settings.
  *
- * @param {Array.<Element|HTMLElement>} rows
+ * @param {Array.<CachedRow>} cachedTable
  * @param {HighlighterSettings} settings
  * @param {Array.<ResultMapping>} resultsMap
  * @returns {function(*, *=): boolean}
  */
-function getFilterForColumnsWithResults(rows, settings, resultsMap) {
+function getFilterForColumnsWithResults(cachedTable, settings, resultsMap) {
     if (typeof settings.roundsColumns === 'string') {
         const  indexes = settings.roundsColumns.split(',').map(Number);
 
@@ -108,10 +104,34 @@ function getFilterForColumnsWithResults(rows, settings, resultsMap) {
         return () => true;
     }
 
-    const  indexes = getIndexesOfColumnsWithResultsFromRows(rows, settings.cellTags, resultsMap);
+    const  indexes = getIndexesOfColumnsWithResultsFromRows(cachedTable, resultsMap);
 
     return createCellFromColumnsFilter(indexes);
 }
+
+/**
+ * Creates cached table
+ * @param {HTMLElement} table
+ * @param {HighlighterSettings} settings
+ * @returns {Array.<CachedRow>}
+ */
+function cacheTable(table, settings) {
+    const rows = table.querySelectorAll(settings.rowTags);
+    const result = new Array(rows.length);
+
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const cells = row.querySelectorAll(settings.cellTags);
+
+        result[i] = {
+            row,
+            cells: asArray(cells)
+        };
+    }
+
+    return result;
+}
+
 
 /**
  * Traverses provided table and creates results map.
@@ -122,65 +142,24 @@ function getFilterForColumnsWithResults(rows, settings, resultsMap) {
  */
 export default function parse(table, config) {
     const settings = defaults(DEFAULT_SETTINGS, config);
-    const rows = asArray(table.querySelectorAll(settings.rowTags));
     const resultsMap = toResultsWithRegExp(settings.results);
     const resultsMapCount = resultsMap.length;
-    const columnsWithResultsFilter = getFilterForColumnsWithResults(rows, settings, resultsMap);
+
+    const cachedTable = cacheTable(table, settings);
+    const columnsWithResultsFilter = getFilterForColumnsWithResults(cachedTable, settings, resultsMap);
+
     const results = {};
-
-    function parseGames(player, cells) {
-        cells.forEach((cell) => {
-            let opponentPlace;
-            let resultCls;
-
-            if (cell.hasAttribute(DOM_ATTRIBUTES.GAME_RESULT) && cell.hasAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT)) {
-                opponentPlace = Number(cell.getAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT));
-                resultCls = cell.getAttribute(DOM_ATTRIBUTES.GAME_RESULT);
-
-            } else {
-                for (let i = 0; i < resultsMapCount; i++) {
-                    let match = cell.textContent.match(resultsMap[i].regexp);
-
-                    if (!match) {
-                        continue;
-                    }
-
-                    opponentPlace = Number(match[1]);
-                    resultCls = resultsMap[i].cls;
-
-                    // opponent row doesn't exist
-                    if (opponentPlace <= 0 || (!settings.ignoreOutOfBoundsRows && opponentPlace > rows.length)) {
-                        return;
-                    }
-
-                    cell.setAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT, opponentPlace);
-                    cell.setAttribute(DOM_ATTRIBUTES.GAME_RESULT, resultsMap[i].cls);
-                }
-
-                if (!opponentPlace) {
-                    return;
-                }
-            }
-
-            player.games[opponentPlace] = {
-                cell,
-                cls: resultCls
-            };
-
-            player.opponents.push(opponentPlace);
-        });
-    }
-
     let lastTournamentPlacement;
     let lastGridPlacement;
 
-    rows.forEach((row, index) => {
+    cachedTable.forEach(parseRow);
+
+    return results;
+
+    function parseRow({ row, cells }, index) {
         if (index < settings.startingRow) {
             return;
         }
-
-        const cells = asArray(row.querySelectorAll(settings.cellTags));
-        const cellsWithResults = cells.filter(columnsWithResultsFilter);
 
         // assign default place
         let gridPlacement = -1;
@@ -232,11 +211,15 @@ export default function parse(table, config) {
             writeGridPlacement(row, gridPlacement);
         }
 
-        if (gridPlacement == -1) {
+        if (Number(gridPlacement) === -1) {
             return;
         }
 
-        parseGames(player, cellsWithResults);
+        cells.forEach((cell, index) => {
+             if (columnsWithResultsFilter(cell, index)) {
+                 parseGame(player, cell);
+             }
+        });
 
         player.tournamentPlace = tournamentPlacement;
         player.opponents.sort((a, b) => a > b ? 1 : -1);
@@ -245,7 +228,52 @@ export default function parse(table, config) {
 
         lastTournamentPlacement = tournamentPlacement;
         lastGridPlacement = gridPlacement;
-    });
+    }
 
-    return results;
+    function parseGame(player, cell) {
+        let opponentPlace;
+        let resultCls;
+
+        if (cell.hasAttribute(DOM_ATTRIBUTES.GAME_RESULT) && cell.hasAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT)) {
+            opponentPlace = Number(cell.getAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT));
+            resultCls = cell.getAttribute(DOM_ATTRIBUTES.GAME_RESULT);
+
+        } else {
+            for (let i = 0; i < resultsMapCount; i++) {
+                let match = cell.textContent.match(resultsMap[i].regexp);
+
+                if (!match) {
+                    continue;
+                }
+
+                opponentPlace = Number(match[1]);
+                resultCls = resultsMap[i].cls;
+
+                // opponent row doesn't exist
+                if (opponentPlace <= 0 || (!settings.ignoreOutOfBoundsRows && opponentPlace > cachedTable.length)) {
+                    return;
+                }
+
+                cell.setAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT, opponentPlace);
+                cell.setAttribute(DOM_ATTRIBUTES.GAME_RESULT, resultsMap[i].cls);
+            }
+
+            if (!opponentPlace) {
+                return;
+            }
+        }
+
+        player.games[opponentPlace] = {
+            cell,
+            cls: resultCls
+        };
+
+        player.opponents.push(opponentPlace);
+    }
 }
+
+/**
+ * @typedef {object} CachedRow
+ * @property {HTMLElement} row - reference to row node
+ * @property {Array.<HTMLElement>} cells - list of references to cell nodes
+ */
