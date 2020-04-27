@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Go Results Highlighter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="A JavaScript library that makes reading Go results super easy">
+    <meta name="keywords" content="go,baduk,weici,igo,results,standings,highlighter">
+    <meta name="author" content="Artur Barcicki">
+    <meta property="og:title" content="Go Results Highlighter">
+    <meta property="og:description" content="A JavaScript library that makes reading Go results super easy">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+    <link href="site.css" rel="stylesheet" type="text/css">
+    <link href="lib.css" rel="stylesheet" type="text/css">
+    <script src="site.js"></script>
+    <script src="lib.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="content">
+        <h1>Go Results Highlighter<small>2.0.0</small></h1>
+        <h2>by Artur Barcicki</h2>
+      </div>
+    </header>
+    <nav>
+      <div class="content">
+        <ul>
+            <li class="active"><a href=""><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-home" aria-hidden="true"><path fill-rule="evenodd" d="M16 9l-3-3V2h-2v2L8 1 0 9h2l1 5c0 .55.45 1 1 1h8c.55 0 1-.45 1-1l1-5h2zm-4 5H9v-4H7v4H4L2.81 7.69 8 2.5l5.19 5.19L12 14z"></path></svg></span><span>Home</span></a></li>
+            <li><a href="docs"><span><svg version="1.1" width="12" height="16" viewBox="0 0 12 16" class="octicon octicon-file" aria-hidden="true"><path fill-rule="evenodd" d="M6 5H2V4h4v1zM2 8h7V7H2v1zm0 2h7V9H2v1zm0 2h7v-1H2v1zm10-7.5V14c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V2c0-.55.45-1 1-1h7.5L12 4.5zM11 5L8 2H1v12h10V5z"></path></svg></span><span>Documentation</span></a></li>
+            <li><a href="examples/binding.html"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-eye" aria-hidden="true"><path fill-rule="evenodd" d="M8.06 2C3 2 0 8 0 8s3 6 8.06 6C13 14 16 8 16 8s-3-6-7.94-6zM8 12c-2.2 0-4-1.78-4-4 0-2.2 1.8-4 4-4 2.22 0 4 1.8 4 4 0 2.22-1.78 4-4 4zm2-4c0 1.11-.89 2-2 2-1.11 0-2-.89-2-2 0-1.11.89-2 2-2 1.11 0 2 .89 2 2z"></path></svg></span><span>Examples</span></a></li>
+        </ul>
+        <ul class="github">
+            <li><a href="https://github.com/barcicki/go-results-highlighter"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></span><span>View on GitHub</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-cloud-download" aria-hidden="true"><path fill-rule="evenodd" d="M9 12h2l-3 3-3-3h2V7h2v5zm3-8c0-.44-.91-3-4.5-3C5.08 1 3 2.92 3 5 1.02 5 0 6.52 0 8c0 1.53 1 3 3 3h3V9.7H3C1.38 9.7 1.3 8.28 1.3 8c0-.17.05-1.7 1.7-1.7h1.3V5c0-1.39 1.56-2.7 3.2-2.7 2.55 0 3.13 1.55 3.2 1.8v1.2H12c.81 0 2.7.22 2.7 2.2 0 2.09-2.25 2.2-2.7 2.2h-2V11h2c2.08 0 4-1.16 4-3.5C16 5.06 14.08 4 12 4z"></path></svg></span><span>Download .zip</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-cloud-download" aria-hidden="true"><path fill-rule="evenodd" d="M9 12h2l-3 3-3-3h2V7h2v5zm3-8c0-.44-.91-3-4.5-3C5.08 1 3 2.92 3 5 1.02 5 0 6.52 0 8c0 1.53 1 3 3 3h3V9.7H3C1.38 9.7 1.3 8.28 1.3 8c0-.17.05-1.7 1.7-1.7h1.3V5c0-1.39 1.56-2.7 3.2-2.7 2.55 0 3.13 1.55 3.2 1.8v1.2H12c.81 0 2.7.22 2.7 2.2 0 2.09-2.25 2.2-2.7 2.2h-2V11h2c2.08 0 4-1.16 4-3.5C16 5.06 14.08 4 12 4z"></path></svg></span><span>Download .tar.gz</span></a></li>
+        </ul>
+      </div>
+    </nav>
+    <article class="features">
+      <div class="content">
+        <p class="badges"><a href="https://badge.fury.io/js/go-results-highlighter"><img src="https://badge.fury.io/js/go-results-highlighter.svg" alt="npm version"></a><a href="https://travis-ci.org/barcicki/go-results-highlighter"><img src="https://travis-ci.org/barcicki/go-results-highlighter.svg" alt="Build Status"></a><a href="https://coveralls.io/github/barcicki/go-results-highlighter?branch=master"><img src="https://coveralls.io/repos/barcicki/go-results-highlighter/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a><a href="https://david-dm.org/barcicki/go-results-highlighter"><img src="https://david-dm.org/barcicki/go-results-highlighter.svg" alt="Dependency Status"></a><a href="https://david-dm.org/barcicki/go-results-highlighter#info=devDependencies"><img src="https://david-dm.org/barcicki/go-results-highlighter/dev-status.svg" alt="devDependency Status"></a></p>
+        <p><span><svg version="1.1" width="13.5" height="18" viewBox="0 0 12 16" class="octicon octicon-check" aria-hidden="true"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"></path></svg></span><span>Makes reading Go results super easy - just move the mouse over the player to see the opponents</span></p>
+        <p><span><svg version="1.1" width="13.5" height="18" viewBox="0 0 12 16" class="octicon octicon-check" aria-hidden="true"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"></path></svg></span><span>Click on the player to see compacted results</span></p>
+        <p><span><svg version="1.1" width="13.5" height="18" viewBox="0 0 12 16" class="octicon octicon-check" aria-hidden="true"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"></path></svg></span><span>Supports HTML and raw outputs from Macmahon and OpenGotha</span></p>
+        <p><span><svg version="1.1" width="13.5" height="18" viewBox="0 0 12 16" class="octicon octicon-check" aria-hidden="true"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"></path></svg></span><span>Mobile friendly</span></p>
+        <p><span><svg version="1.1" width="13.5" height="18" viewBox="0 0 12 16" class="octicon octicon-check" aria-hidden="true"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"></path></svg></span><span>Fully customizable</span></p>
+        <p><span><svg version="1.1" width="13.5" height="18" viewBox="0 0 12 16" class="octicon octicon-check" aria-hidden="true"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"></path></svg></span><span>Supports most modern browsers (and doesn't crash in old ones)</span></p>
+        <p><span><svg version="1.1" width="13.5" height="18" viewBox="0 0 12 16" class="octicon octicon-check" aria-hidden="true"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"></path></svg></span><span>Fully tested</span></p>
+        <p><span><svg version="1.1" width="13.5" height="18" viewBox="0 0 12 16" class="octicon octicon-check" aria-hidden="true"><path fill-rule="evenodd" d="M12 5l-8 8-4-4 1.5-1.5L4 10l6.5-6.5L12 5z"></path></svg></span><span>NEW Bookmarklet! Use highlighter before web admins add it to their sites.</span></p>
+      </div>
+    </article>
+    <article class="home-results">
+      <div class="content">
+        <p class="bookmark"><a href="javascript:!function(e){var t={};function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){&quot;undefined&quot;!=typeof Symbol&amp;&amp;Symbol.toStringTag&amp;&amp;Object.defineProperty(e,Symbol.toStringTag,{value:&quot;Module&quot;}),Object.defineProperty(e,&quot;__esModule&quot;,{value:!0})},n.t=function(e,t){if(1&amp;t&amp;&amp;(e=n(e)),8&amp;t)return e;if(4&amp;t&amp;&amp;&quot;object&quot;==typeof e&amp;&amp;e&amp;&amp;e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,&quot;default&quot;,{enumerable:!0,value:e}),2&amp;t&amp;&amp;&quot;string&quot;!=typeof e)for(var o in e)n.d(r,o,function(t){return e[t]}.bind(null,o));return r},n.n=function(e){var t=e&amp;&amp;e.__esModule?function(){return e.default}:function(){return e};return n.d(t,&quot;a&quot;,t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p=&quot;&quot;,n(n.s=4)}([function(e,t,n){var r=n(1),o=n(2);&quot;string&quot;==typeof(o=o.__esModule?o.default:o)&amp;&amp;(o=[[e.i,o,&quot;&quot;]]);var i={insert:&quot;head&quot;,singleton:!1};r(o,i);e.exports=o.locals||{}},function(e,t,n){&quot;use strict&quot;;var r,o=function(){return void 0===r&amp;&amp;(r=Boolean(window&amp;&amp;document&amp;&amp;document.all&amp;&amp;!window.atob)),r},i=function(){var e={};return function(t){if(void 0===e[t]){var n=document.querySelector(t);if(window.HTMLIFrameElement&amp;&amp;n instanceof window.HTMLIFrameElement)try{n=n.contentDocument.head}catch(e){n=null}e[t]=n}return e[t]}}(),s=[];function a(e){for(var t=-1,n=0;n&lt;s.length;n++)if(s[n].identifier===e){t=n;break}return t}function l(e,t){for(var n={},r=[],o=0;o&lt;e.length;o++){var i=e[o],l=t.base?i[0]+t.base:i[0],u=n[l]||0,c=&quot;&quot;.concat(l,&quot; &quot;).concat(u);n[l]=u+1;var g=a(c),f={css:i[1],media:i[2],sourceMap:i[3]};-1!==g?(s[g].references++,s[g].updater(f)):s.push({identifier:c,updater:m(f,t),references:1}),r.push(c)}return r}function u(e){var t=document.createElement(&quot;style&quot;),r=e.attributes||{};if(void 0===r.nonce){var o=n.nc;o&amp;&amp;(r.nonce=o)}if(Object.keys(r).forEach((function(e){t.setAttribute(e,r[e])})),&quot;function&quot;==typeof e.insert)e.insert(t);else{var s=i(e.insert||&quot;head&quot;);if(!s)throw new Error(&quot;Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.&quot;);s.appendChild(t)}return t}var c,g=(c=[],function(e,t){return c[e]=t,c.filter(Boolean).join(&quot;\n&quot;)});function f(e,t,n,r){var o=n?&quot;&quot;:r.media?&quot;@media &quot;.concat(r.media,&quot; {&quot;).concat(r.css,&quot;}&quot;):r.css;if(e.styleSheet)e.styleSheet.cssText=g(t,o);else{var i=document.createTextNode(o),s=e.childNodes;s[t]&amp;&amp;e.removeChild(s[t]),s.length?e.insertBefore(i,s[t]):e.appendChild(i)}}function h(e,t,n){var r=n.css,o=n.media,i=n.sourceMap;if(o?e.setAttribute(&quot;media&quot;,o):e.removeAttribute(&quot;media&quot;),i&amp;&amp;btoa&amp;&amp;(r+=&quot;\n/*# sourceMappingURL=data:application/json;base64,&quot;.concat(btoa(unescape(encodeURIComponent(JSON.stringify(i)))),&quot; */&quot;)),e.styleSheet)e.styleSheet.cssText=r;else{for(;e.firstChild;)e.removeChild(e.firstChild);e.appendChild(document.createTextNode(r))}}var d=null,p=0;function m(e,t){var n,r,o;if(t.singleton){var i=p++;n=d||(d=u(t)),r=f.bind(null,n,i,!1),o=f.bind(null,n,i,!0)}else n=u(t),r=h.bind(null,n,t),o=function(){!function(e){if(null===e.parentNode)return!1;e.parentNode.removeChild(e)}(n)};return r(e),function(t){if(t){if(t.css===e.css&amp;&amp;t.media===e.media&amp;&amp;t.sourceMap===e.sourceMap)return;r(e=t)}else o()}}e.exports=function(e,t){(t=t||{}).singleton||&quot;boolean&quot;==typeof t.singleton||(t.singleton=o());var n=l(e=e||[],t);return function(e){if(e=e||[],&quot;[object Array]&quot;===Object.prototype.toString.call(e)){for(var r=0;r&lt;n.length;r++){var o=a(n[r]);s[o].references--}for(var i=l(e,t),u=0;u&lt;n.length;u++){var c=a(n[u]);0===s[c].references&amp;&amp;(s[c].updater(),s.splice(c,1))}n=i}}}},function(e,t,n){(t=n(3)(!1)).push([e.i,&quot;.go-results-rearranged{color:#dddddd;cursor:pointer}.go-results-current{background-color:#d2d2d2;color:#000000;cursor:pointer}.go-results-current .go-results-game{background-color:#a7a7a7}.go-results-won{background-color:#799B29;color:#000000}.go-results-won .go-results-game{background-color:#5A6A2C;color:#ffffff}.go-results-lost{background-color:#D97962;color:#000000}.go-results-lost .go-results-game{background-color:#A5422B;color:#ffffff}.go-results-jigo{background-color:#D7C3D1;color:#000000}.go-results-jigo .go-results-game{background-color:#9E7593}.go-results-unresolved{background-color:#CBDCE5;color:#000000}.go-results-unresolved .go-results-game{background-color:#7D9CAD}\n&quot;,&quot;&quot;]),e.exports=t},function(e,t,n){&quot;use strict&quot;;e.exports=function(e){var t=[];return t.toString=function(){return this.map((function(t){var n=function(e,t){var n=e[1]||&quot;&quot;,r=e[3];if(!r)return n;if(t&amp;&amp;&quot;function&quot;==typeof btoa){var o=(s=r,a=btoa(unescape(encodeURIComponent(JSON.stringify(s)))),l=&quot;sourceMappingURL=data:application/json;charset=utf-8;base64,&quot;.concat(a),&quot;/*# &quot;.concat(l,&quot; */&quot;)),i=r.sources.map((function(e){return&quot;/*# sourceURL=&quot;.concat(r.sourceRoot||&quot;&quot;).concat(e,&quot; */&quot;)}));return[n].concat(i).concat([o]).join(&quot;\n&quot;)}var s,a,l;return[n].join(&quot;\n&quot;)}(t,e);return t[2]?&quot;@media &quot;.concat(t[2],&quot; {&quot;).concat(n,&quot;}&quot;):n})).join(&quot;&quot;)},t.i=function(e,n,r){&quot;string&quot;==typeof e&amp;&amp;(e=[[null,e,&quot;&quot;]]);var o={};if(r)for(var i=0;i&lt;this.length;i++){var s=this[i][0];null!=s&amp;&amp;(o[s]=!0)}for(var a=0;a&lt;e.length;a++){var l=[].concat(e[a]);r&amp;&amp;o[l[0]]||(n&amp;&amp;(l[2]?l[2]=&quot;&quot;.concat(n,&quot; and &quot;).concat(l[2]):l[2]=n),t.push(l))}},t}},function(e,t,n){&quot;use strict&quot;;n.r(t);var r={prefixCls:&quot;go-results-&quot;,rearrangedCls:&quot;rearranged&quot;,tableCls:&quot;table&quot;,gameCls:&quot;game&quot;,currentCls:&quot;current&quot;,results:{won:&quot;([0-9]+)\\+&quot;,lost:&quot;([0-9]+)\\-&quot;,jigo:&quot;([0-9]+)=&quot;,unresolved:&quot;([0-9]+)\\?&quot;},startingRow:0,placeColumn:0,roundsColumns:null,rowTags:&quot;tr&quot;,cellTags:&quot;td&quot;,ignoreOutOfBoundsRows:!1,checkColumnsForResults:!0,cellSeparator:&quot;[\t ]+&quot;,joinNames:!0,hovering:!0,rearranging:!0},o=[&quot;rearrangedCls&quot;,&quot;tableCls&quot;,&quot;gameCls&quot;,&quot;currentCls&quot;],i=&quot;data-go-results&quot;,s=&quot;data-go-starting-row&quot;,a=&quot;data-go-place-column&quot;,l=&quot;data-go-rounds-columns&quot;,u=&quot;data-go-rearranging&quot;,c=&quot;data-go-hovering&quot;,g=&quot;data-go-place&quot;,f=&quot;data-go-opponent&quot;,h=&quot;data-go-opponents&quot;,d=&quot;data-go-result&quot;;function p(e){var t=[];for(var n in e)e.hasOwnProperty(n)&amp;&amp;t.push({cls:n,regexp:new RegExp(e[n])});return t}function m(e){return(m=&quot;function&quot;==typeof Symbol&amp;&amp;&quot;symbol&quot;==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&amp;&amp;&quot;function&quot;==typeof Symbol&amp;&amp;e.constructor===Symbol&amp;&amp;e!==Symbol.prototype?&quot;symbol&quot;:typeof e})(e)}function v(e){return Array.prototype.slice.call(e)}function b(e){for(var t=arguments.length,n=new Array(t&gt;1?t-1:0),r=1;r&lt;t;r++)n[r-1]=arguments[r];var o=n.filter((function(e){return&quot;object&quot;===m(e)})).reverse(),i=o.length,s={};e:for(var a in e){for(var l=0;l&lt;i;l++)if(o[l].hasOwnProperty(a)){s[a]=o[l][a];continue e}s[a]=e[a]}return s}function y(e,t){e.setAttribute(g,t)}function C(e){return function(t,n){return-1!==e.indexOf(n)}}function w(e,t){var n,o,i=b(r,t),s=p(i.results),a=s.length,l=function(e,t){for(var n=e.querySelectorAll(t.rowTags),r=new Array(n.length),o=0;o&lt;n.length;o++){var i=n[o],s=i.querySelectorAll(t.cellTags);r[o]={row:i,cells:v(s)}}return r}(e,i),u=function(e,t,n){return&quot;string&quot;==typeof t.roundsColumns?C(t.roundsColumns.split(&quot;,&quot;).map(Number)):t.checkColumnsForResults?C(function(e,t){return function(e){for(var t=[],n=0;n&lt;e.length;n++)for(var r=0;r&lt;e[n].cells.length;r++)t[r]||(t[r]=[]),t[r][n]=e[n].cells[r].textContent;return t}(e).reduce((function(e,n,r){return function(e,t){var n=e.length;return function(e,t){return e.filter((function(e){return t.some((function(t){return e.match(t.regexp)}))}))}(e,t).length/n&gt;=.4}(n,t)&amp;&amp;e.push(r),e}),[])}(e,n)):function(){return!0}}(l,i,s),c={};return l.forEach((function(e,t){var r=e.row,h=e.cells;if(t&lt;i.startingRow)return;var p=-1;if(!h.length||!h[i.placeColumn])return void y(r,p);var m=parseInt(h[i.placeColumn].textContent,10),v={tournamentPlace:-1,row:r,games:{},opponents:[]};if(r.hasAttribute(g))p=Number(r.getAttribute(g));else{if(o)p=o+1;else{if(isNaN(m))return void y(r,p);p=m||1}m?m&lt;=n&amp;&amp;(m=n):m=n||1,y(r,p)}if(-1===Number(p))return;h.forEach((function(e,t){u(e,t)&amp;&amp;function(e,t){var n,r;if(t.hasAttribute(d)&amp;&amp;t.hasAttribute(f))n=Number(t.getAttribute(f)),r=t.getAttribute(d);else{for(var o=0;o&lt;a;o++){var u=t.textContent.match(s[o].regexp);if(u){if(n=Number(u[1]),r=s[o].cls,n&lt;=0||!i.ignoreOutOfBoundsRows&amp;&amp;n&gt;l.length)return;t.setAttribute(f,n),t.setAttribute(d,s[o].cls)}}if(!n)return}e.games[n]={cell:t,cls:r},e.opponents.push(n)}(v,e)})),v.tournamentPlace=m,v.index=t,v.opponents.sort((function(e,t){return e&gt;t?1:-1})),c[p]=v,n=m,o=p})),c}function A(e,t){for(var n=0;n&lt;t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,&quot;value&quot;in r&amp;&amp;(r.writable=!0),Object.defineProperty(e,r.key,r)}}var x=function(){function e(t,n){if(function(e,t){if(!(e instanceof t))throw new TypeError(&quot;Cannot call a class as a function&quot;)}(this,e),this.settings=b(r,function(e){var t={};return e.hasAttribute(a)&amp;&amp;(t.placeColumn=Number(e.getAttribute(a))),e.hasAttribute(s)&amp;&amp;(t.startingRow=Number(e.getAttribute(s))),e.hasAttribute(l)&amp;&amp;(t.roundsColumns=e.getAttribute(l)),e.hasAttribute(u)&amp;&amp;(t.rearranging=&quot;false&quot;!==e.getAttribute(u)),e.hasAttribute(c)&amp;&amp;(t.hovering=&quot;false&quot;!==e.getAttribute(c)),t}(t),n),t instanceof HTMLPreElement){var o=function(e,t){var n=document.createElement(&quot;table&quot;);if(!e)return n;var o=b(r,t),s=e.replace(/&lt;br[^&gt;]*&gt;/gi,&quot;\n&quot;).replace(/&lt;\/?code[^&gt;]*&gt;/gi,&quot;&quot;).split(/\r\n|\n/);if(s.length&lt;=2&amp;&amp;!s[0]&amp;&amp;!s[1])return n;var a,l=p(o.results),u=l.length,c=s.map((function(e){return e.replace(/([0-9]+)\s(dan|kyu)/i,&quot;$1_$2&quot;).split(new RegExp(o.cellSeparator)).filter((function(e){return e.length&gt;0}))})).filter((function(e){return e.length&gt;0&amp;&amp;0!==e[0].indexOf(&quot;;&quot;)})),m=c.reduce((function(e,t){return Math.max(e,t.length)}),0),v=o.joinNames?-1:0,y=o.placeColumn+1,C=null;return&quot;string&quot;==typeof o.roundsColumns&amp;&amp;(C=o.roundsColumns.split(&quot;,&quot;).map(Number)),c.forEach((function(e,t){var r=document.createElement(&quot;tr&quot;),i=e.length;if(i){if(t&lt;o.startingRow||i&lt;m+v){var s=document.createElement(&quot;td&quot;);s.setAttribute(&quot;colspan&quot;,m+v),s.textContent=e.join(&quot; &quot;),r.setAttribute(g,-1),r.appendChild(s)}else{var c=parseInt(e[o.placeColumn],10);if(isNaN(c)&amp;&amp;!a)e.forEach((function(e){var t=document.createElement(&quot;td&quot;);t.textContent=e,r.setAttribute(g,-1),r.appendChild(t)}));else{r.setAttribute(g,a||c);var p=[];o.joinNames&amp;&amp;e.splice(y,2,&quot;&quot;.concat(e[y],&quot;  &quot;).concat(e[y+1])),e.forEach((function(e,t){var n=document.createElement(&quot;td&quot;);if(n.textContent=e.replace(/_/,&quot; &quot;),!C||C.indexOf(t)&gt;=0)for(var o=0;o&lt;u;o++){var i=e.match(l[o].regexp);if(i){var s=i[1];p.push(s),n.setAttribute(f,s),n.setAttribute(d,l[o].cls)}}r.appendChild(n)})),p.length&amp;&amp;r.setAttribute(h,p.join(&quot;,&quot;)),a?a+=1:a=2}}n.appendChild(r)}})),n.setAttribute(i,&quot;&quot;),n}(t.innerHTML,n),m=t.parentNode;m.insertBefore(o,t),m.removeChild(t),this.element=o}else this.element=t;this.element.classList&amp;&amp;(this.createPlayersMap(),this.bindEvents(),this.element.classList.add(this.settings.prefixCls+this.settings.tableCls),this.current=null,this.games=[],this.isRearranged=!1,this.isHighlighting=!1)}var t,n,m;return t=e,(n=[{key:&quot;createPlayersMap&quot;,value:function(){for(var e in this.map=w(this.element,this.settings),this.players=[],this.map)this.map.hasOwnProperty(e)&amp;&amp;this.players.push(this.map[e])}},{key:&quot;highlight&quot;,value:function(e){var t=this;e||(e={});var n=e.player,r=!0===e.rearrange,i=e.games,s=this.map[n],a=function(e){var t={};return o.forEach((function(n){t[n]=e.prefixCls+e[n]})),t}(this.settings);this.isRearranged&amp;&amp;this.players.forEach((function(e){var t=e.row.parentNode.children[e.index];t!==e.row&amp;&amp;e.row.parentNode.insertBefore(e.row,t),e.rearranged=!1})),s&amp;&amp;r?(function(e,t){for(var n=e.row.parentNode,r=e.row.nextElementSibling,o=0;o&lt;t.length;o++){var i=t[o];i.index&lt;e.index?n.insertBefore(i.row,e.row):(n.insertBefore(i.row,r),r=i.row.nextElementSibling),i.rearranged=!0}}(s,s.opponents.map((function(e){return t.map[e]}))),this.element.classList.add(a.rearrangedCls),this.isRearranged=!0):(this.element.classList.remove(a.rearrangedCls),this.isRearranged=!1);var l=v(this.element.querySelectorAll(&quot;.&quot;+a.gameCls)),u=this.element.querySelector(&quot;.&quot;+a.currentCls),c=u?u.getAttribute(g):null,f=c?this.map[c]:null,h=function(e,n){var r=n?&quot;add&quot;:&quot;remove&quot;;e.row.classList[r](a.currentCls),e.opponents.forEach((function(n){t.map[n].row.classList[r](t.settings.prefixCls+e.games[n].cls)}))};l.forEach((function(e){e.classList.remove(a.gameCls)})),f&amp;&amp;f!==s&amp;&amp;h(f,!1),s&amp;&amp;s!==f&amp;&amp;h(s,!0),this.games.length=0,s?(&quot;number&quot;==typeof i&amp;&amp;(i=[i]),i&amp;&amp;&quot;number&quot;==typeof i.length?i.forEach((function(e){var r=t.map[e],o=s.games[e];r&amp;&amp;o&amp;&amp;(o.cell.classList.add(a.gameCls),r.games[n].cell.classList.add(a.gameCls),t.games.push(e))})):this.isRearranged&amp;&amp;s.opponents.forEach((function(e){t.map[e].games[n].cell.classList.add(a.gameCls),t.games.push(e)})),this.current=n,this.isHighlighting=!0):(this.current=null,this.isHighlighting=!1)}},{key:&quot;configure&quot;,value:function(e){this.highlight(null),this.element.classList.remove(this.settings.prefixCls+this.settings.tableCls),this.settings=b(this.settings,e),this.createPlayersMap(),this.element.classList.add(this.settings.prefixCls+this.settings.tableCls)}},{key:&quot;bindEvents&quot;,value:function(){var e=this,t=!1;this.element.addEventListener(&quot;touchstart&quot;,(function(){t=!1})),this.element.addEventListener(&quot;touchmove&quot;,(function(){t=!0})),this.element.addEventListener(&quot;touchend&quot;,(function(n){if(!(t||!1===e.settings.rearranging&amp;&amp;!1===e.settings.hovering)){var r=R(n.target),o=r.target,i=r.player,s=r.games;if(i){var a,l=!1;e.current===i?(e.settings.rearranging&amp;&amp;e.settings.hovering||(i=null),l=!e.isRearranged):!e.isRearranged&amp;&amp;e.settings.hovering||(l=!0),l&amp;&amp;(a=o.getBoundingClientRect().top),e.highlight({player:i,games:s,rearrange:l}),a&amp;&amp;E(o,a),n.preventDefault()}}})),this.element.addEventListener(&quot;click&quot;,(function(t){if(!1!==e.settings.rearranging){var n,r=R(t.target),o=r.target,i=r.player,s=r.games,a=!1;i&amp;&amp;(!e.isRearranged||e.map[i]&amp;&amp;e.map[i].rearranged?a=!0:e.settings.hovering||(i=null),n=o.getBoundingClientRect().top,e.highlight({player:i,games:s,rearrange:a}),n&amp;&amp;E(o,n))}})),this.element.addEventListener(&quot;mouseover&quot;,(function(t){if(!1!==e.settings.hovering){var n=R(t.target),r=n.player,o=n.games,i=e.isRearranged;if(r){if(e.isRearranged){if((!o||r!==e.current)&amp;&amp;e.games.length===e.map[e.current].opponents.length)return;r!==e.current&amp;&amp;(r=e.current,o=null)}e.highlight({player:r,rearrange:i,games:o})}}}),!1),this.element.addEventListener(&quot;mouseout&quot;,(function(t){if(!1!==e.settings.hovering){for(var n=t.relatedTarget;n&amp;&amp;n!==document&amp;&amp;n!==e.element;)n=n.parentNode;n!==e.element&amp;&amp;(e.isRearranged&amp;&amp;e.games.length!==e.map[e.current].opponents.length?e.highlight({player:e.current,rearrange:!0}):e.isRearranged||e.highlight(null))}}),!1)}},{key:&quot;clearInlineStyles&quot;,value:function(){this.players.forEach((function(e){v(e.row.childNodes).forEach((function(e){return e.removeAttribute(&quot;style&quot;)}))}))}}])&amp;&amp;A(t.prototype,n),m&amp;&amp;A(t,m),e}();function E(e,t){var n=e.getBoundingClientRect().top-t;Math.abs(n)&gt;10&amp;&amp;window.scrollBy(0,n)}function R(e){for(var t={player:null,games:null,target:null};e&amp;&amp;e!==document;){var n=e.getAttribute(f),r=e.getAttribute(g);if(n&amp;&amp;(t.games=Number(n)),r){t.player=Number(r);break}e=e.parentNode}return t.target=e,t}function S(e){return(S=&quot;function&quot;==typeof Symbol&amp;&amp;&quot;symbol&quot;==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&amp;&amp;&quot;function&quot;==typeof Symbol&amp;&amp;e.constructor===Symbol&amp;&amp;e!==Symbol.prototype?&quot;symbol&quot;:typeof e})(e)}function N(e){return{get:e,enumerable:!0,configurable:!1}}x.DEFAULT_SETTINGS=r;var j=function e(t,n){if(!(this instanceof e))return new e(t,n);var r=new x(t,n);this.highlight=function(e,t,n){&quot;object&quot;===S(e)?r.highlight(e):(&quot;boolean&quot;==typeof t&amp;&amp;(n=t,t=null),r.highlight({player:e,rearrange:n,games:t}))},this.configure=function(e){r.configure(e)},this.opponents=function(e){var t=r.map[e];return t?t.opponents.slice():[]},this.clearInlineStyles=function(){r.clearInlineStyles()},Object.defineProperties(this,{element:N((function(){return r.element})),isHighlighting:N((function(){return r.isHighlighting})),isRearranged:N((function(){return r.isRearranged})),player:N((function(){return r.current||null})),players:N((function(){return r.players.length})),games:N((function(){return r.games})),configuration:N((function(){var e=r.settings.results,t={};for(var n in e)e.hasOwnProperty(n)&amp;&amp;(t[n]=e[n]);return{startingRow:r.settings.startingRow,placeColumn:r.settings.placeColumn,roundsColumns:r.settings.roundsColumns,prefixCls:r.settings.prefixCls,rearrangedCls:r.settings.rearrangedCls,tableCls:r.settings.tableCls,gameCls:r.settings.gameCls,currentCls:r.settings.currentCls,rowTags:r.settings.rowTags,cellTags:r.settings.cellTags,cellSeparator:r.settings.cellSeparator,joinNames:r.settings.joinNames,ignoreOutOfBoundsRows:r.settings.ignoreOutOfBoundsRows,checkColumnsForResults:r.settings.checkColumnsForResults,results:t}})),rearranging:{set:function(e){!e&amp;&amp;r.isRearranged&amp;&amp;r.highlight(null),r.settings.rearranging=!!e},get:function(){return r.settings.rearranging},configurable:!1,enumerable:!0},hovering:{set:function(e){return r.settings.hovering=!!e},get:function(){return r.settings.hovering},configurable:!1,enumerable:!0}}),r.element.goResultsHighlighter=this},O=(n(0),/^[^0-9]*([0-9]+[-+=?])[^-+?]*$/),L=/[0-9]+[-+?]/g;function k(e,t,n){var r=v(document.querySelectorAll(e)).filter((function(e){if(n)return!0;if(&quot;TABLE&quot;===e.nodeName){for(var t=e.rows.length,r=0;r&lt;t;r++)for(var o=e.rows[r].cells.length,i=0;i&lt;o;i++)if(O.test(e.rows[r].cells[i].textContent))return!0;return!1}var s=e.textContent.match(L);return s&amp;&amp;s.length&gt;6}));if(r.length){var o=0,i=0;r.forEach((function(e){e.goResultsHighlighter?i+=1:(new j(e,t).clearInlineStyles(),o+=1)})),console.log(&quot;Go Results Highlighter was applied to &quot;.concat(o,&quot; DOM elements. &quot;).concat(i,&quot; had Highlighter before.&quot;))}else{var s;(s=n?prompt('Could not find any elements matching &quot;'.concat(e,'&quot; selector. Do you want to provide another one?')):prompt('Could not find any tables with Go results (&quot;'.concat(e,'&quot;). If you are confident that this page has one - please provide a specific selector to the element.')))?k(s,t,!0):console.log(&quot;Could not find any elements with Go results.&quot;)}}-1!==location.hostname.indexOf(&quot;europeangodatabase&quot;)?k(&quot;#tab_wallist&quot;,{placeColumn:1}):k(&quot;table, pre&quot;)}]);" title="Highlight Go Results"><span class="octicon octicon-bookmark"></span><span>Highlight Go Results</span></a></p>
+        <p class="note">Drag the link above to your bookmarks panel and use highlighter on any page!</p>
+        <div class="wrapper"><table data-go-results>
+    <tbody>
+    <tr>
+        <th>Place</th>
+        <th>Name</th>
+        <th>Club</th>
+        <th>Level</th>
+        <th>Score</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>Points</th>
+        <th>SOS</th>
+        <th>SOSOS</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Grabowski, Kamil</td>
+        <td>Opol</td>
+        <td>1 Dan</td>
+        <td>10</td>
+        <td>5+</td>
+        <td>4+</td>
+        <td>3+</td>
+        <td>2-</td>
+        <td>6+</td>
+        <td>4</td>
+        <td>45</td>
+        <td>214</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Frejlak, Stanisław</td>
+        <td>Wars</td>
+        <td>5 Dan</td>
+        <td>10</td>
+        <td>8+</td>
+        <td>3-</td>
+        <td>4+</td>
+        <td>1+</td>
+        <td>7+</td>
+        <td>4</td>
+        <td>44</td>
+        <td>212</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Yeroshkin, Oleksandr</td>
+        <td>Rivn</td>
+        <td>3 Dan</td>
+        <td>9</td>
+        <td>6+</td>
+        <td>2+</td>
+        <td>1-</td>
+        <td>10+</td>
+        <td>5-</td>
+        <td>3</td>
+        <td>44</td>
+        <td>212</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Wałaszewski, Maksym</td>
+        <td>Bydg</td>
+        <td>1 Dan</td>
+        <td>9</td>
+        <td>7+</td>
+        <td>1-</td>
+        <td>2-</td>
+        <td>11+</td>
+        <td>10+</td>
+        <td>3</td>
+        <td>41</td>
+        <td>205</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>Fraczak, Jan</td>
+        <td>Mimu</td>
+        <td>1 Kyu</td>
+        <td>9</td>
+        <td>1-</td>
+        <td>9-</td>
+        <td>13+</td>
+        <td>6+</td>
+        <td>3+</td>
+        <td>3</td>
+        <td>41</td>
+        <td>195&frac12;</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Maćkowiak, Dariusz</td>
+        <td>Pozn</td>
+        <td>1 Kyu</td>
+        <td>8</td>
+        <td>3-</td>
+        <td>8+</td>
+        <td>7+</td>
+        <td>5-</td>
+        <td>1-</td>
+        <td>2</td>
+        <td>44</td>
+        <td>212</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>Jurkiewicz, Dawid</td>
+        <td>Szcz</td>
+        <td>1 Dan</td>
+        <td>8</td>
+        <td>4-</td>
+        <td>10+</td>
+        <td>6-</td>
+        <td>8+</td>
+        <td>2-</td>
+        <td>2</td>
+        <td>42</td>
+        <td>207</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>Dyszczyk, Przemek</td>
+        <td>Lubl</td>
+        <td>1 Kyu</td>
+        <td>8</td>
+        <td>2-</td>
+        <td>6-</td>
+        <td>9+</td>
+        <td>7-</td>
+        <td>12+</td>
+        <td>2</td>
+        <td>40</td>
+        <td>198</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>Dyszczyk, Piotr</td>
+        <td>Lubl</td>
+        <td>3 Kyu</td>
+        <td>8</td>
+        <td>16+</td>
+        <td>5+</td>
+        <td>8-</td>
+        <td>12+</td>
+        <td>11+</td>
+        <td>4</td>
+        <td>33</td>
+        <td>180&frac12;</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>Wałaszewski, Bruno</td>
+        <td>Bydg</td>
+        <td>2 Kyu</td>
+        <td>7</td>
+        <td>11+</td>
+        <td>7-</td>
+        <td>12+</td>
+        <td>3-</td>
+        <td>4-</td>
+        <td>2</td>
+        <td>38</td>
+        <td>198</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>Oczkowski, Robert</td>
+        <td>Toru</td>
+        <td>2 Kyu</td>
+        <td>6</td>
+        <td>10-</td>
+        <td>12-</td>
+        <td>14+</td>
+        <td>4-</td>
+        <td>9-</td>
+        <td>1</td>
+        <td>36</td>
+        <td>171&frac12;</td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>Bednarczyk, Dariusz</td>
+        <td>Hont</td>
+        <td>3 Kyu</td>
+        <td>6</td>
+        <td>13+</td>
+        <td>11+</td>
+        <td>10-</td>
+        <td>9-</td>
+        <td>8-</td>
+        <td>2</td>
+        <td>35</td>
+        <td>176&frac12;</td>
+    </tr>
+    <tr>
+        <td>13</td>
+        <td>Macieszczak, Tom</td>
+        <td>Wars</td>
+        <td>3 Kyu</td>
+        <td>6</td>
+        <td>12-</td>
+        <td>15+</td>
+        <td>5-</td>
+        <td>14-</td>
+        <td>16+</td>
+        <td>2</td>
+        <td>29&frac12;</td>
+        <td>152</td>
+    </tr>
+    <tr>
+        <td>14</td>
+        <td>Domański, Filip</td>
+        <td>Stas</td>
+        <td>5 Kyu</td>
+        <td>6</td>
+        <td>17+</td>
+        <td>16+</td>
+        <td>11-</td>
+        <td>13+</td>
+        <td>15+</td>
+        <td>4</td>
+        <td>24&frac12;</td>
+        <td>135&frac12;</td>
+    </tr>
+    <tr>
+        <td>15</td>
+        <td>Sobański, Grzegorz</td>
+        <td>Hont</td>
+        <td>4 Kyu</td>
+        <td>4&frac12;</td>
+        <td>-</td>
+        <td>13-</td>
+        <td>17+</td>
+        <td>16-</td>
+        <td>14-</td>
+        <td>1</td>
+        <td>23</td>
+        <td>116</td>
+    </tr>
+    <tr>
+        <td>16</td>
+        <td>Białożyt, Adam</td>
+        <td>Krak</td>
+        <td>5 Kyu</td>
+        <td>4</td>
+        <td>9-</td>
+        <td>14-</td>
+        <td>18+</td>
+        <td>15+</td>
+        <td>13-</td>
+        <td>2</td>
+        <td>28&frac12;</td>
+        <td>125</td>
+    </tr>
+    <tr>
+        <td>17</td>
+        <td>Gogosz, Dorota</td>
+        <td>Krak</td>
+        <td>5 Kyu</td>
+        <td>4</td>
+        <td>14-</td>
+        <td>18+</td>
+        <td>15-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>1</td>
+        <td>18&frac12;</td>
+        <td>82&frac12;</td>
+    </tr>
+    <tr>
+        <td>18</td>
+        <td>Dawid, Marcin</td>
+        <td>Pozn</td>
+        <td>6 Kyu</td>
+        <td>4</td>
+        <td>19+</td>
+        <td>17-</td>
+        <td>16-</td>
+        <td>23+</td>
+        <td>22+</td>
+        <td>3</td>
+        <td>15</td>
+        <td>89&frac12;</td>
+    </tr>
+    <tr>
+        <td>19</td>
+        <td>Kaśk&oacute;w, Wojciech</td>
+        <td>Porf</td>
+        <td>6 Kyu</td>
+        <td>4</td>
+        <td>18-</td>
+        <td>20-</td>
+        <td>24+</td>
+        <td>22+</td>
+        <td>21+</td>
+        <td>3</td>
+        <td>13&frac12;</td>
+        <td>60</td>
+    </tr>
+    <tr>
+        <td>20</td>
+        <td>Cieślak, Wojciech</td>
+        <td>Kosz</td>
+        <td>8 Kyu</td>
+        <td>3&frac12;</td>
+        <td>-</td>
+        <td>19+</td>
+        <td>22+</td>
+        <td>21-</td>
+        <td>23+</td>
+        <td>3</td>
+        <td>10</td>
+        <td>54</td>
+    </tr>
+    <tr>
+        <td>21</td>
+        <td>Kunek, Marek</td>
+        <td>Sośn</td>
+        <td>8 Kyu</td>
+        <td>3</td>
+        <td>22-</td>
+        <td>24+</td>
+        <td>23+</td>
+        <td>20+</td>
+        <td>19-</td>
+        <td>3</td>
+        <td>11&frac12;</td>
+        <td>60&frac12;</td>
+    </tr>
+    <tr>
+        <td>22</td>
+        <td>Kwietniewska, Daria</td>
+        <td>Wroc</td>
+        <td>8 Kyu</td>
+        <td>2</td>
+        <td>21+</td>
+        <td>23+</td>
+        <td>20-</td>
+        <td>19-</td>
+        <td>18-</td>
+        <td>2</td>
+        <td>15&frac12;</td>
+        <td>63&frac12;</td>
+    </tr>
+    <tr>
+        <td>23</td>
+        <td>Cichorski, Andrzej</td>
+        <td>Porf</td>
+        <td>12 Kyu</td>
+        <td>1</td>
+        <td>24+</td>
+        <td>22-</td>
+        <td>21-</td>
+        <td>18-</td>
+        <td>20-</td>
+        <td>1</td>
+        <td>13&frac12;</td>
+        <td>60</td>
+    </tr>
+    <tr>
+        <td>24</td>
+        <td>Struss, Katarzyna</td>
+        <td>Wroc</td>
+        <td>18 Kyu</td>
+        <td>1</td>
+        <td>23-</td>
+        <td>21-</td>
+        <td>19-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>0</td>
+        <td>8</td>
+        <td>38&frac12;</td>
+    </tr>
+    </tbody>
+</table>
+        </div>
+        <p class="note">Example results of <strong>Hobby 2015</strong> Go tournament in Poznan.</p>
+      </div>
+    </article>
+  </body>
+</html>

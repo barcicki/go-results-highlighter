@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Documentation - Go Results Highlighter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="A JavaScript library that makes reading Go results super easy">
+    <meta name="keywords" content="go,baduk,weici,igo,results,standings,highlighter">
+    <meta name="author" content="Artur Barcicki">
+    <meta property="og:title" content="Go Results Highlighter">
+    <meta property="og:description" content="A JavaScript library that makes reading Go results super easy">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+    <link href="../site.css" rel="stylesheet" type="text/css">
+    <link href="../lib.css" rel="stylesheet" type="text/css">
+    <script src="../site.js"></script>
+    <script src="../lib.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="content">
+        <h1>Go Results Highlighter<small>2.0.0</small></h1>
+        <h2>by Artur Barcicki</h2>
+      </div>
+    </header>
+    <nav>
+      <div class="content">
+        <ul>
+            <li><a href="../"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-home" aria-hidden="true"><path fill-rule="evenodd" d="M16 9l-3-3V2h-2v2L8 1 0 9h2l1 5c0 .55.45 1 1 1h8c.55 0 1-.45 1-1l1-5h2zm-4 5H9v-4H7v4H4L2.81 7.69 8 2.5l5.19 5.19L12 14z"></path></svg></span><span>Home</span></a></li>
+            <li class="active"><a href="../docs"><span><svg version="1.1" width="12" height="16" viewBox="0 0 12 16" class="octicon octicon-file" aria-hidden="true"><path fill-rule="evenodd" d="M6 5H2V4h4v1zM2 8h7V7H2v1zm0 2h7V9H2v1zm0 2h7v-1H2v1zm10-7.5V14c0 .55-.45 1-1 1H1c-.55 0-1-.45-1-1V2c0-.55.45-1 1-1h7.5L12 4.5zM11 5L8 2H1v12h10V5z"></path></svg></span><span>Documentation</span></a></li>
+            <li><a href="../examples/binding.html"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-eye" aria-hidden="true"><path fill-rule="evenodd" d="M8.06 2C3 2 0 8 0 8s3 6 8.06 6C13 14 16 8 16 8s-3-6-7.94-6zM8 12c-2.2 0-4-1.78-4-4 0-2.2 1.8-4 4-4 2.22 0 4 1.8 4 4 0 2.22-1.78 4-4 4zm2-4c0 1.11-.89 2-2 2-1.11 0-2-.89-2-2 0-1.11.89-2 2-2 1.11 0 2 .89 2 2z"></path></svg></span><span>Examples</span></a></li>
+        </ul>
+        <ul class="github">
+            <li><a href="https://github.com/barcicki/go-results-highlighter"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></span><span>View on GitHub</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-cloud-download" aria-hidden="true"><path fill-rule="evenodd" d="M9 12h2l-3 3-3-3h2V7h2v5zm3-8c0-.44-.91-3-4.5-3C5.08 1 3 2.92 3 5 1.02 5 0 6.52 0 8c0 1.53 1 3 3 3h3V9.7H3C1.38 9.7 1.3 8.28 1.3 8c0-.17.05-1.7 1.7-1.7h1.3V5c0-1.39 1.56-2.7 3.2-2.7 2.55 0 3.13 1.55 3.2 1.8v1.2H12c.81 0 2.7.22 2.7 2.2 0 2.09-2.25 2.2-2.7 2.2h-2V11h2c2.08 0 4-1.16 4-3.5C16 5.06 14.08 4 12 4z"></path></svg></span><span>Download .zip</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-cloud-download" aria-hidden="true"><path fill-rule="evenodd" d="M9 12h2l-3 3-3-3h2V7h2v5zm3-8c0-.44-.91-3-4.5-3C5.08 1 3 2.92 3 5 1.02 5 0 6.52 0 8c0 1.53 1 3 3 3h3V9.7H3C1.38 9.7 1.3 8.28 1.3 8c0-.17.05-1.7 1.7-1.7h1.3V5c0-1.39 1.56-2.7 3.2-2.7 2.55 0 3.13 1.55 3.2 1.8v1.2H12c.81 0 2.7.22 2.7 2.2 0 2.09-2.25 2.2-2.7 2.2h-2V11h2c2.08 0 4-1.16 4-3.5C16 5.06 14.08 4 12 4z"></path></svg></span><span>Download .tar.gz</span></a></li>
+        </ul>
+      </div>
+    </nav>
+    <article class="docs">
+      <div class="content">
+        <h2>Installation</h2>
+<h4>Using NPM</h4>
+<p>Download Go Results Highlighter using following command:</p>
+<pre><code class="language-bash">npm install go-results-highlighter
+</code></pre>
+<p>and then in you script</p>
+<pre><code class="language-js">import 'go-results-highlighter'; // or import GoResultsHighlighter from 'go-results-highlighter` to access API
+import 'go-results-highlighter/dist/lib.css';
+</code></pre>
+<p>It's possible to use unminified version with</p>
+<pre><code class="language-js">// default version which automatically binds to elements with `data-go-results` attribute
+import 'go-results-highlighter/src';
+
+// GoResultsHighlighter without auto binding - just the API
+import GoResultsHighlighter from 'go-results-highlighter/src/lib/wrapper' 
+</code></pre>
+<p>but remember that code from <code>src</code>  may require transpiling before serving to users.</p>
+<h4>Downloading manually</h4>
+<p><a href="https://github.com/barcicki/go-results-highlighter/releases/latest">Download the latest release from GitHub</a></p>
+<p>Include <code>go-results-highlighter.js</code> and <code>go-results-highlighter.css</code></p>
+<h4>Using GitHack CDN</h4>
+<p>Include following lines in your website:</p>
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;//rawcdn.githack.com/barcicki/go-results-highlighter/master/dist/lib.css&quot;&gt;
+&lt;script src=&quot;//rawcdn.githack.com/barcicki/go-results-highlighter/master/dist/lib.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+        <h2>Usage</h2>
+<p>There're several ways possible to use the Highlighter.</p>
+<h4>Let Go Results Highlighter use default settings (no additional JS code)</h4>
+<p>Add <code>data-go-results</code> attribute to <strong>table</strong> or <strong>pre</strong> tags which contain
+Go results.</p>
+<h4>Manually bind Go Results Highlighter to selected elements</h4>
+<p>Highlighter is served using Universal Module Definition, therefore can be used
+globally:</p>
+<pre><code class="language-js">var highlighter = new GoResultsHighlighter(elementWithGoResults, optionalSettings);
+</code></pre>
+<p>or using requirejs:</p>
+<pre><code class="language-js">require('go-results-highlighter', function (GoResultsHighlighter) {
+    var highlighter = new GoResultsHighlighter(elementWithGoResults, optionalSettings);
+});
+</code></pre>
+<p>if it detects globally accessible jQuery object, then it's also possible to call:</p>
+<pre><code class="language-js">$(selectorOfElementWithGoResults).goResultsHighlighter(optionalSettings);
+</code></pre>
+<h4>Access to existing highlighter object</h4>
+<p>It is possible to get a highlighter instance bound to elements using
+<code>goResultsHighlighter</code> property, eg.</p>
+<pre><code class="language-js">var highlighter = document.querySelector('[data-go-results]').goResultsHighlighter;
+</code></pre>
+<p>or in jQuery:</p>
+<pre><code class="language-js">var highlighter = $('[data-go-results]').data('GoResultsHighlighter'); // or $('[data-go-results]').get().goResultsHighlighter;
+</code></pre>
+<p><a href="./api.md">Learn more about highlighter's interface</a></p>
+<h2>Configuration</h2>
+<p>Here's the table of available settings that can be overwritten.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Setting</th>
+<th style="text-align:center">Attribute</th>
+<th style="text-align:center">  Default value  </th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>hovering</code></td>
+<td style="text-align:center"><code>data-go-hovering</code></td>
+<td style="text-align:center"><code>true</code></td>
+<td>Enables highlighting player and opponents on mouse move</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>clicking</code></td>
+<td style="text-align:center"><code>data-go-clickin</code></td>
+<td style="text-align:center"><code>true</code></td>
+<td>Enables rearranging table rows when clicking a player</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>startingRow</code></td>
+<td style="text-align:center"><code>data-go-starting-row</code></td>
+<td style="text-align:center"><code>0</code></td>
+<td>Makes highlighter skip rows below this value</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>placeColumn</code></td>
+<td style="text-align:center"><code>data-go-place-column</code></td>
+<td style="text-align:center"><code>0</code></td>
+<td>Informs highlighter where to look for player's place</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>roundsColumn</code></td>
+<td style="text-align:center"><code>data-go-rounds-columns</code></td>
+<td style="text-align:center">null</td>
+<td>Informs highlighter which columns should contain game resutls, column indexes should be separated with coma e.g. <code>&quot;5,6,7&quot;</code>. If not set highlighter will search for results in all columns</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>rowTags</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;tr&quot;</code></td>
+<td>Selector used by highlighter to divide results into player rows</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>cellTags</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;td,th&quot;</code></td>
+<td>Selector used by highlighter as a single cell which <code>textContent</code> should be analyzed</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>cellSeparator</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;[\t ]+&quot;</code></td>
+<td>Used to divide raw line into columns when building table from raw results</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>joinNames</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>true</code></td>
+<td>Whether to join to consecutive cells after place column index into single cell when building table from raw results. The goals is to join Last name and First name columns into one column</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>checkColumnsForResults</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>true</code></td>
+<td>Whether the highlighter should first try to find columns with Go results before parsing every row</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>ignoreOutOfBoundsRows</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>false</code></td>
+<td>Whether it is allowed to have games with player that are not visible on the list (e.g. when table is paginated)</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>results</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><em>see below</em></td>
+<td>Results map - <code>key</code> is a className and <code>value</code> is an RegExp string matching the result. The className is added to the row when highlighting</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>results.won</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;([0-9]+)\\+&quot;</code></td>
+<td>className and RegExp for winning result</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>results.lost</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;([0-9]+)\\-&quot;</code></td>
+<td>className and RegExp for losing result</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>results.jigo</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;([0-9]+)=&quot;</code></td>
+<td>className and RegExp for draw result</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>results.unresolved</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;([0-9]+)\\?&quot;</code></td>
+<td>className and RegExp for scheduled or unresolved game</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>prefixCls</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;go-results-&quot;</code></td>
+<td>Prefix added to every className</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>rearrangedCls</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;rearranged&quot;</code></td>
+<td>className added when table is rearranged</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>tableCls</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;table&quot;</code></td>
+<td>className added to element with enabled highlighter</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>gameCls</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;game&quot;</code></td>
+<td>className of highlighted game call</td>
+</tr>
+<tr>
+<td style="text-align:center"><code>currentCls</code></td>
+<td style="text-align:center">-</td>
+<td style="text-align:center"><code>&quot;current&quot;</code></td>
+<td>className of the row with highlighted player</td>
+</tr>
+</tbody>
+</table>
+<p>If, for any reason, above settings will have to be changed after the
+initialization, please use <code>configure</code> method on the highlighter instance.</p>
+        <h2>Go Results Highlighter API</h2>
+<p>Here's the list of available methods and properties to be provided by
+instance of the highlighter.</p>
+<h3>Methods</h3>
+<h3><code>highlight(player, [games=[], rearrange=false])</code></h3>
+<p>Highlights row with the player and his/hers opponents.</p>
+<p>The first argument can be either a number or an object (<code>settings</code>) with properties named as
+the arguments</p>
+<p>Arguments:</p>
+<ul>
+<li><code>player</code> - or <code>settings.player</code> - either an object with settings or a number with
+player place. If null or player on this place is not found the table is reset to
+default state and any visual changes are reverted.</li>
+<li><code>games</code> - or <code>settings.games</code> - highlight games with provided opponents, by default no game is
+highlighted or all games if rows are rearranged (compact mode). Can be single number
+with opponent's place or a list of numbers (opponents)</li>
+<li><code>rearrange</code> - or <code>settings.rearrange</code> - if true it rearranges the rows with players
+so the opponents' rows are close to the the highlighted player</li>
+</ul>
+<p><a href="./examples.md">See example use cases</a></p>
+<h3><code>opponents(playerPlace)</code></h3>
+<p>Returns the array of opponents - theirs places (to be precise).</p>
+<h3><code>configure(settings)</code></h3>
+<p>Allows to modify the settings with which the highlighter was initialized.</p>
+<h3><code>clearInlineStyles()</code></h3>
+<p>Removes inline styles from player rows and theirs children. This method is called when using bookmarklet only.</p>
+<p><a href="./usage.md">See usage for details</a></p>
+<h3>Properties</h3>
+<h3><code>hovering</code></h3>
+<p>Boolean value. Controls whether the rows should be highlighted when mouse is moving
+above the table. Note that it doesn't stop manual highlighting.</p>
+<h3><code>rearranging</code></h3>
+<p>Boolean value. Controls whether the rows can be rearranged on mouse click.
+Note that it doesn't stop manual rearranging.</p>
+<h3><code>element</code></h3>
+<p>Readonly. Holds the reference to the DOM element with results.</p>
+<h3><code>isHighlighting</code></h3>
+<p>Readonly boolean. Informs whether any player is highlighted.</p>
+<h3><code>isRearranged</code></h3>
+<p>Readonly boolean. Informs whether the rows of the result table are rearranged.</p>
+<h3><code>player</code></h3>
+<p>Readonly. Holds the place of currently highlighted player (or null if no one is
+highlighted).</p>
+<h3><code>games</code></h3>
+<p>Readonly array. Array with places of opponents for whom games against current player
+are highlighted.</p>
+<h3><code>players</code></h3>
+<p>Readonly number. Contains the number of total rows with players.</p>
+<h3><code>configuration</code></h3>
+<p>Readonly object. Holds current configuration of the highlighter.</p>
+        <h2>Examples</h2>
+<p>Probably common use cases of the Go Results Highlighter.</p>
+<h4>Setup</h4>
+<pre><code class="language-html">&lt;table id=&quot;go-results&quot; data-go-results&gt;
+&lt;!-- ... results ... --&gt;
+&lt;/table&gt;
+</code></pre>
+<pre><code class="language-js">// grab the instance of highlighter from existing element (if that element had data-go-results attribute on page load)
+var results = document.getElementById('go-results').goResultsHighlighter;
+
+or
+
+// create new highlighter
+var results = new GoResultsHighlighter(document.getElementById('go-results'));
+
+</code></pre>
+<h3>Highlight the player on the first place and all opponents:</h3>
+<pre><code class="language-js">results.highlight(1);
+</code></pre>
+<p>or</p>
+<pre><code class="language-js">results.highlight({ player: 1 });
+</code></pre>
+<h3>Show opponents of player on 3rd place and rearrange the table (dimming other rows)</h3>
+<pre><code class="language-js">results.highlight(3, true);
+</code></pre>
+<p>or</p>
+<pre><code class="language-js">results.highlight({ player: 3, rarrange: true });
+</code></pre>
+<h3>Highlight the player on 2nd place and mark his game with player on 3rd place</h3>
+<pre><code class="language-js">results.highlight(2, 3);
+</code></pre>
+<p>or</p>
+<pre><code class="language-js">results.highlight({ player: 2, games: 3 });
+</code></pre>
+<h3>Highlight the player on 3rd place and mark games with players 4 and 5, also rearrange the rows.</h3>
+<pre><code class="language-js">results.highlight(3, [4,5], true);
+</code></pre>
+<p>or</p>
+<pre><code class="language-js">results.highlight({ player: 3, games: [4,5], rearrange: true });
+</code></pre>
+<h3>Remove highlighting</h3>
+<pre><code class="language-js">results.highlight(null); // or any value that doesn't match any player
+</code></pre>
+<h3>Get current highlighted player</h3>
+<pre><code class="language-js">var highlightedPlayer = results.player;
+</code></pre>
+<h3>Get list of highlighted games</h3>
+<pre><code class="language-js">var highlightedGames = results.games;
+</code></pre>
+<h3>Get opponents for player on 3rd place</h3>
+<pre><code class="language-js">var opponents = results.opponents(3);
+</code></pre>
+<h3>Check if table is rearranged or highlighted</h3>
+<pre><code class="language-js">var isHighlighting = results.isHighlighting;
+var isRearranged = results.isRearranged;
+</code></pre>
+
+      </div>
+    </article>
+  </body>
+</html>
