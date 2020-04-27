@@ -2,6 +2,7 @@ const path = require('path');
 const pkg = require('../package.json');
 const fs = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const octicons = require('@primer/octicons');
 
 const { TARGET, SITE, PAGES } = require('./paths');
@@ -16,6 +17,9 @@ module.exports = {
     filename: SITE_JS
   },
   plugins: [
+    new CopyPlugin([
+      { from: path.join(SITE, 'assets'), to: path.join(TARGET, 'assets') }
+    ]),
     new MiniCssExtractPlugin({
       filename: SITE_CSS
     })

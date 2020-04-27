@@ -8,27 +8,17 @@ node_modules/
 coverage
 
 # build dir except for library builts
-.publish
 dist/*
-!dist/go-results-highlighter.js
-!dist/go-results-highlighter.js.map
-!dist/go-results-highlighter.min.js
-!dist/go-results-highlighter.css
-!dist/go-results-highlighter.min.css
-
-# additionaly (in comparison to .gitignore) don't ignore compiled lib
-!dist/lib/*
+!dist/lib.js
+!dist/lib.css
+!dist/bookmark.js
 
 # but ignore all unnecessary files used for development & compilation
-src/
 tests/
 site/
-gulp/
+webpack/
 karma.conf.js
 .travis.yml
-bower.json
 .eslintrc
 .babelrc
-.bowerrc
 .gitignore
-gulpfile.js

@@ -1,6 +1,6 @@
 {
   "name": "go-results-highlighter",
-  "version": "2.0.0",
+  "version": "2.0.0-0",
   "description": "Improves readability of Go results by highlighting opponents of selected player",
   "scripts": {
     "build-lib": "webpack --config=webpack/lib --mode=production",
@@ -11,10 +11,15 @@
     "build-bookmark:site": "webpack --config=webpack/bookmark --mode=production --watch",
     "build-site": "webpack --config=webpack/site --mode=production",
     "build-site:dev": "webpack --config=webpack/site --mode=development",
+    "clean": "rimraf dist",
     "serve": "webpack-dev-server --config=webpack/site --mode=development",
     "build": "npm-run-all build-lib build-bookmark build-site",
     "start": "npm-run-all -p build-lib:site build-bookmark:site serve",
-    "test": "karma start --single-run"
+    "test": "karma start --single-run",
+    "test:watch": "karma start",
+    "preversion": "npm-run-all clean build",
+    "commit-site": "gh-pages -d dist -f",
+    "prepare-site": "npm-run-all clean build commit-site"
   },
   "author": "Artur Barcicki <barcicki@gmail.com>",
   "homepage": "http://barcicki.github.io/go-results-highlighter",
@@ -39,16 +44,18 @@
     "go-results",
     "results-highlighter"
   ],
-  "main": "./lib/highlighter.js",
+  "main": "./dist/lib.js",
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@primer/octicons": "^9.6.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^6.0.0",
+    "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.5.3",
     "eslint": "^6.8.0",
     "file-loader": "^6.0.0",
+    "gh-pages": "^2.2.0",
     "highlight.js": "^10.0.0",
     "jasmine-core": "^3.5.0",
     "jstransformer-markdown-it": "^2.1.0",
@@ -66,6 +73,7 @@
     "npm-run-all": "^4.1.5",
     "pug": "^2.0.4",
     "pug-html-loader": "^1.1.5",
+    "rimraf": "^3.0.2",
     "sass-loader": "^8.0.2",
     "style-loader": "^1.2.0",
     "webpack": "^4.43.0",
