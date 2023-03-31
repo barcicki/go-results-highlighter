@@ -35,6 +35,7 @@ export default class GoResultsHighlighter {
         this.bindEvents();
 
         this.element.classList.add(this.settings.prefixCls + this.settings.tableCls);
+        this.element.setAttribute(DOM_ATTRIBUTES.RESULT_TABLE, '');
 
         this.current = null;
         this.games = [];
@@ -317,7 +318,9 @@ export default class GoResultsHighlighter {
     clearInlineStyles() {
         this.players.forEach(player => {
             // player.row.removeAttribute('style');
-            asArray(player.row.childNodes).forEach(child => child.removeAttribute('style'));
+            asArray(player.row.childNodes)
+              .filter(node => node.nodeType === Node.ELEMENT_NODE)
+              .forEach(child => child.removeAttribute('style'));
         });
     };
 }
