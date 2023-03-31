@@ -17,15 +17,19 @@ module.exports = {
     filename: SITE_JS
   },
   plugins: [
-    new CopyPlugin([
-      { from: path.join(SITE, 'assets'), to: path.join(TARGET, 'assets') }
-    ]),
+    new CopyPlugin({
+      patterns: [
+        { from: path.join(SITE, 'assets'), to: path.join(TARGET, 'assets') }
+      ]
+    }),
     new MiniCssExtractPlugin({
       filename: SITE_CSS
     })
   ],
   devServer: {
-    contentBase: TARGET
+    static: {
+      directory: TARGET
+    }
   },
   module: {
     rules: [
