@@ -1,19 +1,21 @@
-const { TARGET, LIB } = require('./paths');
-const { LIB_CSS, LIB_JS } = require('./config');
+const { TARGET, LIB, COMPONENT } = require('./paths');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
-  entry: LIB,
+  entry: {
+    lib: LIB,
+    component: COMPONENT
+  },
   output: {
     path: TARGET,
-    filename: LIB_JS,
+    filename: '[name].js',
     library: 'GoResultsHighlighter',
     libraryTarget: 'umd',
     libraryExport: 'default'
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: LIB_CSS
+      filename: '[name].css'
     })
   ],
   module: {

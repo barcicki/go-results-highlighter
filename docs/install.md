@@ -33,11 +33,11 @@ but remember that code from `src`  may require transpiling before serving to use
 
 Include `go-results-highlighter.js` and `go-results-highlighter.css`
 
-#### Using GitHack CDN
+#### Using Unpkg CDN
 
 Include following lines in your website:
 
 ```html
-<link rel="stylesheet" href="//rawcdn.githack.com/barcicki/go-results-highlighter/master/dist/lib.css">
-<script src="//rawcdn.githack.com/barcicki/go-results-highlighter/master/dist/lib.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/go-results-highlighter@latest/dist/lib.css">
+<script src="//cdn.jsdelivr.net/npm/go-results-highlighter@latest/dist/lib.js"></script>
 ```

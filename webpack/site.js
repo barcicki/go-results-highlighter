@@ -5,8 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const octicons = require('@primer/octicons');
 
-const { TARGET, SITE, PAGES } = require('./paths');
-const { BOOKMARK_JS, SITE_JS, SITE_CSS, LIB_JS, LIB_CSS } = require('./config');
+const { TARGET, SITE, PAGES, } = require('./paths');
+const { BOOKMARK_JS, SITE_JS, SITE_CSS, LIB_JS, LIB_CSS, COMPONENT_JS} = require('./config');
 
 const bookmark = fs.readFileSync(path.join(TARGET, BOOKMARK_JS), 'utf-8');
 
@@ -69,7 +69,11 @@ module.exports = {
                 libJs: LIB_JS,
                 libCss: LIB_CSS,
                 siteJs: SITE_JS,
-                siteCss: SITE_CSS
+                siteCss: SITE_CSS,
+                componentJs: COMPONENT_JS
+              },
+              filters: {
+                escape: (text) => text.replace(/</g, '&lt;').replace(/>/g, '&gt;')
               }
             }
           }

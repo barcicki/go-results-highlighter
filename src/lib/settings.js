@@ -100,11 +100,15 @@ export function toPrefixedClasses(settings) {
 /**
  * Checks the element for attributes and returns object with set appropriate
  * values
- * @param {HTMLElement} table
+ * @param {HTMLElement | Text} table
  * @returns {object}
  */
 export function readTableSettingsFromDOM(table) {
     const output = {};
+
+    if (typeof table.hasAttribute !== 'function') {
+        return output;
+    }
 
     if (table.hasAttribute(DOM_ATTRIBUTES.SETTING_PLACE_COLUMN)) {
         output.placeColumn = Number(table.getAttribute(DOM_ATTRIBUTES.SETTING_PLACE_COLUMN));

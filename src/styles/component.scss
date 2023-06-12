@@ -1,0 +1,18 @@
+@import 'highlighter';
+
+slot {
+    display: none;
+}
+
+#go-results-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table[data-go-results] {
+    min-width: 100%;
+
+    td {
+        padding: .25em;
+    }
+}

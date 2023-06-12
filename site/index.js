@@ -14,7 +14,7 @@ import './scripts/binding-example-1';
 import './scripts/binding-example-2';
 
 // init code highlighter
-hljs.initHighlightingOnLoad();
+hljs.highlightAll();
 
 function importAll(r) {
   return r.keys().map(r);

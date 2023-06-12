@@ -14,8 +14,8 @@ export default class GoResultsHighlighter {
     constructor(element, settings) {
         this.settings = defaults(DEFAULT_SETTINGS, readTableSettingsFromDOM(element), settings);
 
-        if (element instanceof HTMLPreElement) {
-            let table = convert(element.innerHTML, settings);
+        if (element instanceof HTMLPreElement || element instanceof Text) {
+            let table = convert(element.textContent, settings);
             let parent = element.parentNode;
 
             parent.insertBefore(table, element);
@@ -201,7 +201,7 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            let { target, player, games } = fetchInformationAboutTarget(event.target);
+            let { target, player, games } = fetchInformationAboutTarget(event.target, this.element);
 
             if (!player) {
                 return;
@@ -238,7 +238,7 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            let { target, player, games } = fetchInformationAboutTarget(event.target);
+            let { target, player, games } = fetchInformationAboutTarget(event.target, this.element);
             let rearrange = false;
             let lastTargetPos;
 
@@ -267,7 +267,7 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            let { player, games } = fetchInformationAboutTarget(event.target);
+            let { player, games } = fetchInformationAboutTarget(event.target, this.element);
             let rearrange = this.isRearranged;
 
             if (!player) {
@@ -343,9 +343,10 @@ function updateTopPosition(target, previousTop) {
  * Retrieves information about player and opponent placement from provided element
  * or its parents. Returns also the row with player placement information.
  * @param {HTMLElement|Node} target - target of the event
+ * @param {HTMLElement} stopNode - stopNode
  * @returns {object}
  */
-function fetchInformationAboutTarget(target) {
+function fetchInformationAboutTarget(target, stopNode) {
     var result = {
         player: null,
         games: null,
@@ -353,7 +354,7 @@ function fetchInformationAboutTarget(target) {
     };
 
     // fetch information about hovered element
-    while (target && target !== document) {
+    while (target && target !== document && target !== stopNode) {
         let opponentGridPlacement = target.getAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT);
         let playerGridPlacement = target.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT);
 
