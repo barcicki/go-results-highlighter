@@ -12,7 +12,7 @@
             opacity: 1;
         }
 
-        &current &game {
+        &current[data-go-place] .go-results-game {
             background-color: #a7a7a7;
         }
 
@@ -22,7 +22,7 @@
             opacity: 1;
         }
 
-        &won &game {
+        &won[data-go-place] .go-results-game {
             background-color: #5A6A2C;
             color: #ffffff;
         }
@@ -33,7 +33,7 @@
             opacity: 1;
         }
 
-        &lost &game {
+        &lost[data-go-place] .go-results-game {
             background-color: #A5422B;
             color: #ffffff;
         }
@@ -44,7 +44,7 @@
             opacity: 1;
         }
 
-        &jigo &game {
+        &jigo[data-go-place] .go-results-game {
             background-color: #9E7593;
         }
 
@@ -53,7 +53,7 @@
             color: #000000;
         }
 
-        &unresolved &game {
+        &unresolved .go-results-game {
             background-color: #7D9CAD;
         }
     }
