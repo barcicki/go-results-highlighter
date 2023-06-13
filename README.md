@@ -1,19 +1,6 @@
 # Go Results Highlighter
 
-[![npm version](https://badge.fury.io/js/go-results-highlighter.svg)](https://badge.fury.io/js/go-results-highlighter)
-[![Build Status](https://travis-ci.org/barcicki/go-results-highlighter.svg)](https://travis-ci.org/barcicki/go-results-highlighter)
-[![Coverage Status](https://coveralls.io/repos/barcicki/go-results-highlighter/badge.svg?branch=master&service=github)](https://coveralls.io/github/barcicki/go-results-highlighter?branch=master)
-[![Dependency Status](https://david-dm.org/barcicki/go-results-highlighter.svg)](https://david-dm.org/barcicki/go-results-highlighter)
-[![devDependency Status](https://david-dm.org/barcicki/go-results-highlighter/dev-status.svg)](https://david-dm.org/barcicki/go-results-highlighter#info=devDependencies)
-
-
-Highlighted results:
-
-![Results with highlight](http://barcicki.github.io/go-results-highlighter/assets/results-hover.png)
-
-Highlighted results in compact mode:
-
-![Results in compact mode](http://barcicki.github.io/go-results-highlighter/assets/results-click.png)
+![Highlighter in action](./site/assets/demo.gif)
 
 Visit [go-results-highlighter's website](https://barcicki.github.io/go-results-highlighter)
 to see the Highlighter in action and explore more usage scenarios.
@@ -26,6 +13,22 @@ highlighting opponent rows for the selected player.
 This is the rewritten version of [jQuery Table Result for Go](https://github.com/barcicki/jQuery-Table-Result-for-Go).
 It was created to provide jQuery independent version of the plugin and serve it
 using popular package managers such as Bower or NPM.
+
+## Highlighter Web Component
+
+Version 2.1.0 introduced highlighter as [Web Component](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)
+
+Add this script to your side:
+```html
+<script src="//esm.run/go-results-highlighter/dist/component.js"></script>
+```
+
+Then wrap your results with this `go-results` tag:
+```html
+<go-results>
+  Results - html table or plain text
+</go-results>
+```
 
 ## Installation
 
@@ -55,7 +58,7 @@ interface allowing developers to programmatically highlight rows with results.
 
 The MIT License (MIT)
 
-Copyright (c) 2020 Artur Barcicki
+Copyright (c) 2023 Artur Barcicki
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
