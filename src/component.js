@@ -14,9 +14,9 @@ export class GoResultsWebComponent extends HTMLElement {
 
     slot.onslotchange = () => {
       const settings = {
-        placeColumn: Number(this.getAttribute('place-column')),
-        roundsColumn: Number(this.getAttribute('rounds-column')),
-        startingRow: Number(this.getAttribute('starting-row')),
+        placeColumn: readAttr(this, 'place-column', Number, 0),
+        roundsColumns: readAttr(this, 'rounds-columns', null, null),
+        startingRow: readAttr(this, 'starting-row', Number, 0)
       };
 
       Array.from(slot.assignedNodes()).forEach((node) => {
@@ -31,3 +31,13 @@ export class GoResultsWebComponent extends HTMLElement {
 }
 
 customElements.define('go-results', GoResultsWebComponent);
+
+function readAttr(node, attr, mapper, fallback) {
+  if (node.hasAttribute(attr)) {
+    const value = node.getAttribute(attr);
+
+    return (typeof mapper === 'function') ? mapper(value) : value;
+  }
+
+  return fallback;
+}
