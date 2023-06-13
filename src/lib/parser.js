@@ -136,16 +136,14 @@ function getPlaceColumn(cachedTable, settings) {
     if (typeof settings.placeColumn === 'number') {
         return settings.placeColumn;
     }
-    const columns = getColumnsFromRows(cachedTable);
 
+    const columns = getColumnsFromRows(cachedTable);
     const index = columns.findIndex((column) => {
         const count = column.length;
         const numbers = column.filter(isPositiveNumber).length;
 
         return (numbers / count) >= DETECT_THRESHOLD;
     });
-
-    console.log(columns);
 
     return Math.max(index, 0);
 }
