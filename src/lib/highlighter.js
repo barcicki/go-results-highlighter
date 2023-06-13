@@ -105,9 +105,11 @@ export default class GoResultsHighlighter {
             player.row.classList[method](classes.currentCls);
 
             player.opponents.forEach((opponentPlace) => {
-                let opponent = this.map[opponentPlace];
+                const opponent = this.map[opponentPlace];
 
-                opponent.row.classList[method](this.settings.prefixCls + player.games[opponentPlace].cls);
+                if (opponent) {
+                    opponent.row.classList[method](this.settings.prefixCls + player.games[opponentPlace].cls);
+                }
             });
         };
 
