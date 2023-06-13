@@ -21,7 +21,7 @@ export const DEFAULT_SETTINGS = {
 
     // parser settings
     startingRow: 0,
-    placeColumn: 0,
+    placeColumn: null,
     roundsColumns: null,
     rowTags: 'tr',
     cellTags: 'td',

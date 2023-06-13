@@ -14,7 +14,7 @@ export class GoResultsWebComponent extends HTMLElement {
 
     slot.onslotchange = () => {
       const settings = {
-        placeColumn: readAttr(this, 'place-column', Number, 0),
+        placeColumn: readAttr(this, 'place-column', Number, null),
         roundsColumns: readAttr(this, 'rounds-columns', null, null),
         startingRow: readAttr(this, 'starting-row', Number, 0)
       };

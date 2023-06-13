@@ -7,7 +7,7 @@ import { defaults } from './utils';
  * @param {string} rawResults
  * @param {object} [config]
  * @param {number} [config.startingRow=0] - informs where is the first row with results
- * @param {number} [config.placeColumn=0] - informs in which column is the place located
+ * @param {number} [config.placeColumn=null] - informs in which column is the place located
  * @param {string} [config.roundsColumns] - comma separated list of columns where game results are located
  * @param {string} [config.cellSeparator='[\t ]+'] - separated used to divide rows into cells
  * @param {boolean} [config.joinNames=true] - joins two consecutive cells after the place column into one cell
@@ -51,8 +51,9 @@ export default function convertRawResultsToTable(rawResults, config) {
         .filter((cells) => cells.length > 0 && cells[0].indexOf(';') !== 0);
 
     const tableWidth = rows.reduce((prev, line) => Math.max(prev, line.length), 0);
+    const placeColumn = settings.placeColumn || 0;
     const tableModifier = settings.joinNames ? -1 : 0;
-    const joinNamePos = settings.placeColumn + 1;
+    const joinNamePos = placeColumn + 1;
 
     let gamesInColumns = null;
 
@@ -82,7 +83,7 @@ export default function convertRawResultsToTable(rawResults, config) {
 
         } else {
 
-            const place = parseInt(cells[settings.placeColumn], 10);
+            const place = parseInt(cells[placeColumn], 10);
 
             if (isNaN(place) && !previousPlace) {
                 cells.forEach((cellContent) => {

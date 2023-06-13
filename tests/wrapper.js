@@ -79,7 +79,7 @@ describe('GoResultsHighlighter', () => {
                 },
 
                 startingRow: 0,
-                placeColumn: 0,
+                placeColumn: null,
                 roundsColumns: null,
                 ignoreOutOfBoundsRows: false,
                 checkColumnsForResults: true,
@@ -121,7 +121,7 @@ describe('GoResultsHighlighter', () => {
                 },
 
                 startingRow: 0,
-                placeColumn: 0,
+                placeColumn: null,
                 roundsColumns: '2,3',
                 ignoreOutOfBoundsRows: false,
                 checkColumnsForResults: true,
@@ -164,7 +164,7 @@ describe('GoResultsHighlighter', () => {
                 },
 
                 startingRow: 1,
-                placeColumn: 0,
+                placeColumn: null,
                 roundsColumns: null,
                 ignoreOutOfBoundsRows: false,
                 checkColumnsForResults: true,

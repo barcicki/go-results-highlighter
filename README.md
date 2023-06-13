@@ -20,7 +20,7 @@ Version 2.1.0 introduced highlighter as [Web Component](https://developer.mozill
 
 Add this script to your side:
 ```html
-<script src="//esm.run/go-results-highlighter/dist/component.js"></script>
+<script src="//cdn.jsdelivr.net/npm/go-results-highlighter/dist/component.js"></script>
 ```
 
 Then wrap your results with this `go-results` tag:

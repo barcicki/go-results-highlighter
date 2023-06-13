@@ -1,6 +1,10 @@
 import { asArray, defaults } from './utils';
 import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toResultsWithRegExp } from './settings';
 
+// threshold which when met, can indicate that we successfully identified certain feature
+// (e.g. whether given column has go results)
+const DETECT_THRESHOLD = 0.4;
+
 function writeGridPlacement(row, placement) {
     row.setAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT, placement);
 }
@@ -53,7 +57,19 @@ function checkItemsForResults(items, resultsMap) {
     const count = items.length;
     const itemsWithResultsCount = getItemsWithGoResults(items, resultsMap).length;
 
-    return itemsWithResultsCount / count >= 0.4;
+    return itemsWithResultsCount / count >= DETECT_THRESHOLD;
+}
+
+/**
+ * Checks if given string is a positive number.
+ *
+ * @param {string} item
+ * @returns {boolean}
+ */
+function isPositiveNumber(item) {
+    const val = Number(item);
+
+    return !isNaN(val) && val > 0;
 }
 
 /**
@@ -110,6 +126,31 @@ function getFilterForColumnsWithResults(cachedTable, settings, resultsMap) {
 }
 
 /**
+ * Returns index of column with places
+ *
+ * @param {CachedRow[]} cachedTable
+ * @param {HighlighterSettings} settings
+ * @return {number}
+ */
+function getPlaceColumn(cachedTable, settings) {
+    if (typeof settings.placeColumn === 'number') {
+        return settings.placeColumn;
+    }
+    const columns = getColumnsFromRows(cachedTable);
+
+    const index = columns.findIndex((column) => {
+        const count = column.length;
+        const numbers = column.filter(isPositiveNumber).length;
+
+        return (numbers / count) >= DETECT_THRESHOLD;
+    });
+
+    console.log(columns);
+
+    return Math.max(index, 0);
+}
+
+/**
  * Creates cached table
  * @param {HTMLElement} table
  * @param {HighlighterSettings} settings
@@ -147,6 +188,7 @@ export default function parse(table, config) {
 
     const cachedTable = cacheTable(table, settings);
     const columnsWithResultsFilter = getFilterForColumnsWithResults(cachedTable, settings, resultsMap);
+    const placeColumn = getPlaceColumn(cachedTable, settings);
 
     const results = {};
     let lastTournamentPlacement;
@@ -165,12 +207,12 @@ export default function parse(table, config) {
         let gridPlacement = -1;
 
         // no cells? unlikely to be a result row
-        if (!cells.length || !cells[settings.placeColumn]) {
+        if (!cells.length || !cells[placeColumn]) {
             writeGridPlacement(row, gridPlacement);
             return;
         }
 
-        let tournamentPlacement = parseInt(cells[settings.placeColumn].textContent, 10);
+        let tournamentPlacement = parseInt(cells[placeColumn].textContent, 10);
 
         const player = {
             tournamentPlace: -1,
