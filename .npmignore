@@ -12,13 +12,13 @@ dist/*
 !dist/lib.js
 !dist/lib.css
 !dist/bookmark.js
+!dist/component.js
 
 # but ignore all unnecessary files used for development & compilation
 tests/
 site/
 webpack/
 karma.conf.js
-.travis.yml
 .eslintrc
 .babelrc
 .gitignore
