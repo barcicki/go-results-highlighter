@@ -12,7 +12,7 @@ import Highlighter from './highlighter';
  * @param {HighlighterSettings} [settings] - configuration of the highlighter
  * @constructor
  */
-function GoResultsHighlighter(element, settings) {
+export default function GoResultsHighlighter(element, settings) {
 
     // force new instance
     if (!(this instanceof GoResultsHighlighter)) {
@@ -193,5 +193,3 @@ function getter(callback) {
         configurable: false
     };
 }
-
-export default GoResultsHighlighter;

@@ -15,18 +15,27 @@ globally:
 ```js
 var highlighter = new GoResultsHighlighter(elementWithGoResults, optionalSettings);
 ```
-or using requirejs:
 
-```js
-require('go-results-highlighter', function (GoResultsHighlighter) {
-    var highlighter = new GoResultsHighlighter(elementWithGoResults, optionalSettings);
-});
-```
-
-if it detects globally accessible jQuery object, then it's also possible to call:
+If it detects globally accessible jQuery object, then it's also possible to call:
 
 ```js
 $(selectorOfElementWithGoResults).goResultsHighlighter(optionalSettings);
+```
+
+#### React
+
+It's possible to use ref callback approach:
+
+```jsx
+import attachHighlighter from 'go-results-highlighter'
+
+function Table() {
+  return (
+    <table ref={(element) => attachHighlighter(element, optionalSettings)}>
+      ...
+    </table>
+  );
+}
 ```
 
 #### Access to existing highlighter object

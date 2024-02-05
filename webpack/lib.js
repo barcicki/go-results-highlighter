@@ -1,9 +1,10 @@
-const { TARGET, LIB, COMPONENT } = require('./paths');
+const { TARGET, LIB, COMPONENT, BROWSER } = require('./paths');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
   entry: {
     lib: LIB,
+    browser: BROWSER,
     component: COMPONENT
   },
   output: {
