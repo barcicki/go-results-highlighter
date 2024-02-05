@@ -12,7 +12,8 @@ module.exports = {
     filename: '[name].js',
     library: 'GoResultsHighlighter',
     libraryTarget: 'umd',
-    libraryExport: 'default'
+    libraryExport: 'default',
+    globalObject: 'this'
   },
   plugins: [
     new MiniCssExtractPlugin({
