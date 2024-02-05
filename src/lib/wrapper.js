@@ -13,6 +13,9 @@ import Highlighter from './highlighter';
  * @constructor
  */
 export default function GoResultsHighlighter(element, settings) {
+    if (!element) {
+        return;
+    }
 
     // force new instance
     if (!(this instanceof GoResultsHighlighter)) {
