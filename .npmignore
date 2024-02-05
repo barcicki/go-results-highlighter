@@ -10,7 +10,8 @@ coverage
 # build dir except for library builts
 dist/*
 !dist/lib.js
-!dist/lib.css
+!dist/browser.css
+!dist/browser.js
 !dist/bookmark.js
 !dist/component.js
 
