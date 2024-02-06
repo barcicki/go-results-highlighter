@@ -108,7 +108,7 @@ export default class GoResultsHighlighter {
                 const opponent = this.map[opponentPlace];
 
                 if (opponent) {
-                    opponent.row.classList[method](this.settings.prefixCls + player.games[opponentPlace].cls);
+                    opponent.row.classList[method](this.settings.prefixCls + player.opponentsCls[opponentPlace]);
                 }
             });
         };
@@ -137,23 +137,27 @@ export default class GoResultsHighlighter {
             }
 
             if (gamesToHighlight && typeof gamesToHighlight.length === 'number') {
-                gamesToHighlight.forEach((opponentPlace) => {
-                    let opponent = this.map[opponentPlace];
-                    let game = player.games[opponentPlace];
+                for (const game of player.games) {
+                    if (gamesToHighlight.includes(game.opponentPlace) && (!settings.column || settings.column === game.index)) {
+                        const opponent = this.map[game.opponentPlace];
+                        const opponentGame = opponent.games.find((op) => op.index === game.index);
 
-                    if (opponent && game) {
                         game.cell.classList.add(classes.gameCls);
-                        opponent.games[playerPlace].cell.classList.add(classes.gameCls);
-                        this.games.push(opponentPlace);
+                        opponentGame.cell.classList.add(classes.gameCls);
+                        this.games.push(game.opponentPlace);
                     }
-                });
+                }
             } else if (this.isRearranged) {
-                player.opponents.forEach((opponent) => {
-                    this.map[opponent].games[playerPlace].cell.classList.add(classes.gameCls);
-                    this.games.push(opponent);
-                });
+                for (const game of player.games) {
+                    const opponent = this.map[game.opponentPlace];
+                    const opponentGame = opponent.games.find((op) => op.index === game.index);
+
+                    opponentGame.cell.classList.add(classes.gameCls);
+                    this.games.push(game.opponentPlace);
+                }
             }
 
+            this.games.sort();
             this.current = playerPlace;
             this.isHighlighting = true;
         } else {
@@ -269,7 +273,7 @@ export default class GoResultsHighlighter {
                 return;
             }
 
-            let { player, games } = fetchInformationAboutTarget(event.target, this.element);
+            let { player, games, column } = fetchInformationAboutTarget(event.target, this.element);
             let rearrange = this.isRearranged;
 
             if (!player) {
@@ -287,7 +291,7 @@ export default class GoResultsHighlighter {
                 }
             }
 
-            this.highlight({ player, rearrange, games });
+            this.highlight({ player, rearrange, games, column });
         }, false);
 
         this.element.addEventListener('mouseout', (event) => {
@@ -349,7 +353,7 @@ function updateTopPosition(target, previousTop) {
  * @returns {object}
  */
 function fetchInformationAboutTarget(target, stopNode) {
-    var result = {
+    const result = {
         player: null,
         games: null,
         target: null
@@ -357,6 +361,15 @@ function fetchInformationAboutTarget(target, stopNode) {
 
     // fetch information about hovered element
     while (target && target !== document && target !== stopNode) {
+        if (target.highlighterGame) {
+            return {
+                player: target.highlighterGame.player,
+                games: target.highlighterGame.opponent,
+                target: target.highlighterGame.row,
+                column: target.highlighterGame.column
+            };
+        }
+
         let opponentGridPlacement = target.getAttribute(DOM_ATTRIBUTES.OPPONENT_PLACEMENT);
         let playerGridPlacement = target.getAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT);
 

@@ -20,9 +20,7 @@ describe('parser', () => {
 
     describe('should be able to', () => {
         it('handle empty DOM tree', () => {
-            expect(testMap(
-                `<table></table>`
-            )).toEqual({});
+            expect(testMap('<table></table>')).toEqual({});
         });
 
         it('handle non-empty DOM tree without supported tags', function () {
@@ -45,13 +43,13 @@ describe('parser', () => {
             expect(result[1]).toBeDefined();
             expect(result[1].tournamentPlace).toBe(1);
             expect(result[1].row instanceof HTMLTableRowElement).toBeTruthy();
-            expect(result[1].games).toEqual({});
+            expect(result[1].games).toEqual([]);
             expect(result[1].opponents).toEqual([]);
 
             expect(result[2]).toBeDefined();
             expect(result[2].tournamentPlace).toBe(2);
             expect(result[2].row instanceof HTMLTableRowElement).toBeTruthy();
-            expect(result[2].games).toEqual({});
+            expect(result[2].games).toEqual([]);
             expect(result[2].opponents).toEqual([]);
 
             expect(result[1].row).not.toBe(result[2].row);
@@ -108,25 +106,27 @@ describe('parser', () => {
 
             const player1 = result[1];
             const player2 = result[2];
+            const games1 = toGamesMap(player1.games);
+            const games2 = toGamesMap(player2.games);
 
             expect(player1.opponents.length).toBe(2);
             expect(player2.opponents.length).toBe(2);
 
-            expect(player1.games[2]).toBeDefined();
-            expect(player1.games[2].cls).toBe('won');
-            expect(player1.games[2].cell instanceof HTMLTableCellElement).toBeTruthy();
+            expect(games1[2]).toBeDefined();
+            expect(games1[2].cls).toBe('won');
+            expect(games1[2].cell instanceof HTMLTableCellElement).toBeTruthy();
 
-            expect(player1.games[3]).toBeDefined();
-            expect(player1.games[3].cls).toBe('jigo');
+            expect(games1[3]).toBeDefined();
+            expect(games1[3].cls).toBe('jigo');
 
-            expect(player2.games[1]).toBeDefined();
-            expect(player2.games[1].cls).toBe('lost');
+            expect(games2[1]).toBeDefined();
+            expect(games2[1].cls).toBe('lost');
 
-            expect(player2.games[4]).toBeDefined();
-            expect(player2.games[4].cls).toBe('unresolved');
+            expect(games2[4]).toBeDefined();
+            expect(games2[4].cls).toBe('unresolved');
 
-            expect(player1.games['PL']).not.toBeDefined();
-            expect(player1.games[10]).not.toBeDefined();
+            expect(games1['PL']).not.toBeDefined();
+            expect(games1[10]).not.toBeDefined();
         });
 
         it('disallow games with non-existing players', function () {
@@ -143,8 +143,8 @@ describe('parser', () => {
             expect(player1.opponents.length).toBe(1);
             expect(player2.opponents.length).toBe(1);
 
-            expect(player1.games[0]).not.toBeDefined();
-            expect(player2.games[123]).not.toBeDefined();
+            expect(toGamesMap(player1.games)[0]).not.toBeDefined();
+            expect(toGamesMap(player2.games)[123]).not.toBeDefined();
         });
 
         it('allow games with non-existing players when proper flag is set (0 is never allowed)', function () {
@@ -162,8 +162,8 @@ describe('parser', () => {
             expect(player1.opponents.length).toBe(1);
             expect(player2.opponents.length).toBe(2);
 
-            expect(player1.games[0]).not.toBeDefined();
-            expect(player2.games[123]).toBeDefined();
+            expect(toGamesMap(player1.games)[0]).not.toBeDefined();
+            expect(toGamesMap(player2.games)[123]).toBeDefined();
         });
 
         it('handle selected game columns', function () {
@@ -187,14 +187,15 @@ describe('parser', () => {
                 });
 
             const player = result[1];
+            const games = toGamesMap(player.games);
 
             expect(player.opponents.length).toBe(4);
-            expect(player.games[2]).toBeDefined();
-            expect(player.games[3]).toBeDefined();
-            expect(player.games[4]).toBeDefined();
-            expect(player.games[18]).toBeDefined();
-            expect(player.games[324]).not.toBeDefined();
-            expect(player.games[19]).not.toBeDefined();
+            expect(games[2]).toBeDefined();
+            expect(games[3]).toBeDefined();
+            expect(games[4]).toBeDefined();
+            expect(games[18]).toBeDefined();
+            expect(games[324]).not.toBeDefined();
+            expect(games[19]).not.toBeDefined();
         });
 
         it('read results from attributes', function () {
@@ -213,19 +214,20 @@ describe('parser', () => {
                 </table>`);
 
             const player = result[1];
+            const games = toGamesMap(player.games);
 
             expect(player.opponents.length).toBe(4);
-            expect(player.games[2]).not.toBeDefined();
-            expect(player.games[4]).not.toBeDefined();
-            expect(player.games[18]).not.toBeDefined();
-            expect(player.games[3]).toBeDefined();
-            expect(player.games[3].cls).toBe('won');
-            expect(player.games[5]).toBeDefined();
-            expect(player.games[5].cls).toBe('lost');
-            expect(player.games[8]).toBeDefined();
-            expect(player.games[8].cls).toBe('jigo');
-            expect(player.games[13]).toBeDefined();
-            expect(player.games[13].cls).toBe('unresolved');
+            expect(games[2]).not.toBeDefined();
+            expect(games[4]).not.toBeDefined();
+            expect(games[18]).not.toBeDefined();
+            expect(games[3]).toBeDefined();
+            expect(games[3].cls).toBe('won');
+            expect(games[5]).toBeDefined();
+            expect(games[5].cls).toBe('lost');
+            expect(games[8]).toBeDefined();
+            expect(games[8].cls).toBe('jigo');
+            expect(games[13]).toBeDefined();
+            expect(games[13].cls).toBe('unresolved');
         });
 
         it('support using different tags', function () {
@@ -246,13 +248,15 @@ describe('parser', () => {
                     cellTags: '.place, .game'
                 });
 
-            expect(result[1].games[2]).toBeDefined();
-            expect(result[1].games[2].cls).toBe('won');
-            expect(result[1].games[2].cell instanceof HTMLDivElement).toBeTruthy();
+            expect(result[1].opponents).toEqual([2]);
+            expect(result[1].games[0]).toBeDefined();
+            expect(result[1].games[0].cls).toBe('won');
+            expect(result[1].games[0].cell instanceof HTMLDivElement).toBeTruthy();
 
-            expect(result[2].games[1]).toBeDefined();
-            expect(result[2].games[1].cls).toBe('lost');
-            expect(result[2].games[1].cell instanceof HTMLDivElement).toBeTruthy();
+            expect(result[2].opponents).toEqual([1]);
+            expect(result[2].games[0]).toBeDefined();
+            expect(result[2].games[0].cls).toBe('lost');
+            expect(result[2].games[0].cell instanceof HTMLDivElement).toBeTruthy();
         });
 
         it('skip preceding rows without place in the first column', function () {
@@ -343,3 +347,11 @@ describe('parser', () => {
         });
     });
 });
+
+function toGamesMap(games) {
+    return games.reduce((map, game) => {
+        map[game.opponentPlace] = game;
+
+        return map;
+    }, {});
+}

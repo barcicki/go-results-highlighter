@@ -54,7 +54,7 @@ function getItemsWithGoResults(items, resultsMap) {
  * @returns {boolean}
  */
 function checkItemsForResults(items, resultsMap) {
-    const count = items.length;
+    const count = items.filter(isNonEmpty).length;
     const itemsWithResultsCount = getItemsWithGoResults(items, resultsMap).length;
 
     return itemsWithResultsCount / count >= DETECT_THRESHOLD;
@@ -70,6 +70,15 @@ function isPositiveNumber(item) {
     const val = Number(item);
 
     return !isNaN(val) && val > 0;
+}
+
+/**
+ * Checks if given string is non empty
+ * @param {string} item
+ * @returns {boolean}
+ */
+function isNonEmpty(item) {
+    return item && String(item).length > 0;
 }
 
 /**
@@ -120,7 +129,7 @@ function getFilterForColumnsWithResults(cachedTable, settings, resultsMap) {
         return () => true;
     }
 
-    const  indexes = getIndexesOfColumnsWithResultsFromRows(cachedTable, resultsMap);
+    const indexes = getIndexesOfColumnsWithResultsFromRows(cachedTable, resultsMap);
 
     return createCellFromColumnsFilter(indexes);
 }
@@ -139,7 +148,7 @@ function getPlaceColumn(cachedTable, settings) {
 
     const columns = getColumnsFromRows(cachedTable);
     const index = columns.findIndex((column) => {
-        const count = column.length;
+        const count = column.filter(isNonEmpty).length;
         const numbers = column.filter(isPositiveNumber).length;
 
         return (numbers / count) >= DETECT_THRESHOLD;
@@ -215,8 +224,9 @@ export default function parse(table, config) {
         const player = {
             tournamentPlace: -1,
             row,
-            games: {},
-            opponents: []
+            games: [],
+            opponents: [],
+            opponentsCls: {}
         };
 
         if (row.hasAttribute(DOM_ATTRIBUTES.PLAYER_PLACEMENT)) {
@@ -255,15 +265,17 @@ export default function parse(table, config) {
             return;
         }
 
+        player.gridPlacement = gridPlacement;
+        player.tournamentPlace = tournamentPlacement;
+
         cells.forEach((cell, index) => {
              if (columnsWithResultsFilter(cell, index)) {
-                 parseGame(player, cell);
+                 parseGame(player, cell, index);
              }
         });
 
-        player.tournamentPlace = tournamentPlacement;
         player.index = index;
-        player.opponents.sort((a, b) => a > b ? 1 : -1);
+        player.opponents.sort((a, b) => a - b);
 
         results[gridPlacement] = player;
 
@@ -271,7 +283,7 @@ export default function parse(table, config) {
         lastGridPlacement = gridPlacement;
     }
 
-    function parseGame(player, cell) {
+    function parseGame(player, cell, index) {
         let opponentPlace;
         let resultCls;
 
@@ -304,11 +316,21 @@ export default function parse(table, config) {
             }
         }
 
-        player.games[opponentPlace] = {
-            cell,
-            cls: resultCls
+        cell.highlighterGame = {
+            player: player.gridPlacement,
+            opponent: opponentPlace,
+            row: player.row,
+            column: index,
         };
 
+        player.games.push({
+            cell,
+            index,
+            opponentPlace,
+            cls: resultCls
+        });
+
+        player.opponentsCls[opponentPlace] = resultCls;
         player.opponents.push(opponentPlace);
     }
 }
