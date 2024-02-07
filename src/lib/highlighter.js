@@ -193,6 +193,7 @@ export default class GoResultsHighlighter {
      */
     bindEvents() {
         let hasTouchMoved = false;
+        let hasTouched = false;
 
         this.element.addEventListener('touchstart', () => {
             hasTouchMoved = false;
@@ -236,10 +237,15 @@ export default class GoResultsHighlighter {
                 updateTopPosition(target, lastTargetPos);
             }
 
-            event.preventDefault();
+            hasTouched = true;
         });
 
         this.element.addEventListener('click', (event) => {
+            if (hasTouched) {
+                hasTouched = false;
+                return;
+            }
+
             if (this.settings.rearranging === false) {
                 return;
             }

@@ -562,7 +562,10 @@ describe('highlighter', () => {
 
         it('remove highlighting when not hovering table', () => {
             table.querySelector('#row5').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('mouseout', { bubbles: true, relatedTarget: table.querySelector('#row5') }));
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('mouseout', {
+                bubbles: true,
+                relatedTarget: table.querySelector('#row5')
+            }));
             table.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, relatedTarget: table.parentNode }));
 
             expect(highlighter.isHighlighting).toBe(false);
@@ -745,7 +748,10 @@ describe('highlighter', () => {
         it('keep highlighting when not hovering rearranged table', () => {
             table.querySelector('#row5').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
             table.querySelector('#row5').querySelector('.game3').dispatchEvent(new MouseEvent('click', { bubbles: true }));
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('mouseout', { bubbles: true, relatedTarget: table.querySelector('#row5') }));
+            table.querySelector('#row5').dispatchEvent(new MouseEvent('mouseout', {
+                bubbles: true,
+                relatedTarget: table.querySelector('#row5')
+            }));
             table.dispatchEvent(new MouseEvent('mouseout', { bubbles: true, relatedTarget: table.parentNode }));
 
             expect(highlighter.isHighlighting).toBe(true);
@@ -768,11 +774,24 @@ describe('highlighter', () => {
             highlighter = new GoResultsHighlighter(table);
         });
 
-        it('highlight player and opponents when touched', () => {
-            let el = table.querySelector('#row5');
+        function dispatchTouch(selector) {
+            const el = table.querySelector(selector);
 
             el.dispatchEvent(new MouseEvent('touchstart', { bubbles: true }));
             el.dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        }
+
+        function dispatchTouchAndMove(selector) {
+            const el = table.querySelector(selector);
+
+            el.dispatchEvent(new MouseEvent('touchstart', { bubbles: true }));
+            el.dispatchEvent(new MouseEvent('touchmove', { bubbles: true }));
+            el.dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+        }
+
+        it('highlight player and opponents when touched', () => {
+            dispatchTouch('#row5');
 
             expect(highlighter.current).toBe(3);
             expect(highlighter.isRearranged).toBe(false);
@@ -781,11 +800,7 @@ describe('highlighter', () => {
         });
 
         it('ignore touchend event when touchmove was triggered', () => {
-            let el = table.querySelector('#row5');
-
-            el.dispatchEvent(new MouseEvent('touchstart', { bubbles: true }));
-            el.dispatchEvent(new MouseEvent('touchmove', { bubbles: true }));
-            el.dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouchAndMove('#row5');
 
             expect(highlighter.current).toBe(null);
             expect(highlighter.isRearranged).toBe(false);
@@ -794,8 +809,8 @@ describe('highlighter', () => {
         });
 
         it('change highlight when touched other player', () => {
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row6').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
+            dispatchTouch('#row6');
 
             expect(highlighter.current).toBe(4);
             expect(highlighter.isRearranged).toBe(false);
@@ -804,8 +819,8 @@ describe('highlighter', () => {
         });
 
         it('rearrange rows when highlighted player touched again', () => {
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
+            dispatchTouch('#row5');
 
             expect(highlighter.current).toBe(3);
             expect(highlighter.isRearranged).toBe(true);
@@ -814,9 +829,9 @@ describe('highlighter', () => {
         });
 
         it('rearrange rows again when touched other player when already rearranged', () => {
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row4').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
+            dispatchTouch('#row5');
+            dispatchTouch('#row4');
 
             expect(highlighter.current).toBe(2);
             expect(highlighter.isRearranged).toBe(true);
@@ -825,9 +840,9 @@ describe('highlighter', () => {
         });
 
         it('restore initial order but keep highlighted when touched highlighted player when rearranged', () => {
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
+            dispatchTouch('#row5');
+            dispatchTouch('#row5');
 
             expect(highlighter.current).toBe(3);
             expect(highlighter.isRearranged).toBe(false);
@@ -836,8 +851,8 @@ describe('highlighter', () => {
         });
 
         it('hide highlight when touching non-player row', () => {
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row1').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
+            dispatchTouch('#row1');
 
             expect(highlighter.current).toBe(null);
             expect(highlighter.isRearranged).toBe(false);
@@ -845,9 +860,9 @@ describe('highlighter', () => {
         });
 
         it('hide highlight and restore initial order when touching non-player row', () => {
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row1').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
+            dispatchTouch('#row5');
+            dispatchTouch('#row1');
 
             expect(highlighter.current).toBe(null);
             expect(highlighter.isRearranged).toBe(false);
@@ -858,8 +873,8 @@ describe('highlighter', () => {
         it('remove highlight instead of rearranging if rearranging is disabled when touched the highlighted player second time', () => {
             highlighter.settings.rearranging = false;
 
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
+            dispatchTouch('#row5');
 
             expect(highlighter.current).toBe(null);
             expect(highlighter.isRearranged).toBe(false);
@@ -870,7 +885,7 @@ describe('highlighter', () => {
         it('rearrange rows if hovering is disabled and touched any player', () => {
             highlighter.settings.hovering = false;
 
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
 
             expect(highlighter.current).toBe(3);
             expect(highlighter.isRearranged).toBe(true);
@@ -881,8 +896,8 @@ describe('highlighter', () => {
         it('remove highlight when touched highlighted player again and hovering is disabled', () => {
             highlighter.settings.hovering = false;
 
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
+            dispatchTouch('#row5');
 
             expect(highlighter.current).toBe(null);
             expect(highlighter.isRearranged).toBe(false);
@@ -894,7 +909,7 @@ describe('highlighter', () => {
             highlighter.settings.hovering = false;
             highlighter.settings.rearranging = false;
 
-            table.querySelector('#row5').dispatchEvent(new MouseEvent('touchend', { bubbles: true }));
+            dispatchTouch('#row5');
 
             expect(highlighter.current).toBe(null);
             expect(highlighter.isRearranged).toBe(false);
