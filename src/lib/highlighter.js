@@ -140,7 +140,7 @@ export default class GoResultsHighlighter {
             if (gamesToHighlight && typeof gamesToHighlight.length === 'number') {
                 for (const game of player.games) {
                     if (gamesToHighlight.includes(game.opponentPlace) && (!settings.column || settings.column === game.index)) {
-                        const opponentGame = getOpponentGame(this.map[game.opponentPlace], game);
+                        const opponentGame = getOpponentGame(this.map[game.opponentPlace], player, game);
 
                         if (!opponentGame) {
                             continue;
@@ -153,7 +153,7 @@ export default class GoResultsHighlighter {
                 }
             } else if (this.isRearranged) {
                 for (const game of player.games) {
-                    const opponentGame = getOpponentGame(this.map[game.opponentPlace], game);
+                    const opponentGame = getOpponentGame(this.map[game.opponentPlace], player, game);
 
                     if (!opponentGame) {
                         continue;
@@ -444,11 +444,15 @@ function rearrangeOrder(player, opponents) {
     }
 }
 
-function getOpponentGame(opponent, game) {
+function getOpponentGame(opponent, player, game) {
     let best = null;
     let current;
 
     for (const opponentGame of opponent.games) {
+        if (opponentGame.opponentPlace !== player.gridPlacement) {
+            continue;
+        }
+
         const distance = Math.abs(game.index - opponentGame.index);
 
         if (!best || distance < current) {
