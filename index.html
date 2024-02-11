@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Go Results Highlighter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="A JavaScript library that makes reading Go results super easy">
+    <meta name="keywords" content="go,baduk,weici,igo,results,standings,highlighter">
+    <meta name="author" content="Artur Barcicki">
+    <meta property="og:title" content="Go Results Highlighter">
+    <meta property="og:description" content="A JavaScript library that makes reading Go results super easy">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+    <link href="site.css" rel="stylesheet" type="text/css">
+    <link href="browser.css" rel="stylesheet" type="text/css">
+    <script src="site.js"></script>
+    <script src="component.js"></script>
+    <script src="browser.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="content">
+        <h1>Go Results Highlighter<small>3.0.4</small></h1>
+        <h2>by Artur Barcicki</h2>
+      </div>
+    </header>
+    <nav>
+      <div class="content">
+        <ul>
+            <li class="active"><a href=""><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-home" aria-hidden="true"><path d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path></svg></span><span>Home</span></a></li>
+            <li><a href="docs"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-file" aria-hidden="true"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg></span><span>Documentation</span></a></li>
+            <li><a href="examples/binding.html"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-eye" aria-hidden="true"><path d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path></svg></span><span>Examples</span></a></li>
+        </ul>
+        <ul class="github">
+            <li><a href="https://github.com/barcicki/go-results-highlighter"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg></span><span>GitHub</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-download" aria-hidden="true"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg></span><span>Download .zip</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-download" aria-hidden="true"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg></span><span>Download .tar.gz</span></a></li>
+        </ul>
+      </div>
+    </nav>
+    <article class="features">
+      <div class="content">
+        <p><span><svg version="1.1" width="18" height="18" viewBox="0 0 16 16" class="octicon octicon-check" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span><span>Makes reading Go results super easy - just move the mouse over the player to see the opponents</span></p>
+        <p><span><svg version="1.1" width="18" height="18" viewBox="0 0 16 16" class="octicon octicon-check" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span><span>Click on the player to see compacted results</span></p>
+        <p><span><svg version="1.1" width="18" height="18" viewBox="0 0 16 16" class="octicon octicon-check" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span><span>Supports HTML and raw outputs from Macmahon and OpenGotha</span></p>
+        <p><span><svg version="1.1" width="18" height="18" viewBox="0 0 16 16" class="octicon octicon-check" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span><span>Mobile friendly</span></p>
+        <p><span><svg version="1.1" width="18" height="18" viewBox="0 0 16 16" class="octicon octicon-check" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span><span>Fully customizable</span></p>
+        <p><span><svg version="1.1" width="18" height="18" viewBox="0 0 16 16" class="octicon octicon-check" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span><span>Supports most modern browsers (and doesn't crash in old ones)</span></p>
+        <p><span><svg version="1.1" width="18" height="18" viewBox="0 0 16 16" class="octicon octicon-check" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span><span>Fully tested</span></p>
+        <p><span><svg version="1.1" width="18" height="18" viewBox="0 0 16 16" class="octicon octicon-check" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span><span>Can be used as WebComponent</span></p>
+        <p><span><svg version="1.1" width="18" height="18" viewBox="0 0 16 16" class="octicon octicon-check" aria-hidden="true"><path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path></svg></span><span>Bookmarklet! Use highlighter before web admins add it to their sites.</span></p>
+      </div>
+    </article>
+    <article class="home-results">
+      <div class="content">
+        <p class="bookmark"><a href="javascript:(()=&gt;{&quot;use strict&quot;;var e={192:(e,t,n)=&gt;{n.d(t,{c:()=&gt;a});var r=n(500),s=n.n(r),o=n(312),i=n.n(o)()(s());i.push([e.id,&quot;[data-go-results].go-results-rearranged [data-go-place]{opacity:.2;cursor:pointer}[data-go-results] .go-results-current[data-go-place]{background-color:#d2d2d2;color:#000;cursor:pointer;opacity:1}[data-go-results] .go-results-current[data-go-place] .go-results-game{background-color:#a7a7a7}[data-go-results] .go-results-won[data-go-place]{background-color:#799b29;color:#000;opacity:1}[data-go-results] .go-results-won[data-go-place] .go-results-game{background-color:#5a6a2c;color:#fff}[data-go-results] .go-results-lost[data-go-place]{background-color:#d97962;color:#000;opacity:1}[data-go-results] .go-results-lost[data-go-place] .go-results-game{background-color:#a5422b;color:#fff}[data-go-results] .go-results-jigo[data-go-place]{background-color:#d7c3d1;color:#000;opacity:1}[data-go-results] .go-results-jigo[data-go-place] .go-results-game{background-color:#9e7593}[data-go-results] .go-results-unresolved{background-color:#cbdce5;color:#000}[data-go-results] .go-results-unresolved .go-results-game{background-color:#7d9cad}&quot;,&quot;&quot;]);const a=i},312:e=&gt;{e.exports=function(e){var t=[];return t.toString=function(){return this.map((function(t){var n=&quot;&quot;,r=void 0!==t[5];return t[4]&amp;&amp;(n+=&quot;@supports (&quot;.concat(t[4],&quot;) {&quot;)),t[2]&amp;&amp;(n+=&quot;@media &quot;.concat(t[2],&quot; {&quot;)),r&amp;&amp;(n+=&quot;@layer&quot;.concat(t[5].length&gt;0?&quot; &quot;.concat(t[5]):&quot;&quot;,&quot; {&quot;)),n+=e(t),r&amp;&amp;(n+=&quot;}&quot;),t[2]&amp;&amp;(n+=&quot;}&quot;),t[4]&amp;&amp;(n+=&quot;}&quot;),n})).join(&quot;&quot;)},t.i=function(e,n,r,s,o){&quot;string&quot;==typeof e&amp;&amp;(e=[[null,e,void 0]]);var i={};if(r)for(var a=0;a&lt;this.length;a++){var l=this[a][0];null!=l&amp;&amp;(i[l]=!0)}for(var c=0;c&lt;e.length;c++){var u=[].concat(e[c]);r&amp;&amp;i[u[0]]||(void 0!==o&amp;&amp;(void 0===u[5]||(u[1]=&quot;@layer&quot;.concat(u[5].length&gt;0?&quot; &quot;.concat(u[5]):&quot;&quot;,&quot; {&quot;).concat(u[1],&quot;}&quot;)),u[5]=o),n&amp;&amp;(u[2]?(u[1]=&quot;@media &quot;.concat(u[2],&quot; {&quot;).concat(u[1],&quot;}&quot;),u[2]=n):u[2]=n),s&amp;&amp;(u[4]?(u[1]=&quot;@supports (&quot;.concat(u[4],&quot;) {&quot;).concat(u[1],&quot;}&quot;),u[4]=s):u[4]=&quot;&quot;.concat(s)),t.push(u))}},t}},500:e=&gt;{e.exports=function(e){return e[1]}},596:e=&gt;{var t=[];function n(e){for(var n=-1,r=0;r&lt;t.length;r++)if(t[r].identifier===e){n=r;break}return n}function r(e,r){for(var o={},i=[],a=0;a&lt;e.length;a++){var l=e[a],c=r.base?l[0]+r.base:l[0],u=o[c]||0,g=&quot;&quot;.concat(c,&quot; &quot;).concat(u);o[c]=u+1;var h=n(g),p={css:l[1],media:l[2],sourceMap:l[3],supports:l[4],layer:l[5]};if(-1!==h)t[h].references++,t[h].updater(p);else{var d=s(p,r);r.byIndex=a,t.splice(a,0,{identifier:g,updater:d,references:1})}i.push(g)}return i}function s(e,t){var n=t.domAPI(t);return n.update(e),function(t){if(t){if(t.css===e.css&amp;&amp;t.media===e.media&amp;&amp;t.sourceMap===e.sourceMap&amp;&amp;t.supports===e.supports&amp;&amp;t.layer===e.layer)return;n.update(e=t)}else n.remove()}}e.exports=function(e,s){var o=r(e=e||[],s=s||{});return function(e){e=e||[];for(var i=0;i&lt;o.length;i++){var a=n(o[i]);t[a].references--}for(var l=r(e,s),c=0;c&lt;o.length;c++){var u=n(o[c]);0===t[u].references&amp;&amp;(t[u].updater(),t.splice(u,1))}o=l}}},176:e=&gt;{var t={};e.exports=function(e,n){var r=function(e){if(void 0===t[e]){var n=document.querySelector(e);if(window.HTMLIFrameElement&amp;&amp;n instanceof window.HTMLIFrameElement)try{n=n.contentDocument.head}catch(e){n=null}t[e]=n}return t[e]}(e);if(!r)throw new Error(&quot;Couldn't find a style target. This probably means that the value for the 'insert' parameter is invalid.&quot;);r.appendChild(n)}},808:e=&gt;{e.exports=function(e){var t=document.createElement(&quot;style&quot;);return e.setAttributes(t,e.attributes),e.insert(t,e.options),t}},120:(e,t,n)=&gt;{e.exports=function(e){var t=n.nc;t&amp;&amp;e.setAttribute(&quot;nonce&quot;,t)}},520:e=&gt;{e.exports=function(e){if(&quot;undefined&quot;==typeof document)return{update:function(){},remove:function(){}};var t=e.insertStyleElement(e);return{update:function(n){!function(e,t,n){var r=&quot;&quot;;n.supports&amp;&amp;(r+=&quot;@supports (&quot;.concat(n.supports,&quot;) {&quot;)),n.media&amp;&amp;(r+=&quot;@media &quot;.concat(n.media,&quot; {&quot;));var s=void 0!==n.layer;s&amp;&amp;(r+=&quot;@layer&quot;.concat(n.layer.length&gt;0?&quot; &quot;.concat(n.layer):&quot;&quot;,&quot; {&quot;)),r+=n.css,s&amp;&amp;(r+=&quot;}&quot;),n.media&amp;&amp;(r+=&quot;}&quot;),n.supports&amp;&amp;(r+=&quot;}&quot;);var o=n.sourceMap;o&amp;&amp;&quot;undefined&quot;!=typeof btoa&amp;&amp;(r+=&quot;\n/*# sourceMappingURL=data:application/json;base64,&quot;.concat(btoa(unescape(encodeURIComponent(JSON.stringify(o)))),&quot; */&quot;)),t.styleTagTransform(r,e,t.options)}(t,e,n)},remove:function(){!function(e){if(null===e.parentNode)return!1;e.parentNode.removeChild(e)}(t)}}}},936:e=&gt;{e.exports=function(e,t){if(t.styleSheet)t.styleSheet.cssText=e;else{for(;t.firstChild;)t.removeChild(t.firstChild);t.appendChild(document.createTextNode(e))}}}},t={};function n(r){var s=t[r];if(void 0!==s)return s.exports;var o=t[r]={id:r,exports:{}};return e[r](o,o.exports,n),o.exports}n.n=e=&gt;{var t=e&amp;&amp;e.__esModule?()=&gt;e.default:()=&gt;e;return n.d(t,{a:t}),t},n.d=(e,t)=&gt;{for(var r in t)n.o(t,r)&amp;&amp;!n.o(e,r)&amp;&amp;Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},n.o=(e,t)=&gt;Object.prototype.hasOwnProperty.call(e,t),n.nc=void 0,(()=&gt;{const e={prefixCls:&quot;go-results-&quot;,rearrangedCls:&quot;rearranged&quot;,tableCls:&quot;table&quot;,gameCls:&quot;game&quot;,currentCls:&quot;current&quot;,results:{won:&quot;([0-9]+)\\+&quot;,lost:&quot;([0-9]+)\\-&quot;,jigo:&quot;([0-9]+)=&quot;,unresolved:&quot;([0-9]+)\\?&quot;},startingRow:0,placeColumn:null,roundsColumns:null,rowTags:&quot;tr&quot;,cellTags:&quot;td&quot;,ignoreOutOfBoundsRows:!1,checkColumnsForResults:!0,cellSeparator:&quot;[\t ]+&quot;,joinNames:!0,hovering:!0,rearranging:!0},t=[&quot;rearrangedCls&quot;,&quot;tableCls&quot;,&quot;gameCls&quot;,&quot;currentCls&quot;],r={RESULT_TABLE:&quot;data-go-results&quot;,SETTING_STARTING_ROW:&quot;data-go-starting-row&quot;,SETTING_PLACE_COLUMN:&quot;data-go-place-column&quot;,SETTING_ROUNDS_COLUMNS:&quot;data-go-rounds-columns&quot;,SETTING_REARRANGING:&quot;data-go-rearranging&quot;,SETTING_HOVERING:&quot;data-go-hovering&quot;,PLAYER_PLACEMENT:&quot;data-go-place&quot;,OPPONENT_PLACEMENT:&quot;data-go-opponent&quot;,OPPONENTS:&quot;data-go-opponents&quot;,GAME_RESULT:&quot;data-go-result&quot;};function s(e){const t=[];for(let n in e)e.hasOwnProperty(n)&amp;&amp;t.push({cls:n,regexp:new RegExp(e[n])});return t}function o(e){return Array.prototype.slice.call(e)}function i(e){for(var t=arguments.length,n=new Array(t&gt;1?t-1:0),r=1;r&lt;t;r++)n[r-1]=arguments[r];const s=n.filter((e=&gt;&quot;object&quot;==typeof e)).reverse(),o=s.length,i={};e:for(let t in e){for(let e=0;e&lt;o;e++)if(s[e].hasOwnProperty(t)){i[t]=s[e][t];continue e}i[t]=e[t]}return i}const a=.4;function l(e,t){e.setAttribute(r.PLAYER_PLACEMENT,t)}function c(e){const t=[];for(let n=0;n&lt;e.length;n++)for(let r=0;r&lt;e[n].cells.length;r++)t[r]||(t[r]=[]),t[r][n]=e[n].cells[r].textContent;return t}function u(e){const t=Number(e);return!isNaN(t)&amp;&amp;t&gt;0}function g(e){return e&amp;&amp;String(e).length&gt;0}function h(e){return(t,n)=&gt;-1!==e.indexOf(n)}function p(t,n){const p=i(e,n),d=s(p.results),f=d.length,m=function(e,t){const n=e.querySelectorAll(t.rowTags),r=new Array(n.length);for(let e=0;e&lt;n.length;e++){const s=n[e],i=s.querySelectorAll(t.cellTags);r[e]={row:s,cells:o(i)}}return r}(t,p),E=function(e,t,n){return&quot;string&quot;==typeof t.roundsColumns?h(t.roundsColumns.split(&quot;,&quot;).map(Number)):t.checkColumnsForResults?h(function(e,t){return c(e).reduce(((e,n,r)=&gt;(function(e,t){const n=e.filter(g).length,r=function(e,t){return e.filter((e=&gt;t.some((t=&gt;e.match(t.regexp)))))}(e,t).length;return r/n&gt;=a}(n,t)&amp;&amp;e.push(r),e)),[])}(e,n)):()=&gt;!0}(m,p,d),C=function(e,t){if(&quot;number&quot;==typeof t.placeColumn)return t.placeColumn;const n=c(e).findIndex((e=&gt;{const t=e.filter(g).length;return e.filter(u).length/t&gt;=a}));return Math.max(n,0)}(m,p),b={};let N,T;return m.forEach((function(e,t){let{row:n,cells:s}=e;if(t&lt;p.startingRow)return;let o=-1;if(!s.length||!s[C])return void l(n,o);let i=parseInt(s[C].textContent,10);const a={tournamentPlace:-1,row:n,games:[],opponents:[],opponentsCls:{}};if(n.hasAttribute(r.PLAYER_PLACEMENT))o=Number(n.getAttribute(r.PLAYER_PLACEMENT));else{if(T)o=T+1;else{if(isNaN(i))return void l(n,o);o=i||1}i?i&lt;=N&amp;&amp;(i=N):i=N||1,l(n,o)}-1!==Number(o)&amp;&amp;(a.gridPlacement=o,a.tournamentPlace=i,s.forEach(((e,t)=&gt;{E(e,t)&amp;&amp;function(e,t,n){let s,o;if(t.hasAttribute(r.GAME_RESULT)&amp;&amp;t.hasAttribute(r.OPPONENT_PLACEMENT))s=Number(t.getAttribute(r.OPPONENT_PLACEMENT)),o=t.getAttribute(r.GAME_RESULT);else{for(let e=0;e&lt;f;e++){let n=t.textContent.match(d[e].regexp);if(n){if(s=Number(n[1]),o=d[e].cls,s&lt;=0||!p.ignoreOutOfBoundsRows&amp;&amp;s&gt;m.length)return;t.setAttribute(r.OPPONENT_PLACEMENT,s),t.setAttribute(r.GAME_RESULT,d[e].cls)}}if(!s)return}t.highlighterGame={player:e.gridPlacement,opponent:s,row:e.row,column:n},e.games.push({cell:t,index:n,opponentPlace:s,cls:o}),e.opponentsCls[s]=o,e.opponents.push(s)}(a,e,t)})),a.index=t,a.opponents.sort(((e,t)=&gt;e-t)),b[o]=a,N=i,T=o)})),b}class d{constructor(t,n){if(this.settings=i(e,function(e){const t={};return&quot;function&quot;!=typeof e.hasAttribute||(e.hasAttribute(r.SETTING_PLACE_COLUMN)&amp;&amp;(t.placeColumn=Number(e.getAttribute(r.SETTING_PLACE_COLUMN))),e.hasAttribute(r.SETTING_STARTING_ROW)&amp;&amp;(t.startingRow=Number(e.getAttribute(r.SETTING_STARTING_ROW))),e.hasAttribute(r.SETTING_ROUNDS_COLUMNS)&amp;&amp;(t.roundsColumns=e.getAttribute(r.SETTING_ROUNDS_COLUMNS)),e.hasAttribute(r.SETTING_REARRANGING)&amp;&amp;(t.rearranging=&quot;false&quot;!==e.getAttribute(r.SETTING_REARRANGING)),e.hasAttribute(r.SETTING_HOVERING)&amp;&amp;(t.hovering=&quot;false&quot;!==e.getAttribute(r.SETTING_HOVERING))),t}(t),n),t instanceof HTMLPreElement||t instanceof Text){let o=function(t,n){const o=document.createElement(&quot;table&quot;);if(!t)return o;const a=i(e,n),l=t.replace(/&lt;br[^&gt;]*&gt;/gi,&quot;\n&quot;).replace(/&lt;\/?code[^&gt;]*&gt;/gi,&quot;&quot;).split(/\r\n|\n/);if(l.length&lt;=2&amp;&amp;!l[0]&amp;&amp;!l[1])return o;const c=s(a.results),u=c.length,g=l.map((e=&gt;e.replace(/([0-9]+)\s(dan|kyu)/i,&quot;$1_$2&quot;).split(new RegExp(a.cellSeparator)).filter((e=&gt;e.length&gt;0)))).filter((e=&gt;e.length&gt;0&amp;&amp;0!==e[0].indexOf(&quot;;&quot;))),h=g.reduce(((e,t)=&gt;Math.max(e,t.length)),0),p=a.placeColumn||0,d=a.joinNames?-1:0,f=p+1;let m,E=null;return&quot;string&quot;==typeof a.roundsColumns&amp;&amp;(E=a.roundsColumns.split(&quot;,&quot;).map(Number)),g.forEach(((e,t)=&gt;{const n=document.createElement(&quot;tr&quot;),s=e.length;if(s){if(t&lt;a.startingRow||s&lt;h+d){let t=document.createElement(&quot;td&quot;);t.setAttribute(&quot;colspan&quot;,h+d),t.textContent=e.join(&quot; &quot;),n.setAttribute(r.PLAYER_PLACEMENT,-1),n.appendChild(t)}else{const t=parseInt(e[p],10);if(isNaN(t)&amp;&amp;!m)e.forEach((e=&gt;{let t=document.createElement(&quot;td&quot;);t.textContent=e,n.setAttribute(r.PLAYER_PLACEMENT,-1),n.appendChild(t)}));else{n.setAttribute(r.PLAYER_PLACEMENT,m||t);let s=[];a.joinNames&amp;&amp;e.splice(f,2,&quot;&quot;.concat(e[f],&quot;  &quot;).concat(e[f+1])),e.forEach(((e,t)=&gt;{let o=document.createElement(&quot;td&quot;);if(o.textContent=e.replace(/_/,&quot; &quot;),!E||E.indexOf(t)&gt;=0)for(let t=0;t&lt;u;t++){let n=e.match(c[t].regexp);if(!n)continue;let i=n[1];s.push(i),o.setAttribute(r.OPPONENT_PLACEMENT,i),o.setAttribute(r.GAME_RESULT,c[t].cls)}n.appendChild(o)})),s.length&amp;&amp;n.setAttribute(r.OPPONENTS,s.join(&quot;,&quot;)),m?m+=1:m=2}}o.appendChild(n)}})),o.setAttribute(r.RESULT_TABLE,&quot;&quot;),o}(t.textContent,n),a=t.parentNode;a.insertBefore(o,t),a.removeChild(t),this.element=o}else this.element=t;this.element.classList&amp;&amp;(this.createPlayersMap(),this.bindEvents(),this.element.classList.add(this.settings.prefixCls+this.settings.tableCls),this.element.setAttribute(r.RESULT_TABLE,&quot;&quot;),this.current=null,this.games=[],this.isRearranged=!1,this.isHighlighting=!1)}createPlayersMap(){this.map=p(this.element,this.settings),this.players=[];for(let e in this.map)this.map.hasOwnProperty(e)&amp;&amp;this.players.push(this.map[e])}highlight(e){e||(e={});let n=e.player,s=!0===e.rearrange,i=e.games;const a=this.map[n],l=function(e){let n={};return t.forEach((t=&gt;{n[t]=e.prefixCls+e[t]})),n}(this.settings);this.isRearranged&amp;&amp;this.players.forEach((e=&gt;{const t=e.row.parentNode.children[e.index];t!==e.row&amp;&amp;e.row.parentNode.insertBefore(e.row,t),e.rearranged=!1})),a&amp;&amp;s?(function(e,t){const n=e.row.parentNode;let r=e.row.nextElementSibling;for(let s=0;s&lt;t.length;s++){const o=t[s];o.index&lt;e.index?n.insertBefore(o.row,e.row):(n.insertBefore(o.row,r),r=o.row.nextElementSibling),o.rearranged=!0}}(a,a.opponents.map((e=&gt;this.map[e]))),this.element.classList.add(l.rearrangedCls),this.isRearranged=!0):(this.element.classList.remove(l.rearrangedCls),this.isRearranged=!1);const c=o(this.element.querySelectorAll(&quot;.&quot;+l.gameCls)),u=this.element.querySelector(&quot;.&quot;+l.currentCls),g=u?u.getAttribute(r.PLAYER_PLACEMENT):null,h=g?this.map[g]:null,p=(e,t)=&gt;{const n=t?&quot;add&quot;:&quot;remove&quot;;e.row.classList[n](l.currentCls),e.opponents.forEach((t=&gt;{const r=this.map[t];r&amp;&amp;r.row.classList[n](this.settings.prefixCls+e.opponentsCls[t])}))};if(c.forEach((e=&gt;{e.classList.remove(l.gameCls)})),h&amp;&amp;h!==a&amp;&amp;p(h,!1),a&amp;&amp;a!==h&amp;&amp;p(a,!0),this.games.length=0,a){if(&quot;number&quot;==typeof i&amp;&amp;(i=[i]),i&amp;&amp;&quot;number&quot;==typeof i.length){for(const t of a.games)if(i.includes(t.opponentPlace)&amp;&amp;(!e.column||e.column===t.index)){const e=E(this.map[t.opponentPlace],t);if(!e)continue;t.cell.classList.add(l.gameCls),e.cell.classList.add(l.gameCls),this.games.push(t.opponentPlace)}}else if(this.isRearranged)for(const e of a.games){const t=E(this.map[e.opponentPlace],e);t&amp;&amp;(t.cell.classList.add(l.gameCls),this.games.push(e.opponentPlace))}this.games.sort(),this.current=n,this.isHighlighting=!0}else this.current=null,this.isHighlighting=!1}configure(e){this.highlight(null),this.element.classList.remove(this.settings.prefixCls+this.settings.tableCls),this.settings=i(this.settings,e),this.createPlayersMap(),this.element.classList.add(this.settings.prefixCls+this.settings.tableCls)}bindEvents(){let e=!1,t=!1;this.element.addEventListener(&quot;touchstart&quot;,(()=&gt;{e=!1})),this.element.addEventListener(&quot;touchmove&quot;,(()=&gt;{e=!0})),this.element.addEventListener(&quot;touchend&quot;,(n=&gt;{if(e||!1===this.settings.rearranging&amp;&amp;!1===this.settings.hovering)return;let{target:r,player:s,games:o}=m(n.target,this.element);if(!s)return;let i,a=!1;this.current===s?(this.settings.rearranging&amp;&amp;this.settings.hovering||(s=null),a=!this.isRearranged):!this.isRearranged&amp;&amp;this.settings.hovering||(a=!0),a&amp;&amp;(i=r.getBoundingClientRect().top),this.highlight({player:s,games:o,rearrange:a}),i&amp;&amp;f(r,i),t=!0})),this.element.addEventListener(&quot;click&quot;,(e=&gt;{if(t)return void(t=!1);if(!1===this.settings.rearranging)return;let n,{target:r,player:s,games:o}=m(e.target,this.element),i=!1;s&amp;&amp;(!this.isRearranged||this.map[s]&amp;&amp;this.map[s].rearranged?i=!0:this.settings.hovering||(s=null),n=r.getBoundingClientRect().top,this.highlight({player:s,games:o,rearrange:i}),n&amp;&amp;f(r,n))})),this.element.addEventListener(&quot;mouseover&quot;,(e=&gt;{if(!1===this.settings.hovering)return;let{player:t,games:n,column:r}=m(e.target,this.element),s=this.isRearranged;if(t){if(this.isRearranged){if((!n||t!==this.current)&amp;&amp;this.games.length===this.map[this.current].opponents.length)return;t!==this.current&amp;&amp;(t=this.current,n=null)}this.highlight({player:t,rearrange:s,games:n,column:r})}}),!1),this.element.addEventListener(&quot;mouseout&quot;,(e=&gt;{if(!1===this.settings.hovering)return;let t=e.relatedTarget;for(;t&amp;&amp;t!==document&amp;&amp;t!==this.element;)t=t.parentNode;t!==this.element&amp;&amp;(this.isRearranged&amp;&amp;this.games.length!==this.map[this.current].opponents.length?this.highlight({player:this.current,rearrange:!0}):this.isRearranged||this.highlight(null))}),!1)}clearInlineStyles(){this.players.forEach((e=&gt;{o(e.row.childNodes).filter((e=&gt;e.nodeType===Node.ELEMENT_NODE)).forEach((e=&gt;e.removeAttribute(&quot;style&quot;)))}))}}function f(e,t){let n=e.getBoundingClientRect().top-t;Math.abs(n)&gt;10&amp;&amp;window.scrollBy(0,n)}function m(e,t){const n={player:null,games:null,target:null};for(;e&amp;&amp;e!==document&amp;&amp;e!==t;){if(e.highlighterGame)return{player:e.highlighterGame.player,games:e.highlighterGame.opponent,target:e.highlighterGame.row,column:e.highlighterGame.column};let t=e.getAttribute(r.OPPONENT_PLACEMENT),s=e.getAttribute(r.PLAYER_PLACEMENT);if(t&amp;&amp;(n.games=Number(t)),s){n.player=Number(s);break}e=e.parentNode}return n.target=e,n}function E(e,t){let n,r=null;for(const s of e.games){const e=Math.abs(t.index-s.index);(!r||e&lt;n)&amp;&amp;(r=s,n=e)}return r}function C(e,t){if(!e)return;if(!(this instanceof C))return new C(e,t);const n=new d(e,t);this.highlight=(e,t,r)=&gt;{&quot;object&quot;==typeof e?n.highlight(e):(&quot;boolean&quot;==typeof t&amp;&amp;(r=t,t=null),n.highlight({player:e,rearrange:r,games:t}))},this.configure=e=&gt;{n.configure(e)},this.opponents=e=&gt;{const t=n.map[e];return t?t.opponents.slice():[]},this.clearInlineStyles=()=&gt;{n.clearInlineStyles()},Object.defineProperties(this,{element:b((()=&gt;n.element)),isHighlighting:b((()=&gt;n.isHighlighting)),isRearranged:b((()=&gt;n.isRearranged)),player:b((()=&gt;n.current||null)),players:b((()=&gt;n.players.length)),games:b((()=&gt;n.games)),configuration:b((()=&gt;{const e=n.settings.results,t={};for(let n in e)e.hasOwnProperty(n)&amp;&amp;(t[n]=e[n]);return{startingRow:n.settings.startingRow,placeColumn:n.settings.placeColumn,roundsColumns:n.settings.roundsColumns,prefixCls:n.settings.prefixCls,rearrangedCls:n.settings.rearrangedCls,tableCls:n.settings.tableCls,gameCls:n.settings.gameCls,currentCls:n.settings.currentCls,rowTags:n.settings.rowTags,cellTags:n.settings.cellTags,cellSeparator:n.settings.cellSeparator,joinNames:n.settings.joinNames,ignoreOutOfBoundsRows:n.settings.ignoreOutOfBoundsRows,checkColumnsForResults:n.settings.checkColumnsForResults,results:t}})),rearranging:{set:e=&gt;{!e&amp;&amp;n.isRearranged&amp;&amp;n.highlight(null),n.settings.rearranging=!!e},get:()=&gt;n.settings.rearranging,configurable:!1,enumerable:!0},hovering:{set:e=&gt;n.settings.hovering=!!e,get:()=&gt;n.settings.hovering,configurable:!1,enumerable:!0}}),n.element.goResultsHighlighter=this}function b(e){return{get:e,enumerable:!0,configurable:!1}}d.DEFAULT_SETTINGS=e;var N=n(596),T=n.n(N),y=n(520),A=n.n(y),v=n(176),R=n.n(v),L=n(120),P=n.n(L),w=n(808),S=n.n(w),x=n(936),O=n.n(x),_=n(192),M={};M.styleTagTransform=O(),M.setAttributes=P(),M.insert=R().bind(null,&quot;head&quot;),M.domAPI=A(),M.insertStyleElement=S(),T()(_.c,M),_.c&amp;&amp;_.c.locals&amp;&amp;_.c.locals;const G=/^[^0-9]*([0-9]+[-+=?])[^-+?]*$/,I=/[0-9]+[-+?]/g;function U(e,t,n){const r=o(document.querySelectorAll(e)).filter((e=&gt;{if(n)return!0;if(&quot;TABLE&quot;===e.nodeName){const t=e.rows.length;for(let n=0;n&lt;t;n++){const t=e.rows[n].cells.length;for(let r=0;r&lt;t;r++)if(G.test(e.rows[n].cells[r].textContent))return!0}return!1}const t=e.textContent.match(I);return t&amp;&amp;t.length&gt;6}));if(!r.length){let r;return r=n?prompt('Could not find any elements matching &quot;'.concat(e,'&quot; selector. Do you want to provide another one?')):prompt('Could not find any tables with Go results (&quot;'.concat(e,'&quot;). If you are confident that this page has one - please provide a specific selector to the element.')),void(r?U(r,t,!0):console.log(&quot;Could not find any elements with Go results.&quot;))}let s=0,i=0;r.forEach((e=&gt;{e.goResultsHighlighter?i+=1:(new C(e,t).clearInlineStyles(),s+=1)})),console.log(&quot;Go Results Highlighter was applied to &quot;.concat(s,&quot; DOM elements. &quot;).concat(i,&quot; had Highlighter before.&quot;))}-1!==location.hostname.indexOf(&quot;europeangodatabase&quot;)?U(&quot;#tab_wallist&quot;,{placeColumn:1}):U(&quot;table, pre&quot;)})()})();" title="Highlight Go Results"><span class="octicon octicon-bookmark"></span><span>Highlight Go Results</span></a></p>
+        <p class="note">Drag the link above to your bookmarks panel and use highlighter on any page!</p>
+        <div class="wrapper"><table data-go-results>
+    <tbody>
+    <tr>
+        <th>Place</th>
+        <th>Name</th>
+        <th>Club</th>
+        <th>Level</th>
+        <th>Score</th>
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>Points</th>
+        <th>SOS</th>
+        <th>SOSOS</th>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>Grabowski, Kamil</td>
+        <td>Opol</td>
+        <td>1 Dan</td>
+        <td>10</td>
+        <td>5+</td>
+        <td>4+</td>
+        <td>3+</td>
+        <td>2-</td>
+        <td>6+</td>
+        <td>4</td>
+        <td>45</td>
+        <td>214</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>Frejlak, Stanisław</td>
+        <td>Wars</td>
+        <td>5 Dan</td>
+        <td>10</td>
+        <td>8+</td>
+        <td>3-</td>
+        <td>4+</td>
+        <td>1+</td>
+        <td>7+</td>
+        <td>4</td>
+        <td>44</td>
+        <td>212</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>Yeroshkin, Oleksandr</td>
+        <td>Rivn</td>
+        <td>3 Dan</td>
+        <td>9</td>
+        <td>6+</td>
+        <td>2+</td>
+        <td>1-</td>
+        <td>10+</td>
+        <td>5-</td>
+        <td>3</td>
+        <td>44</td>
+        <td>212</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>Wałaszewski, Maksym</td>
+        <td>Bydg</td>
+        <td>1 Dan</td>
+        <td>9</td>
+        <td>7+</td>
+        <td>1-</td>
+        <td>2-</td>
+        <td>11+</td>
+        <td>10+</td>
+        <td>3</td>
+        <td>41</td>
+        <td>205</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>Fraczak, Jan</td>
+        <td>Mimu</td>
+        <td>1 Kyu</td>
+        <td>9</td>
+        <td>1-</td>
+        <td>9-</td>
+        <td>13+</td>
+        <td>6+</td>
+        <td>3+</td>
+        <td>3</td>
+        <td>41</td>
+        <td>195&frac12;</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>Maćkowiak, Dariusz</td>
+        <td>Pozn</td>
+        <td>1 Kyu</td>
+        <td>8</td>
+        <td>3-</td>
+        <td>8+</td>
+        <td>7+</td>
+        <td>5-</td>
+        <td>1-</td>
+        <td>2</td>
+        <td>44</td>
+        <td>212</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>Jurkiewicz, Dawid</td>
+        <td>Szcz</td>
+        <td>1 Dan</td>
+        <td>8</td>
+        <td>4-</td>
+        <td>10+</td>
+        <td>6-</td>
+        <td>8+</td>
+        <td>2-</td>
+        <td>2</td>
+        <td>42</td>
+        <td>207</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>Dyszczyk, Przemek</td>
+        <td>Lubl</td>
+        <td>1 Kyu</td>
+        <td>8</td>
+        <td>2-</td>
+        <td>6-</td>
+        <td>9+</td>
+        <td>7-</td>
+        <td>12+</td>
+        <td>2</td>
+        <td>40</td>
+        <td>198</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>Dyszczyk, Piotr</td>
+        <td>Lubl</td>
+        <td>3 Kyu</td>
+        <td>8</td>
+        <td>16+</td>
+        <td>5+</td>
+        <td>8-</td>
+        <td>12+</td>
+        <td>11+</td>
+        <td>4</td>
+        <td>33</td>
+        <td>180&frac12;</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>Wałaszewski, Bruno</td>
+        <td>Bydg</td>
+        <td>2 Kyu</td>
+        <td>7</td>
+        <td>11+</td>
+        <td>7-</td>
+        <td>12+</td>
+        <td>3-</td>
+        <td>4-</td>
+        <td>2</td>
+        <td>38</td>
+        <td>198</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>Oczkowski, Robert</td>
+        <td>Toru</td>
+        <td>2 Kyu</td>
+        <td>6</td>
+        <td>10-</td>
+        <td>12-</td>
+        <td>14+</td>
+        <td>4-</td>
+        <td>9-</td>
+        <td>1</td>
+        <td>36</td>
+        <td>171&frac12;</td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>Bednarczyk, Dariusz</td>
+        <td>Hont</td>
+        <td>3 Kyu</td>
+        <td>6</td>
+        <td>13+</td>
+        <td>11+</td>
+        <td>10-</td>
+        <td>9-</td>
+        <td>8-</td>
+        <td>2</td>
+        <td>35</td>
+        <td>176&frac12;</td>
+    </tr>
+    <tr>
+        <td>13</td>
+        <td>Macieszczak, Tom</td>
+        <td>Wars</td>
+        <td>3 Kyu</td>
+        <td>6</td>
+        <td>12-</td>
+        <td>15+</td>
+        <td>5-</td>
+        <td>14-</td>
+        <td>16+</td>
+        <td>2</td>
+        <td>29&frac12;</td>
+        <td>152</td>
+    </tr>
+    <tr>
+        <td>14</td>
+        <td>Domański, Filip</td>
+        <td>Stas</td>
+        <td>5 Kyu</td>
+        <td>6</td>
+        <td>17+</td>
+        <td>16+</td>
+        <td>11-</td>
+        <td>13+</td>
+        <td>15+</td>
+        <td>4</td>
+        <td>24&frac12;</td>
+        <td>135&frac12;</td>
+    </tr>
+    <tr>
+        <td>15</td>
+        <td>Sobański, Grzegorz</td>
+        <td>Hont</td>
+        <td>4 Kyu</td>
+        <td>4&frac12;</td>
+        <td>-</td>
+        <td>13-</td>
+        <td>17+</td>
+        <td>16-</td>
+        <td>14-</td>
+        <td>1</td>
+        <td>23</td>
+        <td>116</td>
+    </tr>
+    <tr>
+        <td>16</td>
+        <td>Białożyt, Adam</td>
+        <td>Krak</td>
+        <td>5 Kyu</td>
+        <td>4</td>
+        <td>9-</td>
+        <td>14-</td>
+        <td>18+</td>
+        <td>15+</td>
+        <td>13-</td>
+        <td>2</td>
+        <td>28&frac12;</td>
+        <td>125</td>
+    </tr>
+    <tr>
+        <td>17</td>
+        <td>Gogosz, Dorota</td>
+        <td>Krak</td>
+        <td>5 Kyu</td>
+        <td>4</td>
+        <td>14-</td>
+        <td>18+</td>
+        <td>15-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>1</td>
+        <td>18&frac12;</td>
+        <td>82&frac12;</td>
+    </tr>
+    <tr>
+        <td>18</td>
+        <td>Dawid, Marcin</td>
+        <td>Pozn</td>
+        <td>6 Kyu</td>
+        <td>4</td>
+        <td>19+</td>
+        <td>17-</td>
+        <td>16-</td>
+        <td>23+</td>
+        <td>22+</td>
+        <td>3</td>
+        <td>15</td>
+        <td>89&frac12;</td>
+    </tr>
+    <tr>
+        <td>19</td>
+        <td>Kaśk&oacute;w, Wojciech</td>
+        <td>Porf</td>
+        <td>6 Kyu</td>
+        <td>4</td>
+        <td>18-</td>
+        <td>20-</td>
+        <td>24+</td>
+        <td>22+</td>
+        <td>21+</td>
+        <td>3</td>
+        <td>13&frac12;</td>
+        <td>60</td>
+    </tr>
+    <tr>
+        <td>20</td>
+        <td>Cieślak, Wojciech</td>
+        <td>Kosz</td>
+        <td>8 Kyu</td>
+        <td>3&frac12;</td>
+        <td>-</td>
+        <td>19+</td>
+        <td>22+</td>
+        <td>21-</td>
+        <td>23+</td>
+        <td>3</td>
+        <td>10</td>
+        <td>54</td>
+    </tr>
+    <tr>
+        <td>21</td>
+        <td>Kunek, Marek</td>
+        <td>Sośn</td>
+        <td>8 Kyu</td>
+        <td>3</td>
+        <td>22-</td>
+        <td>24+</td>
+        <td>23+</td>
+        <td>20+</td>
+        <td>19-</td>
+        <td>3</td>
+        <td>11&frac12;</td>
+        <td>60&frac12;</td>
+    </tr>
+    <tr>
+        <td>22</td>
+        <td>Kwietniewska, Daria</td>
+        <td>Wroc</td>
+        <td>8 Kyu</td>
+        <td>2</td>
+        <td>21+</td>
+        <td>23+</td>
+        <td>20-</td>
+        <td>19-</td>
+        <td>18-</td>
+        <td>2</td>
+        <td>15&frac12;</td>
+        <td>63&frac12;</td>
+    </tr>
+    <tr>
+        <td>23</td>
+        <td>Cichorski, Andrzej</td>
+        <td>Porf</td>
+        <td>12 Kyu</td>
+        <td>1</td>
+        <td>24+</td>
+        <td>22-</td>
+        <td>21-</td>
+        <td>18-</td>
+        <td>20-</td>
+        <td>1</td>
+        <td>13&frac12;</td>
+        <td>60</td>
+    </tr>
+    <tr>
+        <td>24</td>
+        <td>Struss, Katarzyna</td>
+        <td>Wroc</td>
+        <td>18 Kyu</td>
+        <td>1</td>
+        <td>23-</td>
+        <td>21-</td>
+        <td>19-</td>
+        <td>-</td>
+        <td>-</td>
+        <td>0</td>
+        <td>8</td>
+        <td>38&frac12;</td>
+    </tr>
+    </tbody>
+</table>
+        </div>
+        <p class="note">Example results of <strong>Hobby 2015</strong> Go tournament in Poznan.</p>
+      </div>
+    </article>
+  </body>
+</html>

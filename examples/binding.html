@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Manual Binding Examples - Go Results Highlighter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="A JavaScript library that makes reading Go results super easy">
+    <meta name="keywords" content="go,baduk,weici,igo,results,standings,highlighter">
+    <meta name="author" content="Artur Barcicki">
+    <meta property="og:title" content="Go Results Highlighter">
+    <meta property="og:description" content="A JavaScript library that makes reading Go results super easy">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+    <link href="../site.css" rel="stylesheet" type="text/css">
+    <link href="../browser.css" rel="stylesheet" type="text/css">
+    <script src="../site.js"></script>
+    <script src="../component.js"></script>
+    <script src="../browser.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="content">
+        <h1>Go Results Highlighter<small>3.0.4</small></h1>
+        <h2>by Artur Barcicki</h2>
+      </div>
+    </header>
+    <nav>
+      <div class="content">
+        <ul>
+            <li><a href="../"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-home" aria-hidden="true"><path d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path></svg></span><span>Home</span></a></li>
+            <li><a href="../docs"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-file" aria-hidden="true"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg></span><span>Documentation</span></a></li>
+            <li class="active"><a href="../examples/binding.html"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-eye" aria-hidden="true"><path d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path></svg></span><span>Examples</span></a></li>
+        </ul>
+        <ul class="github">
+            <li><a href="https://github.com/barcicki/go-results-highlighter"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg></span><span>GitHub</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-download" aria-hidden="true"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg></span><span>Download .zip</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-download" aria-hidden="true"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg></span><span>Download .tar.gz</span></a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="content">
+      <ul class="examples">
+        <li><a href="binding.html">Manual Binding</a></li>
+        <li><a href="congress.html">Long Go Congress results</a></li>
+        <li><a href="raw.html">Raw results from Macmahon & OpenGotha</a></li>
+        <li><a href="webComponent.html">Go Results Web Component</a></li>
+      </ul>
+    </div>
+    <article>
+      <div class="content docs">
+        <h1>Manual binding</h1>
+        <div class="wrapper" id="binding-example-1"><table>
+    <tbody>
+    <tr><td colspan="11">Example Tournament - After Round 3</td></tr>
+    <tr><td>Place</td><td>Name</td><td>Club</td><td>Level</td><td>Score</td><td>1</td><td>2</td><td>3</td><td>Points</td><td>SOS</td><td>SOSOS</td></tr>
+    <tr><td>1</td><td>Player 8</td><td>AAA</td><td>2 Kyu</td><td>28</td><td>6+</td><td>5+</td><td>2+</td><td>3</td><td>79</td><td>241</td></tr>
+    <tr><td>2</td><td>Player 4</td><td>BBB</td><td>4 Kyu</td><td>27</td><td>8+</td><td>3+</td><td>1-</td><td>2</td><td>80</td><td>238</td></tr>
+    <tr><td>3</td><td>Player 6</td><td>BBB</td><td>3 Kyu</td><td>27</td><td>4+</td><td>2-</td><td>7+</td><td>2</td><td>80</td><td>237</td></tr>
+    <tr><td>4</td><td>Player 2</td><td>CCC</td><td>3 Kyu</td><td>27</td><td>3-</td><td>6+</td><td>5+</td><td>2</td><td>79</td><td>241</td></tr>
+    <tr><td>5</td><td>Player 3</td><td>CCC</td><td>5 Kyu</td><td>26</td><td>7+</td><td>1-</td><td>4-</td><td>1</td><td>81</td><td>236</td></tr>
+    <tr><td>6</td><td>Player 7</td><td>AAA</td><td>5 Kyu</td><td>26</td><td>1-</td><td>4-</td><td>8+</td><td>1</td><td>80</td><td>237</td></tr>
+    <tr><td>7</td><td>Player 1</td><td>AAA</td><td>6 Kyu</td><td>26</td><td>5-</td><td>8+</td><td>3-</td><td>1</td><td>78</td><td>240</td></tr>
+    <tr><td>8</td><td>Player 5</td><td>BBB</td><td>8 Kyu</td><td>25</td><td>2-</td><td>7-</td><td>6-</td><td>0</td><td>79</td><td>238</td></tr>
+    </tbody>
+</table>
+        </div>
+        <button rel="binding-example-1">Add Go Results Highlighter!</button>
+        <pre><code class="language-html">&lt;!-- html --&gt;
+&lt;table id=&quot;binding-example-1&quot;&gt;&lt;!-- results placeholder --&gt;&lt;/table&gt;
+&lt;button rel=&quot;binding-example-1&quot;&gt;Add Go Results Highlighter!&lt;/button&gt;</code><code class="language-js">// javascript
+document.addEventListener('DOMContentLoaded', () => {
+    let button = document.querySelector('[rel="binding-example-1"]');
+    let table = document.getElementById('binding-example-1');
+
+    if (button && table) {
+        button.addEventListener('click', () => {
+            new GoResultsHighlighter(table);
+
+            button.textContent = 'Go Results Highlighter is working.';
+            button.disabled = true;
+        });
+    }
+});</code></pre>
+        <h1>jQuery binding</h1>
+        <div class="wrapper" id="binding-example-2"><table>
+    <tbody>
+    <tr><td colspan="11">Example Tournament - After Round 3</td></tr>
+    <tr><td>Place</td><td>Name</td><td>Club</td><td>Level</td><td>Score</td><td>1</td><td>2</td><td>3</td><td>Points</td><td>SOS</td><td>SOSOS</td></tr>
+    <tr><td>1</td><td>Player 8</td><td>AAA</td><td>2 Kyu</td><td>28</td><td>6+</td><td>5+</td><td>2+</td><td>3</td><td>79</td><td>241</td></tr>
+    <tr><td>2</td><td>Player 4</td><td>BBB</td><td>4 Kyu</td><td>27</td><td>8+</td><td>3+</td><td>1-</td><td>2</td><td>80</td><td>238</td></tr>
+    <tr><td>3</td><td>Player 6</td><td>BBB</td><td>3 Kyu</td><td>27</td><td>4+</td><td>2-</td><td>7+</td><td>2</td><td>80</td><td>237</td></tr>
+    <tr><td>4</td><td>Player 2</td><td>CCC</td><td>3 Kyu</td><td>27</td><td>3-</td><td>6+</td><td>5+</td><td>2</td><td>79</td><td>241</td></tr>
+    <tr><td>5</td><td>Player 3</td><td>CCC</td><td>5 Kyu</td><td>26</td><td>7+</td><td>1-</td><td>4-</td><td>1</td><td>81</td><td>236</td></tr>
+    <tr><td>6</td><td>Player 7</td><td>AAA</td><td>5 Kyu</td><td>26</td><td>1-</td><td>4-</td><td>8+</td><td>1</td><td>80</td><td>237</td></tr>
+    <tr><td>7</td><td>Player 1</td><td>AAA</td><td>6 Kyu</td><td>26</td><td>5-</td><td>8+</td><td>3-</td><td>1</td><td>78</td><td>240</td></tr>
+    <tr><td>8</td><td>Player 5</td><td>BBB</td><td>8 Kyu</td><td>25</td><td>2-</td><td>7-</td><td>6-</td><td>0</td><td>79</td><td>238</td></tr>
+    </tbody>
+</table>
+        </div>
+        <button rel="binding-example-2">Add Go Results Highlighter!</button>
+        <pre><code class="language-html">&lt;!-- html --&gt;
+&lt;table id=&quot;binding-example-2&quot;&gt;&lt;!-- results placeholder --&gt;&lt;/table&gt;
+&lt;button rel=&quot;binding-example-2&quot;&gt;Add Go Results Highlighter!&lt;/button&gt;</code><code class="language-js">// javascript
+$(document).ready(() => {
+    let $button = $('[rel="binding-example-2"]');
+    let $table = $('#binding-example-2');
+
+    if ($button && $table) {
+        $button.click(() => {
+            $table.goResultsHighlighter();
+            $button
+                .attr('disabled', true)
+                .html('Go Results Highlighter is working.');
+        });
+    }
+});</code></pre>
+      </div>
+    </article>
+  </body>
+</html>

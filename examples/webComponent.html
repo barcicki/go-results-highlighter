@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Go Results Web Component - Go Results Highlighter</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="A JavaScript library that makes reading Go results super easy">
+    <meta name="keywords" content="go,baduk,weici,igo,results,standings,highlighter">
+    <meta name="author" content="Artur Barcicki">
+    <meta property="og:title" content="Go Results Highlighter">
+    <meta property="og:description" content="A JavaScript library that makes reading Go results super easy">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:400,400italic" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+    <link href="../site.css" rel="stylesheet" type="text/css">
+    <link href="../browser.css" rel="stylesheet" type="text/css">
+    <script src="../site.js"></script>
+    <script src="../component.js"></script>
+    <script src="../browser.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="content">
+        <h1>Go Results Highlighter<small>3.0.4</small></h1>
+        <h2>by Artur Barcicki</h2>
+      </div>
+    </header>
+    <nav>
+      <div class="content">
+        <ul>
+            <li><a href="../"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-home" aria-hidden="true"><path d="M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z"></path></svg></span><span>Home</span></a></li>
+            <li><a href="../docs"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-file" aria-hidden="true"><path d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0 1 13.25 16h-9.5A1.75 1.75 0 0 1 2 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5Zm6.75.062V4.25c0 .138.112.25.25.25h2.688l-.011-.013-2.914-2.914-.013-.011Z"></path></svg></span><span>Documentation</span></a></li>
+            <li class="active"><a href="../examples/binding.html"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-eye" aria-hidden="true"><path d="M8 2c1.981 0 3.671.992 4.933 2.078 1.27 1.091 2.187 2.345 2.637 3.023a1.62 1.62 0 0 1 0 1.798c-.45.678-1.367 1.932-2.637 3.023C11.67 13.008 9.981 14 8 14c-1.981 0-3.671-.992-4.933-2.078C1.797 10.83.88 9.576.43 8.898a1.62 1.62 0 0 1 0-1.798c.45-.677 1.367-1.931 2.637-3.022C4.33 2.992 6.019 2 8 2ZM1.679 7.932a.12.12 0 0 0 0 .136c.411.622 1.241 1.75 2.366 2.717C5.176 11.758 6.527 12.5 8 12.5c1.473 0 2.825-.742 3.955-1.715 1.124-.967 1.954-2.096 2.366-2.717a.12.12 0 0 0 0-.136c-.412-.621-1.242-1.75-2.366-2.717C10.824 4.242 9.473 3.5 8 3.5c-1.473 0-2.825.742-3.955 1.715-1.124.967-1.954 2.096-2.366 2.717ZM8 10a2 2 0 1 1-.001-3.999A2 2 0 0 1 8 10Z"></path></svg></span><span>Examples</span></a></li>
+        </ul>
+        <ul class="github">
+            <li><a href="https://github.com/barcicki/go-results-highlighter"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-mark-github" aria-hidden="true"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg></span><span>GitHub</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/zipball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-download" aria-hidden="true"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg></span><span>Download .zip</span></a></li>
+            <li><a href="https://github.com/barcicki/go-results-highlighter/tarball/master"><span><svg version="1.1" width="16" height="16" viewBox="0 0 16 16" class="octicon octicon-download" aria-hidden="true"><path d="M2.75 14A1.75 1.75 0 0 1 1 12.25v-2.5a.75.75 0 0 1 1.5 0v2.5c0 .138.112.25.25.25h10.5a.25.25 0 0 0 .25-.25v-2.5a.75.75 0 0 1 1.5 0v2.5A1.75 1.75 0 0 1 13.25 14Z"></path><path d="M7.25 7.689V2a.75.75 0 0 1 1.5 0v5.689l1.97-1.969a.749.749 0 1 1 1.06 1.06l-3.25 3.25a.749.749 0 0 1-1.06 0L4.22 6.78a.749.749 0 1 1 1.06-1.06l1.97 1.969Z"></path></svg></span><span>Download .tar.gz</span></a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="content">
+      <ul class="examples">
+        <li><a href="binding.html">Manual Binding</a></li>
+        <li><a href="congress.html">Long Go Congress results</a></li>
+        <li><a href="raw.html">Raw results from Macmahon & OpenGotha</a></li>
+        <li><a href="webComponent.html">Go Results Web Component</a></li>
+      </ul>
+    </div>
+    <article>
+      <div class="content docs">
+        <h1>Raw results from <a href="http://www.cgerlach.de/go/macmahon.html">MacMahon</a></h1>
+        <h3>Input:</h3>
+        <p>Saved tournament walllist using MacMahon 3.4</p>
+        <pre><code class="language-html">&lt;go-results&gt;
+Example Tournament - After Round 3
+Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
+1	Player 8	AAA	2 Kyu	28	6+	5+	2+	3	79	241
+2	Player 4	BBB	4 Kyu	27	8+	3+	1-	2	80	238
+3	Player 6	BBB	3 Kyu	27	4+	2-	7+	2	80	237
+4	Player 2	CCC	3 Kyu	27	3-	6+	5+	2	79	241
+5	Player 3	CCC	5 Kyu	26	7+	1-	4-	1	81	236
+6	Player 7	AAA	5 Kyu	26	1-	4-	8+	1	80	237
+7	Player 1	AAA	6 Kyu	26	5-	8+	3-	1	78	240
+8	Player 5	BBB	8 Kyu	25	2-	7-	6-	0	79	238
+&lt;/go-results&gt;</code></pre>
+        <h3>Output:</h3>
+        <div class="wrapper">
+          <go-results>Example Tournament - After Round 3
+Place	Name	Club	Level	Score	1	2	3	Points	SOS	SOSOS
+1	Player 8	AAA	2 Kyu	28	6+	5+	2+	3	79	241
+2	Player 4	BBB	4 Kyu	27	8+	3+	1-	2	80	238
+3	Player 6	BBB	3 Kyu	27	4+	2-	7+	2	80	237
+4	Player 2	CCC	3 Kyu	27	3-	6+	5+	2	79	241
+5	Player 3	CCC	5 Kyu	26	7+	1-	4-	1	81	236
+6	Player 7	AAA	5 Kyu	26	1-	4-	8+	1	80	237
+7	Player 1	AAA	6 Kyu	26	5-	8+	3-	1	78	240
+8	Player 5	BBB	8 Kyu	25	2-	7-	6-	0	79	238
+
+          </go-results>
+        </div>
+        <h1>Raw results from <a href="http://vannier.info/jeux/gotournaments/opengotha.htm">OpenGotha</a></h1>
+        <h3>Input:</h3>
+        <p>Exported to EGD format using OpenGotha 3.42. Spaces between columns</p>
+        <pre><code class="language-html">&lt;go-results&gt;
+; CL[A]
+; EV[Example Tournament]
+; PC[,Location name]
+; DT[2015-11-11,2015-11-11]
+; HA[h1]
+; KM[7.5]
+; TM[82]
+; CM[Standard byo-yomi]
+; Generated by OpenGotha 3.42
+;
+; Pl Name                            Rk Co Club  MMS  SOSSOSOS
+   1 Player_8 H                      2K XX  AAA   23   63  198 0    8+/b0    5+/w0    2+/w0
+   2 Player_2 B                      3K XX  CCC   22   65  193 0    7+/b0    6+/w0    1-/b0
+   3 Player_4 D                      4K XX  BBB   22   63  197 0    6-/b0    7+/w0    5+/w0
+   4 Player_7 G                      5K XX  AAA   22   62  199 0    5-/b0    8+/w0    6+/w0
+   5 Player_6 F                      3K XX  BBB   21   67  188 0    4+/w0    1-/b0    3-/b0
+   6 Player_3 C                      5K XX  CCC   21   66  190 0    3+/w0    2-/b0    4-/b0
+   7 Player_1 A                      6K XX  AAA   21   64  194 0    2-/w0    3-/b0    8+/b0
+   8 Player_5 E                      8K XX  BBB   20   66  189 0    1-/w0    4-/b0    7-/w0
+&lt;/go-results&gt;</code></pre>
+        <h3>Output:</h3>
+        <div class="wrapper">
+          <go-results>; CL[A]
+; EV[Example Tournament]
+; PC[,Location name]
+; DT[2015-11-11,2015-11-11]
+; HA[h1]
+; KM[7.5]
+; TM[82]
+; CM[Standard byo-yomi]
+; Generated by OpenGotha 3.42
+;
+; Pl Name                            Rk Co Club  MMS  SOSSOSOS
+   1 Player_8 H                      2K XX  AAA   23   63  198 0    8+/b0    5+/w0    2+/w0
+   2 Player_2 B                      3K XX  CCC   22   65  193 0    7+/b0    6+/w0    1-/b0
+   3 Player_4 D                      4K XX  BBB   22   63  197 0    6-/b0    7+/w0    5+/w0
+   4 Player_7 G                      5K XX  AAA   22   62  199 0    5-/b0    8+/w0    6+/w0
+   5 Player_6 F                      3K XX  BBB   21   67  188 0    4+/w0    1-/b0    3-/b0
+   6 Player_3 C                      5K XX  CCC   21   66  190 0    3+/w0    2-/b0    4-/b0
+   7 Player_1 A                      6K XX  AAA   21   64  194 0    2-/w0    3-/b0    8+/b0
+   8 Player_5 E                      8K XX  BBB   20   66  189 0    1-/w0    4-/b0    7-/w0
+
+          </go-results>
+        </div>
+        <h1>Table input</h1>
+        <h3>Input:</h3>
+        <p>Table generated by MacMahon</p>
+        <pre><code class="language-html">&lt;go-results&gt;
+&lt;table&gt;
+    &lt;tbody&gt;
+    &lt;tr&gt;&lt;td colspan="11"&gt;Example Tournament - After Round 3&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;Place&lt;/td&gt;&lt;td&gt;Name&lt;/td&gt;&lt;td&gt;Club&lt;/td&gt;&lt;td&gt;Level&lt;/td&gt;&lt;td&gt;Score&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;Points&lt;/td&gt;&lt;td&gt;SOS&lt;/td&gt;&lt;td&gt;SOSOS&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;Player 8&lt;/td&gt;&lt;td&gt;AAA&lt;/td&gt;&lt;td&gt;2 Kyu&lt;/td&gt;&lt;td&gt;28&lt;/td&gt;&lt;td&gt;6+&lt;/td&gt;&lt;td&gt;5+&lt;/td&gt;&lt;td&gt;2+&lt;/td&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;79&lt;/td&gt;&lt;td&gt;241&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;Player 4&lt;/td&gt;&lt;td&gt;BBB&lt;/td&gt;&lt;td&gt;4 Kyu&lt;/td&gt;&lt;td&gt;27&lt;/td&gt;&lt;td&gt;8+&lt;/td&gt;&lt;td&gt;3+&lt;/td&gt;&lt;td&gt;1-&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;td&gt;238&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;3&lt;/td&gt;&lt;td&gt;Player 6&lt;/td&gt;&lt;td&gt;BBB&lt;/td&gt;&lt;td&gt;3 Kyu&lt;/td&gt;&lt;td&gt;27&lt;/td&gt;&lt;td&gt;4+&lt;/td&gt;&lt;td&gt;2-&lt;/td&gt;&lt;td&gt;7+&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;td&gt;237&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;Player 2&lt;/td&gt;&lt;td&gt;CCC&lt;/td&gt;&lt;td&gt;3 Kyu&lt;/td&gt;&lt;td&gt;27&lt;/td&gt;&lt;td&gt;3-&lt;/td&gt;&lt;td&gt;6+&lt;/td&gt;&lt;td&gt;5+&lt;/td&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;79&lt;/td&gt;&lt;td&gt;241&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;Player 3&lt;/td&gt;&lt;td&gt;CCC&lt;/td&gt;&lt;td&gt;5 Kyu&lt;/td&gt;&lt;td&gt;26&lt;/td&gt;&lt;td&gt;7+&lt;/td&gt;&lt;td&gt;1-&lt;/td&gt;&lt;td&gt;4-&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;81&lt;/td&gt;&lt;td&gt;236&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;6&lt;/td&gt;&lt;td&gt;Player 7&lt;/td&gt;&lt;td&gt;AAA&lt;/td&gt;&lt;td&gt;5 Kyu&lt;/td&gt;&lt;td&gt;26&lt;/td&gt;&lt;td&gt;1-&lt;/td&gt;&lt;td&gt;4-&lt;/td&gt;&lt;td&gt;8+&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;80&lt;/td&gt;&lt;td&gt;237&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;7&lt;/td&gt;&lt;td&gt;Player 1&lt;/td&gt;&lt;td&gt;AAA&lt;/td&gt;&lt;td&gt;6 Kyu&lt;/td&gt;&lt;td&gt;26&lt;/td&gt;&lt;td&gt;5-&lt;/td&gt;&lt;td&gt;8+&lt;/td&gt;&lt;td&gt;3-&lt;/td&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;78&lt;/td&gt;&lt;td&gt;240&lt;/td&gt;&lt;/tr&gt;
+    &lt;tr&gt;&lt;td&gt;8&lt;/td&gt;&lt;td&gt;Player 5&lt;/td&gt;&lt;td&gt;BBB&lt;/td&gt;&lt;td&gt;8 Kyu&lt;/td&gt;&lt;td&gt;25&lt;/td&gt;&lt;td&gt;2-&lt;/td&gt;&lt;td&gt;7-&lt;/td&gt;&lt;td&gt;6-&lt;/td&gt;&lt;td&gt;0&lt;/td&gt;&lt;td&gt;79&lt;/td&gt;&lt;td&gt;238&lt;/td&gt;&lt;/tr&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/go-results&gt;</code></pre>
+        <h3>Output:</h3>
+        <div class="wrapper">
+          <go-results><table>
+    <tbody>
+    <tr><td colspan="11">Example Tournament - After Round 3</td></tr>
+    <tr><td>Place</td><td>Name</td><td>Club</td><td>Level</td><td>Score</td><td>1</td><td>2</td><td>3</td><td>Points</td><td>SOS</td><td>SOSOS</td></tr>
+    <tr><td>1</td><td>Player 8</td><td>AAA</td><td>2 Kyu</td><td>28</td><td>6+</td><td>5+</td><td>2+</td><td>3</td><td>79</td><td>241</td></tr>
+    <tr><td>2</td><td>Player 4</td><td>BBB</td><td>4 Kyu</td><td>27</td><td>8+</td><td>3+</td><td>1-</td><td>2</td><td>80</td><td>238</td></tr>
+    <tr><td>3</td><td>Player 6</td><td>BBB</td><td>3 Kyu</td><td>27</td><td>4+</td><td>2-</td><td>7+</td><td>2</td><td>80</td><td>237</td></tr>
+    <tr><td>4</td><td>Player 2</td><td>CCC</td><td>3 Kyu</td><td>27</td><td>3-</td><td>6+</td><td>5+</td><td>2</td><td>79</td><td>241</td></tr>
+    <tr><td>5</td><td>Player 3</td><td>CCC</td><td>5 Kyu</td><td>26</td><td>7+</td><td>1-</td><td>4-</td><td>1</td><td>81</td><td>236</td></tr>
+    <tr><td>6</td><td>Player 7</td><td>AAA</td><td>5 Kyu</td><td>26</td><td>1-</td><td>4-</td><td>8+</td><td>1</td><td>80</td><td>237</td></tr>
+    <tr><td>7</td><td>Player 1</td><td>AAA</td><td>6 Kyu</td><td>26</td><td>5-</td><td>8+</td><td>3-</td><td>1</td><td>78</td><td>240</td></tr>
+    <tr><td>8</td><td>Player 5</td><td>BBB</td><td>8 Kyu</td><td>25</td><td>2-</td><td>7-</td><td>6-</td><td>0</td><td>79</td><td>238</td></tr>
+    </tbody>
+</table>
+          </go-results>
+        </div>
+      </div>
+    </article>
+  </body>
+</html>
