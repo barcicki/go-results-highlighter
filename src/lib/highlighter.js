@@ -65,6 +65,7 @@ export default class GoResultsHighlighter {
      * @param {boolean} [settings.rearrange=false] - whether the table should be
      * rearranged to display results in compact size
      * @param {Array.<number>} [settings.games] - the opponent whose game with the
+     * @param {number} [settings.column] - optional column identifier
      * player should be highlighted
      */
     highlight(settings) {
@@ -139,8 +140,11 @@ export default class GoResultsHighlighter {
             if (gamesToHighlight && typeof gamesToHighlight.length === 'number') {
                 for (const game of player.games) {
                     if (gamesToHighlight.includes(game.opponentPlace) && (!settings.column || settings.column === game.index)) {
-                        const opponent = this.map[game.opponentPlace];
-                        const opponentGame = opponent.games.find((op) => op.index === game.index);
+                        const opponentGame = getOpponentGame(this.map[game.opponentPlace], game);
+
+                        if (!opponentGame) {
+                            continue;
+                        }
 
                         game.cell.classList.add(classes.gameCls);
                         opponentGame.cell.classList.add(classes.gameCls);
@@ -149,8 +153,11 @@ export default class GoResultsHighlighter {
                 }
             } else if (this.isRearranged) {
                 for (const game of player.games) {
-                    const opponent = this.map[game.opponentPlace];
-                    const opponentGame = opponent.games.find((op) => op.index === game.index);
+                    const opponentGame = getOpponentGame(this.map[game.opponentPlace], game);
+
+                    if (!opponentGame) {
+                        continue;
+                    }
 
                     opponentGame.cell.classList.add(classes.gameCls);
                     this.games.push(game.opponentPlace);
@@ -435,6 +442,22 @@ function rearrangeOrder(player, opponents) {
 
         opponent.rearranged = true;
     }
+}
+
+function getOpponentGame(opponent, game) {
+    let best = null;
+    let current;
+
+    for (const opponentGame of opponent.games) {
+        const distance = Math.abs(game.index - opponentGame.index);
+
+        if (!best || distance < current) {
+            best = opponentGame;
+            current = distance;
+        }
+    }
+
+    return best;
 }
 
 GoResultsHighlighter.DEFAULT_SETTINGS = DEFAULT_SETTINGS;
