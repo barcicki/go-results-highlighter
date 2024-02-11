@@ -1,6 +1,6 @@
 {
   "name": "go-results-highlighter",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Improves readability of Go results by highlighting opponents of selected player",
   "scripts": {
     "build-lib": "webpack --config=webpack/lib --mode=production",
