@@ -34,7 +34,7 @@ describe('GoResultsHighlighter', () => {
             let table = createDom('<table></table>');
             let highlighter = new GoResultsHighlighter(table);
 
-            expect(highlighter.element).not.toBe(table);
+            expect(highlighter.element).toBe(table);
             expect(table.goResultsHighlighter).toBe(highlighter);
         });
 
@@ -43,7 +43,7 @@ describe('GoResultsHighlighter', () => {
             let highlighter = new GoResultsHighlighter(pre);
 
             expect(highlighter.element).not.toBe(pre);
-            expect(pre.goResultsHighlighter).toBeDefined();
+            expect(pre.goResultsHighlighter).not.toBeDefined();
         });
 
         it('return highlighter instance when called without new', () => {

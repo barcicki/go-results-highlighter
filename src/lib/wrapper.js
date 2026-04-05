@@ -22,6 +22,7 @@ export default function GoResultsHighlighter(element, settings) {
         return new GoResultsHighlighter(element, settings);
     }
 
+    const backup = element.cloneNode(true);
     const highlighter = new Highlighter(element, settings);
 
     /**
@@ -77,8 +78,8 @@ export default function GoResultsHighlighter(element, settings) {
      * Remove highlighter
      */
     this.dispose = () => {
-        delete highlighter.originalElement.goResultsHighlighter;
-        highlighter.dispose();
+        highlighter.unbindEvents();
+        element.replaceWith(backup);
     };
 
     Object.defineProperties(this, /** @lends module:wrapper~GoResultsHighlighter.prototype */ {
@@ -190,7 +191,6 @@ export default function GoResultsHighlighter(element, settings) {
     });
 
     highlighter.element.goResultsHighlighter = this;
-    highlighter.originalElement.goResultsHighlighter = this;
 }
 
 /**
