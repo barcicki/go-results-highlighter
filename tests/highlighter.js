@@ -67,8 +67,8 @@ describe('highlighter', () => {
             let table = createDom('<table></table>');
             let highlighter = new GoResultsHighlighter(table);
 
-            expect(highlighter.element).toBe(table);
-            expect(table.className).toBe('go-results-table');
+            expect(highlighter.element).not.toBe(table);
+            expect(highlighter.element.className).toBe('go-results-table');
             expect(highlighter.settings).toEqual(DEFAULT_SETTINGS);
         });
 
@@ -140,6 +140,7 @@ describe('highlighter', () => {
         beforeEach(() => {
             table = createDom(EXAMPLE_TOURNAMENT);
             highlighter = new GoResultsHighlighter(table);
+            table = highlighter.element;
         });
 
         it('ensure no player is selected on start', () => {
@@ -465,6 +466,7 @@ describe('highlighter', () => {
         beforeEach(() => {
             table = createDom(EXAMPLE_TOURNAMENT_WITH_ADDITIONAL_IDS_AND_CLASSES);
             highlighter = new GoResultsHighlighter(table);
+            table = highlighter.element;
         });
 
         it('not mark any player when hovering non-player rows', () => {
@@ -772,6 +774,7 @@ describe('highlighter', () => {
         beforeEach(() => {
             table = createDom(EXAMPLE_TOURNAMENT_WITH_ADDITIONAL_IDS_AND_CLASSES);
             highlighter = new GoResultsHighlighter(table);
+            table = highlighter.element;
         });
 
         function dispatchTouch(selector) {
@@ -926,6 +929,7 @@ describe('highlighter', () => {
         beforeEach(() => {
             table = createDom(EXAMPLE_TOURNAMENT);
             highlighter = new GoResultsHighlighter(table);
+            table = highlighter.element;
         });
 
         it('keep same settings if no new settings provided', () => {

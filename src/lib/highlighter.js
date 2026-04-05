@@ -13,6 +13,7 @@ export default class GoResultsHighlighter {
      */
     constructor(element, settings) {
         this.settings = defaults(DEFAULT_SETTINGS, readTableSettingsFromDOM(element), settings);
+        this.originalElement = element;
 
         if (element instanceof HTMLPreElement || element instanceof Text) {
             let table = convert(element.textContent, settings);
@@ -23,7 +24,8 @@ export default class GoResultsHighlighter {
 
             this.element = table;
         } else {
-            this.element = element;
+            this.element = element.cloneNode(true);
+            element.replaceWith(this.element);
         }
 
         if (!this.element.classList) {
@@ -343,6 +345,14 @@ export default class GoResultsHighlighter {
             this._abortController.abort();
             this._abortController = null;
         }
+    }
+
+    /**
+     * Remove highlighter
+     */
+    dispose() {
+        this.unbindEvents();
+        this.element.replaceWith(this.originalElement);
     }
 
     /**
