@@ -1,7 +1,7 @@
 'use strict';
 
 import GoResultsHighlighter from '../src/lib/highlighter';
-import { DEFAULT_SETTINGS } from '../src/lib/settings';
+import { DEFAULT_SETTINGS, DOM_ATTRIBUTES } from '../src/lib/settings';
 
 const EXAMPLE_TOURNAMENT =
     `<table>
@@ -489,6 +489,18 @@ describe('highlighter', () => {
             expect(highlighter.games).toEqual([]);
         });
 
+        it('ignore highlighting when disposed', () => {
+            highlighter.dispose();
+
+            let event = new MouseEvent('mouseover', { bubbles: true });
+
+            table.querySelector('#row5').dispatchEvent(event);
+
+            expect(highlighter.current).not.toBe(3);
+            expect(highlighter.isHighlighting).not.toBe(true);
+            expect(highlighter.games).toEqual([]);
+        });
+
         it('neither highlight nor remove highlight when hovering the table directly', () => {
             table.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
             expect(highlighter.current).toBe(null);
@@ -757,6 +769,25 @@ describe('highlighter', () => {
             expect(highlighter.isHighlighting).toBe(true);
             expect(highlighter.isRearranged).toBe(true);
             expect(highlighter.games).toEqual([2, 4, 7]);
+        });
+
+        it('cleanup highlight on dispose', () => {
+            table.querySelector('#row3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row7').querySelector('.game1').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row5').querySelector('.game3').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row6').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+            table.querySelector('#row8').dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+
+            highlighter.dispose();
+
+            expect(table.querySelectorAll('.go-results-current').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-won').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-lost').length).toBe(0);
+            expect(table.querySelectorAll('.go-results-game').length).toBe(0);
+
+            for (const attr in DOM_ATTRIBUTES) {
+                expect(table.querySelectorAll(`.${DOM_ATTRIBUTES[attr]}`).length).toBe(0);
+            }
         });
     });
 

@@ -44,6 +44,13 @@ const CLASSES_TO_BE_PREFIXED = [
     'currentCls'
 ];
 
+export const GAME_CLASSES = [
+    'won',
+    'lost',
+    'jigo',
+    'unresolved'
+];
+
 /**
  * Names of attributes used in this plugin
  * @type {{RESULT_TABLE: string, SETTING_STARTING_ROW: string, SETTING_PLACE_COLUMN: string, SETTING_ROUNDS_COLUMNS: string, SETTING_REARRANGING: string, SETTING_HOVERING: string, PLAYER_PLACEMENT: string, OPPONENT_PLACEMENT: string, OPPONENTS: string, GAME_RESULT: string}}

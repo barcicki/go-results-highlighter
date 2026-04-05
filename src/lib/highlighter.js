@@ -1,4 +1,11 @@
-import { DEFAULT_SETTINGS, DOM_ATTRIBUTES, toPrefixedClasses, readTableSettingsFromDOM } from './settings';
+import {
+    DEFAULT_SETTINGS,
+    DOM_ATTRIBUTES,
+    GAME_CLASSES,
+    readTableSettingsFromDOM,
+    toPrefixedClasses
+} from './settings';
+
 import parse from './parser';
 import convert from './raw2table';
 import { asArray, defaults } from './utils';
@@ -21,6 +28,7 @@ export default class GoResultsHighlighter {
             parent.insertBefore(table, element);
             parent.removeChild(element);
 
+            this.originalElement = element;
             this.element = table;
         } else {
             this.element = element;
@@ -342,6 +350,46 @@ export default class GoResultsHighlighter {
         if (this._abortController) {
             this._abortController.abort();
             this._abortController = null;
+        }
+    }
+
+    dispose() {
+        this.unbindEvents();
+
+        restoreNaturalOrder(this.players);
+
+        const classes = toPrefixedClasses(this.settings);
+        const gameClasses = GAME_CLASSES
+            .map((cls) => this.settings.prefixCls + cls);
+
+        const queue = [this.element];
+
+        while (queue.length) {
+            const element = queue.shift();
+
+            for (const child of element.children) {
+                queue.push(child);
+            }
+
+            for (const cls in classes) {
+                if (classes.hasOwnProperty(cls)) {
+                    element.classList.remove(classes[cls]);
+                }
+            }
+
+            for (const cls of gameClasses) {
+                element.classList.remove(cls);
+            }
+
+            for (const attr in DOM_ATTRIBUTES) {
+                if (DOM_ATTRIBUTES.hasOwnProperty(attr)) {
+                    element.removeAttribute(DOM_ATTRIBUTES[attr]);
+                }
+            }
+        }
+
+        if (this.originalElement) {
+            this.element.replaceWith(this.originalElement);
         }
     }
 
