@@ -199,16 +199,20 @@ export default class GoResultsHighlighter {
      * Binds touchend, click, mouseover and mouseout events listeners to the element.
      */
     bindEvents() {
+        this.unbindEvents();
+        this._abortController = new AbortController();
+
         let hasTouchMoved = false;
         let hasTouched = false;
+        const options = { signal: this._abortController.signal };
 
         this.element.addEventListener('touchstart', () => {
             hasTouchMoved = false;
-        });
+        }, options);
 
         this.element.addEventListener('touchmove', () => {
             hasTouchMoved = true;
-        });
+        }, options);
 
         this.element.addEventListener('touchend', (event) => {
             if (hasTouchMoved || (this.settings.rearranging === false && this.settings.hovering === false)) {
@@ -245,7 +249,7 @@ export default class GoResultsHighlighter {
             }
 
             hasTouched = true;
-        });
+        }, options);
 
         this.element.addEventListener('click', (event) => {
             if (hasTouched) {
@@ -279,7 +283,7 @@ export default class GoResultsHighlighter {
             if (lastTargetPos) {
                 updateTopPosition(target, lastTargetPos);
             }
-        });
+        }, options);
 
         this.element.addEventListener('mouseover', (event) => {
             if (this.settings.hovering === false) {
@@ -305,7 +309,7 @@ export default class GoResultsHighlighter {
             }
 
             this.highlight({ player, rearrange, games, column });
-        }, false);
+        }, options);
 
         this.element.addEventListener('mouseout', (event) => {
             if (this.settings.hovering === false) {
@@ -328,7 +332,17 @@ export default class GoResultsHighlighter {
                     this.highlight(null);
                 }
             }
-        }, false);
+        }, options);
+    }
+
+    /**
+     * Removes event listeners
+     */
+    unbindEvents() {
+        if (this._abortController) {
+            this._abortController.abort();
+            this._abortController = null;
+        }
     }
 
     /**
